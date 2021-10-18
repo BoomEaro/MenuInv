@@ -1,0 +1,6 @@
+name: MenuInv
+version: '${project.version}'
+main: ru.boomearo.menuinv.MenuInv
+api-version: 1.16
+authors: [ BoomEaro ]
+description: Menu api for plugins
