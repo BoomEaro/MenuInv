@@ -13,7 +13,7 @@ public interface IUpdateable<T, C> {
     public T update(C consume, Player player);
 
     /**
-     * @return время для обновления метода update. По умолчанию значение равно 20 тиков, то есть одна секунда. (1 тик = 250 мс)
+     * @return время для обновления метода update. По умолчанию значение равно 20 тиков, то есть одна секунда. (1 тик = 50 мс)
      */
     public default long getUpdateTime() {
         return 20;

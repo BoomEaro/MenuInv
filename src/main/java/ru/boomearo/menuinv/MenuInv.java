@@ -10,6 +10,7 @@ import ru.boomearo.menuinv.listeners.InventoryListener;
 import ru.boomearo.menuinv.objects.InventoryPage;
 import ru.boomearo.menuinv.objects.PluginTemplatePages;
 import ru.boomearo.menuinv.objects.TemplatePage;
+import ru.boomearo.menuinv.runnable.MenuUpdater;
 import ru.boomearo.menuinv.test.TestMenu;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -19,6 +20,8 @@ public final class MenuInv extends JavaPlugin {
 
     private final ConcurrentMap<Class<? extends JavaPlugin>, PluginTemplatePages> menu = new ConcurrentHashMap<>();
 
+    private MenuUpdater updater = null;
+
     private static MenuInv instance = null;
 
     @Override
@@ -26,6 +29,8 @@ public final class MenuInv extends JavaPlugin {
         instance = this;
 
         this.getServer().getPluginManager().registerEvents(new InventoryListener(), this);
+
+        this.updater = new MenuUpdater();
 
         try {
             TestMenu.setupTest();
@@ -44,6 +49,10 @@ public final class MenuInv extends JavaPlugin {
 
     public static MenuInv getInstance() {
         return instance;
+    }
+
+    public MenuUpdater getMenuUpdater() {
+        return this.updater;
     }
 
     public IPluginTemplatePages registerPages(JavaPlugin plugin) throws MenuInvException {
@@ -96,7 +105,7 @@ public final class MenuInv extends JavaPlugin {
             try {
                 //TODO
                 InventoryPage newPage = templatePage.createNewInventoryPage(player);
-                newPage.update();
+                newPage.update(true, true);
 
                 player.openInventory(newPage.getInventory());
                 //TODO добавить в this.menu

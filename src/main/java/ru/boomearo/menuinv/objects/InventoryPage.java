@@ -6,6 +6,8 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 
 import org.bukkit.inventory.ItemStack;
+import ru.boomearo.menuinv.MenuInv;
+import ru.boomearo.menuinv.api.AbstractButtonHandler;
 import ru.boomearo.menuinv.api.InvType;
 
 import java.util.Arrays;
@@ -64,18 +66,42 @@ public class InventoryPage {
 
     }
 
+
     public void update() {
+        update(false);
+    }
+
+    public void update(boolean force) {
+        update(false, force);
+    }
+
+    public void update(boolean clean, boolean force) {
 
         ItemStack[] array = new ItemStack[this.inventory.getSize()];
-        Arrays.fill(array, null);
+
+        if (clean) {
+            Arrays.fill(array, null);
+        }
+        else {
+            array = Arrays.copyOf(this.inventory.getContents(), this.inventory.getSize());
+        }
 
         for (ItemIcon ii : this.elements.getAllItemIcon()) {
-            array[ii.getPosition()] = ii.getHandler().update(this, this.player);
+            AbstractButtonHandler handler = ii.getHandler();
+
+            if (((System.currentTimeMillis() - ii.getUpdateHandlerCooldown()) > (handler.getUpdateTime() * 50)) || force) {
+                ii.resetUpdateHandlerCooldown();
+                array[ii.getPosition()] = ii.getHandler().update(this, this.player);
+            }
         }
 
         this.inventory.setContents(array);
 
         this.player.updateInventory();
+    }
+
+    public void close() {
+        Bukkit.getScheduler().runTask(MenuInv.getInstance(), this.player::closeInventory);
     }
 
 }

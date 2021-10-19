@@ -9,15 +9,19 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
+import org.bukkit.inventory.meta.ItemMeta;
 import ru.boomearo.menuinv.MenuInv;
 import ru.boomearo.menuinv.api.AbstractButtonHandler;
 import ru.boomearo.menuinv.api.IPluginTemplatePages;
 import ru.boomearo.menuinv.api.ITemplatePage;
+import ru.boomearo.menuinv.api.InvType;
 import ru.boomearo.menuinv.exceptions.MenuInvException;
 import ru.boomearo.menuinv.objects.InventoryPage;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 public class TestMenu {
 
@@ -75,9 +79,9 @@ public class TestMenu {
             });
         }
         {
-            ITemplatePage page = pages.createTemplatePage("test2", "Привет2", 2);
+            ITemplatePage page = pages.createTemplatePage("test2", "Привет2", InvType.Hopper);
 
-            page.addButton(5, new AbstractButtonHandler() {
+            page.addButton(0, new AbstractButtonHandler() {
 
                 @Override
                 public void click(InventoryPage page, Player player, ClickType type) {
@@ -91,7 +95,35 @@ public class TestMenu {
 
                 @Override
                 public ItemStack update(InventoryPage consume, Player player) {
-                    return new ItemStack(Material.RED_BED, 1);
+                    ItemStack item = new ItemStack(Material.values()[new Random().nextInt(Material.values().length)], 1);
+                    ItemMeta meta = item.getItemMeta();
+                    meta.setDisplayName("Привет тест!");
+                    meta.setLore(Arrays.asList("Time: " + System.currentTimeMillis()));
+                    item.setItemMeta(meta);
+                    return item;
+                }
+
+                @Override
+                public long getUpdateTime() {
+                    return 1;
+                }
+
+            });
+            page.addButton(1, new AbstractButtonHandler() {
+
+                @Override
+                public void click(InventoryPage page, Player player, ClickType type) {
+
+                }
+
+                @Override
+                public ItemStack update(InventoryPage consume, Player player) {
+                    ItemStack item = new ItemStack(Material.RED_BED, 1);
+                    ItemMeta meta = item.getItemMeta();
+                    meta.setDisplayName("Привет тест!");
+                    meta.setLore(Arrays.asList("Агагага"));
+                    item.setItemMeta(meta);
+                    return item;
                 }
             });
 
