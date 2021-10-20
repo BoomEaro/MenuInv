@@ -68,22 +68,31 @@ public class InventoryPage {
 
 
     public void update() {
+        //long start = System.nanoTime();
         update(false);
+        //long end = System.nanoTime();
+
+        //MenuInv.getInstance().getLogger().info("test " + (end - start));
     }
 
     public void update(boolean force) {
         update(false, force);
     }
 
+    //TODO Я хз, нужно ли оптимизировать, так как вызывается обновление каждый тик.
+    //TODO По замерам вроде вообще проблем нет
     public void update(boolean clean, boolean force) {
 
-        ItemStack[] array = new ItemStack[this.inventory.getSize()];
+        ItemStack[] array;
 
         if (clean) {
+            array = new ItemStack[this.inventory.getSize()];
             Arrays.fill(array, null);
         }
         else {
-            array = Arrays.copyOf(this.inventory.getContents(), this.inventory.getSize());
+            //TODO А точно нужно копировать массив? Я его сейчас просто переиспользую а затем в конце заново устанавливаю..
+            //TODO Если конечно баккит каждый раз не создает новый..
+            array = this.inventory.getContents();
         }
 
         for (ItemIcon ii : this.elements.getAllItemIcon()) {

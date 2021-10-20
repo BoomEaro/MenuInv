@@ -12,8 +12,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import ru.boomearo.menuinv.MenuInv;
 import ru.boomearo.menuinv.api.AbstractButtonHandler;
-import ru.boomearo.menuinv.api.IPluginTemplatePages;
-import ru.boomearo.menuinv.api.ITemplatePage;
+import ru.boomearo.menuinv.api.PluginTemplatePages;
+import ru.boomearo.menuinv.api.TemplatePage;
 import ru.boomearo.menuinv.api.InvType;
 import ru.boomearo.menuinv.exceptions.MenuInvException;
 import ru.boomearo.menuinv.objects.InventoryPage;
@@ -21,7 +21,7 @@ import ru.boomearo.menuinv.objects.InventoryPage;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class TestMenu {
 
@@ -33,10 +33,10 @@ public class TestMenu {
 
     public static void setupMenu() throws MenuInvException {
         MenuInv inv = MenuInv.getInstance();
-        IPluginTemplatePages pages = inv.registerPages(inv);
+        PluginTemplatePages pages = inv.registerPages(inv);
 
         {
-            ITemplatePage page = pages.createTemplatePage("test", "Привет", 4);
+            TemplatePage page = pages.createTemplatePage("test", "Привет", 4);
 
             page.addButton(1, new AbstractButtonHandler() {
 
@@ -79,7 +79,7 @@ public class TestMenu {
             });
         }
         {
-            ITemplatePage page = pages.createTemplatePage("test2", "Привет2", InvType.Hopper);
+            TemplatePage page = pages.createTemplatePage("test2", "Привет2", InvType.Hopper);
 
             page.addButton(0, new AbstractButtonHandler() {
 
@@ -95,7 +95,7 @@ public class TestMenu {
 
                 @Override
                 public ItemStack update(InventoryPage consume, Player player) {
-                    ItemStack item = new ItemStack(Material.values()[new Random().nextInt(Material.values().length)], 1);
+                    ItemStack item = new ItemStack(Material.values()[ThreadLocalRandom.current().nextInt(Material.values().length)], 1);
                     ItemMeta meta = item.getItemMeta();
                     meta.setDisplayName("Привет тест!");
                     meta.setLore(Arrays.asList("Time: " + System.currentTimeMillis()));
@@ -105,7 +105,7 @@ public class TestMenu {
 
                 @Override
                 public long getUpdateTime() {
-                    return 1;
+                    return 0;
                 }
 
             });
@@ -118,10 +118,32 @@ public class TestMenu {
 
                 @Override
                 public ItemStack update(InventoryPage consume, Player player) {
-                    ItemStack item = new ItemStack(Material.RED_BED, 1);
+                    ItemStack item = new ItemStack(Material.values()[ThreadLocalRandom.current().nextInt(Material.values().length)], 1);
                     ItemMeta meta = item.getItemMeta();
-                    meta.setDisplayName("Привет тест!");
-                    meta.setLore(Arrays.asList("Агагага"));
+                    meta.setDisplayName("Привет тест2!");
+                    meta.setLore(Arrays.asList("Time2: " + System.currentTimeMillis()));
+                    item.setItemMeta(meta);
+                    return item;
+                }
+
+                @Override
+                public long getUpdateTime() {
+                    return 5;
+                }
+            });
+            page.addButton(4, new AbstractButtonHandler() {
+
+                @Override
+                public void click(InventoryPage page, Player player, ClickType type) {
+                    page.close();
+                }
+
+                @Override
+                public ItemStack update(InventoryPage consume, Player player) {
+                    ItemStack item = new ItemStack(Material.BARRIER, 1);
+                    ItemMeta meta = item.getItemMeta();
+                    meta.setDisplayName("Закрыть");
+                    meta.setLore(Arrays.asList("Агагага22"));
                     item.setItemMeta(meta);
                     return item;
                 }

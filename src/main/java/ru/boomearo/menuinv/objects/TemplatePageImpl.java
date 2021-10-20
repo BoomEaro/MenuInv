@@ -2,15 +2,15 @@ package ru.boomearo.menuinv.objects;
 
 import org.bukkit.entity.Player;
 import ru.boomearo.menuinv.api.AbstractButtonHandler;
-import ru.boomearo.menuinv.api.IListedButtonHandler;
-import ru.boomearo.menuinv.api.ITemplatePage;
+import ru.boomearo.menuinv.api.ListedButtonHandler;
+import ru.boomearo.menuinv.api.TemplatePage;
 import ru.boomearo.menuinv.api.InvType;
 import ru.boomearo.menuinv.exceptions.MenuInvException;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class TemplatePage implements ITemplatePage {
+public class TemplatePageImpl implements TemplatePage {
 
     private final String name;
     private final String title;
@@ -20,7 +20,7 @@ public class TemplatePage implements ITemplatePage {
 
     private final Map<Integer, TemplateItemIcon> iconsPosition = new HashMap<>();
 
-    public TemplatePage(String name, String title, InvType type, int height) {
+    public TemplatePageImpl(String name, String title, InvType type, int height) {
         this.name = name;
         this.title = title;
         this.type = type;
@@ -64,7 +64,7 @@ public class TemplatePage implements ITemplatePage {
     }
 
     @Override
-    public void addListedButton(String name, int x, int z, int width, int height, IListedButtonHandler listedButton) {
+    public void addListedButton(String name, int x, int z, int width, int height, ListedButtonHandler listedButton) {
 
     }
 }

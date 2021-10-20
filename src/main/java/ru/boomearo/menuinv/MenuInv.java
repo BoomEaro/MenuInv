@@ -4,12 +4,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import ru.boomearo.menuinv.api.IPluginTemplatePages;
+import ru.boomearo.menuinv.api.PluginTemplatePages;
 import ru.boomearo.menuinv.exceptions.MenuInvException;
 import ru.boomearo.menuinv.listeners.InventoryListener;
 import ru.boomearo.menuinv.objects.InventoryPage;
-import ru.boomearo.menuinv.objects.PluginTemplatePages;
-import ru.boomearo.menuinv.objects.TemplatePage;
+import ru.boomearo.menuinv.objects.PluginTemplatePagesImpl;
+import ru.boomearo.menuinv.objects.TemplatePageImpl;
 import ru.boomearo.menuinv.runnable.MenuUpdater;
 import ru.boomearo.menuinv.test.TestMenu;
 
@@ -18,7 +18,7 @@ import java.util.concurrent.ConcurrentMap;
 
 public final class MenuInv extends JavaPlugin {
 
-    private final ConcurrentMap<Class<? extends JavaPlugin>, PluginTemplatePages> menu = new ConcurrentHashMap<>();
+    private final ConcurrentMap<Class<? extends JavaPlugin>, PluginTemplatePagesImpl> menu = new ConcurrentHashMap<>();
 
     private MenuUpdater updater = null;
 
@@ -55,17 +55,17 @@ public final class MenuInv extends JavaPlugin {
         return this.updater;
     }
 
-    public IPluginTemplatePages registerPages(JavaPlugin plugin) throws MenuInvException {
+    public PluginTemplatePages registerPages(JavaPlugin plugin) throws MenuInvException {
         if (plugin == null) {
             throw new MenuInvException("Аргумент являются нулл!");
         }
 
-        PluginTemplatePages tmp = this.menu.get(plugin.getClass());
+        PluginTemplatePagesImpl tmp = this.menu.get(plugin.getClass());
         if (tmp != null) {
             throw new MenuInvException("Страницы плагина '" + plugin.getName() + "' уже зарегистрированы!");
         }
 
-        PluginTemplatePages pages = new PluginTemplatePages(plugin);
+        PluginTemplatePagesImpl pages = new PluginTemplatePagesImpl(plugin);
 
         this.menu.put(plugin.getClass(), pages);
 
@@ -77,7 +77,7 @@ public final class MenuInv extends JavaPlugin {
             throw new MenuInvException("Аргумент являются нулл!");
         }
 
-        PluginTemplatePages tmp = this.menu.get(plugin.getClass());
+        PluginTemplatePagesImpl tmp = this.menu.get(plugin.getClass());
         if (tmp == null) {
             throw new MenuInvException("Страницы плагина '" + plugin.getName() + "' еще не были зарегистрированы!");
         }
@@ -91,12 +91,12 @@ public final class MenuInv extends JavaPlugin {
             throw new MenuInvException("Аргументы являются нулл!");
         }
 
-        PluginTemplatePages pp = this.menu.get(plugin.getClass());
+        PluginTemplatePagesImpl pp = this.menu.get(plugin.getClass());
         if (pp == null) {
             throw new MenuInvException("Плагин '" + plugin.getName() + "' не зарегистрировал страницы!");
         }
 
-        TemplatePage templatePage = pp.getTemplatePage(page);
+        TemplatePageImpl templatePage = pp.getTemplatePage(page);
         if (templatePage == null) {
             throw new MenuInvException("Плагин '" + plugin.getName() + "' еще не зарегистрировал страницу '" + page + "'");
         }

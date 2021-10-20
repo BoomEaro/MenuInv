@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Представляет массив кнопок, помещенный в некую область
  */
-public interface IListedButtonHandler extends IUpdateable<List<AbstractButtonHandler>, InventoryPage> {
+public interface ListedButtonHandler extends Updateable<List<AbstractButtonHandler>, InventoryPage> {
 
 
 }

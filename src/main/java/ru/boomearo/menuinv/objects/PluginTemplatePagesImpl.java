@@ -2,20 +2,20 @@ package ru.boomearo.menuinv.objects;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
-import ru.boomearo.menuinv.api.IPluginTemplatePages;
-import ru.boomearo.menuinv.api.ITemplatePage;
+import ru.boomearo.menuinv.api.PluginTemplatePages;
+import ru.boomearo.menuinv.api.TemplatePage;
 import ru.boomearo.menuinv.api.InvType;
 import ru.boomearo.menuinv.exceptions.MenuInvException;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class PluginTemplatePages implements IPluginTemplatePages {
+public class PluginTemplatePagesImpl implements PluginTemplatePages {
 
     private final JavaPlugin plugin;
-    private final Map<String, TemplatePage> pages = new HashMap<>();
+    private final Map<String, TemplatePageImpl> pages = new HashMap<>();
 
-    public PluginTemplatePages(JavaPlugin plugin) {
+    public PluginTemplatePagesImpl(JavaPlugin plugin) {
         this.plugin = plugin;
     }
 
@@ -23,28 +23,28 @@ public class PluginTemplatePages implements IPluginTemplatePages {
         return this.plugin;
     }
 
-    public TemplatePage getTemplatePage(String name) {
+    public TemplatePageImpl getTemplatePage(String name) {
         return this.pages.get(name);
     }
 
     @Override
-    public ITemplatePage createTemplatePage(String name, String title) throws MenuInvException {
+    public TemplatePage createTemplatePage(String name, String title) throws MenuInvException {
         return createTemplatePage(name, title, InvType.Chest);
     }
 
     @Override
-    public ITemplatePage createTemplatePage(String name, String title, int height) throws MenuInvException {
+    public TemplatePage createTemplatePage(String name, String title, int height) throws MenuInvException {
         return createTemplatePage(name, title, InvType.Chest, height);
     }
 
     @Override
-    public ITemplatePage createTemplatePage(String name, String title, InvType type) throws MenuInvException {
+    public TemplatePage createTemplatePage(String name, String title, InvType type) throws MenuInvException {
         return createTemplatePage(name, title, type, type.getMaxHeight());
     }
 
     @Override
-    public ITemplatePage createTemplatePage(String name, String title, InvType type, int height) throws MenuInvException {
-        ITemplatePage tmp = this.pages.get(name);
+    public TemplatePage createTemplatePage(String name, String title, InvType type, int height) throws MenuInvException {
+        TemplatePage tmp = this.pages.get(name);
         if (tmp != null) {
             throw new MenuInvException("Страница '" + name + "' уже создана!");
         }
@@ -62,7 +62,7 @@ public class PluginTemplatePages implements IPluginTemplatePages {
             newHeight = type.getMaxHeight();
         }
 
-        TemplatePage newPage = new TemplatePage(name, title, type, newHeight);
+        TemplatePageImpl newPage = new TemplatePageImpl(name, title, type, newHeight);
 
         this.pages.put(name, newPage);
 
