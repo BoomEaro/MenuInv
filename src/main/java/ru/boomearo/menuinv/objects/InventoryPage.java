@@ -6,11 +6,11 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 
 import org.bukkit.inventory.ItemStack;
+
 import ru.boomearo.menuinv.MenuInv;
-import ru.boomearo.menuinv.api.AbstractButtonHandler;
 import ru.boomearo.menuinv.api.InvType;
 
-import java.util.Arrays;
+import java.util.*;
 
 public class InventoryPage {
 
@@ -18,18 +18,22 @@ public class InventoryPage {
     private final InvType type;
     private final String title;
 
-    private final InventoryElements elements;
+    private final Map<String, ListedIconItems> listedIcons;
+
+    private final Map<Integer, ItemIcon> activeIcons;
 
     private final Inventory inventory;
 
     private final Player player;
 
-    public InventoryPage(String name, InvType type, String title, int height, InventoryElements elements, Player player) {
+    public InventoryPage(String name, InvType type, String title, int height, Map<Integer, ItemIcon> iconsPosition, Map<String, ListedIconItems> listedIcons, Player player) {
         this.name = name;
         this.type = type;
         this.title = title;
-        this.elements = elements;
+        this.listedIcons = listedIcons;
         this.player = player;
+
+        this.activeIcons = new HashMap<>(iconsPosition);
 
         if (this.type == InvType.Chest) {
             this.inventory = Bukkit.createInventory(new MenuInvHolder(this), height * this.type.getMaxWidth(), this.title);
@@ -52,20 +56,29 @@ public class InventoryPage {
         return this.title;
     }
 
+    public Player getPlayer() {
+        return this.player;
+    }
+
+    public ListedIconItems getListedIconsItems(String name) {
+        return this.listedIcons.get(name);
+    }
+
+    protected Map<Integer, ItemIcon> getActiveIcons() {
+        return this.activeIcons;
+    }
+
     public Inventory getInventory() {
         return this.inventory;
     }
 
     public void handleInventoryClick(int slot, ClickType type) {
-        ItemIcon ii = this.elements.getItemIcon(slot);
+        ItemIcon ii = this.activeIcons.get(slot);
         if (ii != null) {
 
             ii.getHandler().handleClick(this, this.player, type);
-            return;
         }
-
     }
-
 
     public void update() {
         //long start = System.nanoTime();
@@ -74,34 +87,21 @@ public class InventoryPage {
 
         //MenuInv.getInstance().getLogger().info("test " + (end - start));
     }
-
-    public void update(boolean force) {
-        update(false, force);
-    }
-
     //TODO Я хз, нужно ли оптимизировать, так как вызывается обновление каждый тик.
     //TODO По замерам вроде вообще проблем нет
-    public void update(boolean clean, boolean force) {
+    public void update(boolean force) {
 
-        ItemStack[] array;
+        ItemStack[] array = new ItemStack[this.inventory.getSize()];
+        Arrays.fill(array, null);
 
-        if (clean) {
-            array = new ItemStack[this.inventory.getSize()];
-            Arrays.fill(array, null);
-        }
-        else {
-            //TODO А точно нужно копировать массив? Я его сейчас просто переиспользую а затем в конце заново устанавливаю..
-            //TODO Если конечно баккит каждый раз не создает новый..
-            array = this.inventory.getContents();
+        for (ListedIconItems lii : this.listedIcons.values()) {
+            lii.updateActiveIcons(this, force);
         }
 
-        for (ItemIcon ii : this.elements.getAllItemIcon()) {
-            AbstractButtonHandler handler = ii.getHandler();
+        //MenuInv.getInstance().getLogger().info("test " + this.activeIcons.toString());
 
-            if (((System.currentTimeMillis() - ii.getUpdateHandlerCooldown()) > (handler.getUpdateTime() * 50)) || force) {
-                ii.resetUpdateHandlerCooldown();
-                array[ii.getPosition()] = ii.getHandler().update(this, this.player);
-            }
+        for (ItemIcon ii : this.activeIcons.values()) {
+            array[ii.getPosition()] = ii.getItemStack(this, force);
         }
 
         this.inventory.setContents(array);

@@ -18,9 +18,7 @@ import ru.boomearo.menuinv.api.InvType;
 import ru.boomearo.menuinv.exceptions.MenuInvException;
 import ru.boomearo.menuinv.objects.InventoryPage;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class TestMenu {
@@ -36,7 +34,7 @@ public class TestMenu {
         PluginTemplatePages pages = inv.registerPages(inv);
 
         {
-            TemplatePage page = pages.createTemplatePage("test", "Привет", 4);
+            TemplatePage page = pages.createTemplatePage("test", "Привет", 6);
 
             page.addButton(1, new AbstractButtonHandler() {
 
@@ -56,21 +54,47 @@ public class TestMenu {
                 }
             });
 
-            page.addListedButton("test", 1, 1, 2, 2, (consume, player) -> {
-                List<AbstractButtonHandler> tmp = new ArrayList<>();
-                for (int i = 1; i < 10; i++) {
-                    int t = i;
+            page.addButton(7, new AbstractButtonHandler() {
 
+                @Override
+                public void click(InventoryPage page, Player player, ClickType type) {
+                    page.getListedIconsItems("test").previouslyPage();
+                    page.update(true);
+                }
+
+                @Override
+                public ItemStack update(InventoryPage consume, Player player) {
+                    return new ItemStack(Material.PAPER, 1);
+                }
+            });
+            page.addButton(8, new AbstractButtonHandler() {
+
+                @Override
+                public void click(InventoryPage page, Player player, ClickType type) {
+                    page.getListedIconsItems("test").nextPage();
+                    page.update(true);
+                }
+
+                @Override
+                public ItemStack update(InventoryPage consume, Player player) {
+                    return new ItemStack(Material.PAPER, 1);
+                }
+            });
+
+            page.addListedButton("test", 2, 2, 5, 4, (consume, player) -> {
+                List<AbstractButtonHandler> tmp = new ArrayList<>();
+                for (int i = 1; i <= 64; i++) {
+                    int f = i;
                     tmp.add(new AbstractButtonHandler() {
 
                         @Override
-                        public void click(InventoryPage page1, Player player, ClickType type) {
-
+                        public void click(InventoryPage page, Player player, ClickType type) {
+                            player.sendMessage("Вот так вот: " + f);
                         }
 
                         @Override
                         public ItemStack update(InventoryPage consume, Player player) {
-                            return new ItemStack(Material.STONE, t);
+                            return new ItemStack(Material.STONE, f);
                         }
 
                     });
@@ -147,28 +171,6 @@ public class TestMenu {
                     item.setItemMeta(meta);
                     return item;
                 }
-            });
-
-            page.addListedButton("test", 1, 1, 2, 2, (consume, player) -> {
-                List<AbstractButtonHandler> tmp = new ArrayList<>();
-                for (int i = 1; i < 10; i++) {
-                    int t = i;
-
-                    tmp.add(new AbstractButtonHandler() {
-
-                        @Override
-                        public void click(InventoryPage page1, Player player, ClickType type) {
-
-                        }
-
-                        @Override
-                        public ItemStack update(InventoryPage consume, Player player) {
-                            return new ItemStack(Material.STONE, t);
-                        }
-
-                    });
-                }
-                return tmp;
             });
         }
     }

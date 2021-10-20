@@ -105,7 +105,7 @@ public final class MenuInv extends JavaPlugin {
             try {
                 //TODO
                 InventoryPage newPage = templatePage.createNewInventoryPage(player);
-                newPage.update(true, true);
+                newPage.update(true);
 
                 player.openInventory(newPage.getInventory());
                 //TODO добавить в this.menu

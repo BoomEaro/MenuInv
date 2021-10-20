@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Представляет обычную кнопку или нажимаемый объект
+ * Представляет обработчик нажатий на кнопку
  */
 public abstract class AbstractButtonHandler implements Updateable<ItemStack, InventoryPage> {
 

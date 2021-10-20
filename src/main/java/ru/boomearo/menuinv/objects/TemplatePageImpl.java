@@ -1,10 +1,7 @@
 package ru.boomearo.menuinv.objects;
 
 import org.bukkit.entity.Player;
-import ru.boomearo.menuinv.api.AbstractButtonHandler;
-import ru.boomearo.menuinv.api.ListedButtonHandler;
-import ru.boomearo.menuinv.api.TemplatePage;
-import ru.boomearo.menuinv.api.InvType;
+import ru.boomearo.menuinv.api.*;
 import ru.boomearo.menuinv.exceptions.MenuInvException;
 
 import java.util.HashMap;
@@ -19,6 +16,7 @@ public class TemplatePageImpl implements TemplatePage {
     private final int height;
 
     private final Map<Integer, TemplateItemIcon> iconsPosition = new HashMap<>();
+    private final Map<String, TemplateListedIcons> listedIcons = new HashMap<>();
 
     public TemplatePageImpl(String name, String title, InvType type, int height) {
         this.name = name;
@@ -48,23 +46,33 @@ public class TemplatePageImpl implements TemplatePage {
         for (TemplateItemIcon tii : this.iconsPosition.values()) {
             itemIcons.put(tii.getPosition(), new ItemIcon(tii.getPosition(), tii.getHandler()));
         }
-        InventoryElements newElements = new InventoryElements(itemIcons);
-
-        return new InventoryPage(this.name, this.type, this.title, this.height, newElements, player);
-    }
-
-    @Override
-    public void addButton(int position, AbstractButtonHandler handler) throws MenuInvException {
-        TemplateItemIcon iconPosition = this.iconsPosition.get(position);
-        if (iconPosition != null) {
-            throw new MenuInvException("Кнопка на позиции '" + position + "' уже добавлена!");
+        Map<String, ListedIconItems> listedIcons = new HashMap<>();
+        for (TemplateListedIcons tli : this.listedIcons.values()) {
+            listedIcons.put(tli.getName(), new ListedIconItems(tli.getName(), tli.getX(), tli.getZ(), tli.getWidth(), tli.getHeight(), tli.getHandler()));
         }
 
-        this.iconsPosition.put(position, new TemplateItemIcon(position, handler));
+        return new InventoryPage(this.name, this.type, this.title, this.height, itemIcons, listedIcons, player);
     }
 
+    //TODO Добавить куча проверок на пересечение и прочее
     @Override
-    public void addListedButton(String name, int x, int z, int width, int height, ListedButtonHandler listedButton) {
+    public void addButton(int slot, AbstractButtonHandler handler) throws MenuInvException {
+        TemplateItemIcon tmp = this.iconsPosition.get(slot);
+        if (tmp != null) {
+            throw new MenuInvException("Кнопка на позиции '" + slot + "' уже добавлена!");
+        }
 
+        this.iconsPosition.put(slot, new TemplateItemIcon(slot, handler));
+    }
+
+    //TODO Добавить куча проверок на пересечение и прочее
+    @Override
+    public void addListedButton(String name, int x, int z, int width, int height, ListedIconsHandler handler) throws MenuInvException {
+        TemplateListedIcons tmp = this.listedIcons.get(name);
+        if (tmp != null) {
+            throw new MenuInvException("Список кнопок '" + name + "' уже добавлена!");
+        }
+
+        this.listedIcons.put(name, new TemplateListedIcons(name, x, z, width, height, handler));
     }
 }

@@ -1,6 +1,4 @@
-package ru.boomearo.menuinv.objects;
-
-import ru.boomearo.menuinv.api.AbstractButtonHandler;
+package ru.boomearo.menuinv.api;
 
 public class TemplateItemIcon {
 

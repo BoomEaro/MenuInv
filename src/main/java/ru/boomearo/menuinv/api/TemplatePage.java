@@ -4,8 +4,8 @@ import ru.boomearo.menuinv.exceptions.MenuInvException;
 
 public interface TemplatePage {
 
-    public void addButton(int position, AbstractButtonHandler handler) throws MenuInvException;
+    public void addButton(int slot, AbstractButtonHandler handler) throws MenuInvException;
 
-    public void addListedButton(String name, int x, int z, int width, int height, ListedButtonHandler listedButton) throws MenuInvException;
+    public void addListedButton(String name, int x, int z, int width, int height, ListedIconsHandler handler) throws MenuInvException;
 
 }
