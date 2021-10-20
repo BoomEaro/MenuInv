@@ -1,5 +1,6 @@
 package ru.boomearo.menuinv.objects;
 
+import ru.boomearo.menuinv.MenuInv;
 import ru.boomearo.menuinv.api.AbstractButtonHandler;
 import ru.boomearo.menuinv.api.InvType;
 import ru.boomearo.menuinv.api.ListedIconsHandler;
@@ -49,7 +50,7 @@ public class ListedIconItems extends TemplateListedIcons {
 
         this.page = next;
 
-        return this.page != newPage;
+        return this.page == newPage;
     }
 
     public boolean previouslyPage() {
@@ -61,7 +62,7 @@ public class ListedIconItems extends TemplateListedIcons {
         }
         this.page = back;
 
-        return this.page != newPage;
+        return this.page == newPage;
     }
 
     public boolean scrollPage(ScrollType type) {

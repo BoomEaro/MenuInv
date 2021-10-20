@@ -54,18 +54,17 @@ public class TestMenu {
 
             page.addListedButton("test", 2, 2, 5, 4, (consume, player) -> {
                 List<AbstractButtonHandler> tmp = new ArrayList<>();
-                for (int i = 1; i <= 61; i++) {
-                    int f = i;
+                for (Material mat : Material.values()) {
                     tmp.add(new AbstractButtonHandler() {
 
                         @Override
                         public void onClick(InventoryPage page, Player player, ClickType type) {
-                            player.sendMessage("Вот так вот: " + f);
+                            player.sendMessage("Вот так вот: " + mat);
                         }
 
                         @Override
                         public ItemStack onUpdate(InventoryPage consume, Player player) {
-                            return new ItemStack(Material.STONE, f);
+                            return new ItemStack(mat, 1);
                         }
 
                     });
@@ -77,7 +76,12 @@ public class TestMenu {
 
                 @Override
                 public ItemStack onVisible(int currentPage, int maxPage) {
-                    return new ItemStack(Material.PAPER, 1);
+                    ItemStack item = new ItemStack(Material.PAPER, 1);
+                    ItemMeta meta = item.getItemMeta();
+                    meta.setDisplayName("");
+                    meta.setLore(Arrays.asList("Назад (" + (currentPage - 1) + "/" + maxPage + ")"));
+                    item.setItemMeta(meta);
+                    return item;
                 }
 
                 @Override
@@ -91,7 +95,12 @@ public class TestMenu {
 
                 @Override
                 public ItemStack onVisible(int currentPage, int maxPage) {
-                    return new ItemStack(Material.PAPER, 1);
+                    ItemStack item = new ItemStack(Material.PAPER, 1);
+                    ItemMeta meta = item.getItemMeta();
+                    meta.setDisplayName("");
+                    meta.setLore(Arrays.asList("Вперед (" + (currentPage + 1) + "/" + maxPage + ")"));
+                    item.setItemMeta(meta);
+                    return item;
                 }
 
                 @Override
