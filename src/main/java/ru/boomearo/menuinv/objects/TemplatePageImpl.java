@@ -79,9 +79,7 @@ public class TemplatePageImpl implements TemplatePage {
 
         TemplateListedIcons tli = new TemplateListedIcons(name, x, z, width, height, handler);
 
-        if (isWithinBorder(tli)) {
-            throw new MenuInvException("Список кнопок '" + name + "' выходит за пределы области страницы!");
-        }
+        checkBorder(tli);
 
         this.listedIcons.put(name, tli);
     }
@@ -150,12 +148,21 @@ public class TemplatePageImpl implements TemplatePage {
         this.iconsPosition.put(icon.getSlot(), icon);
     }
 
-    private boolean isWithinBorder(FramedIcons frame) {
-        int size = this.type.getMaxWidth() * this.height;
+    private void checkBorder(FramedIcons frame) throws MenuInvException {
 
-        MenuInv.getInstance().getLogger().info("test " + (frame.getFirstX() + frame.getWidth()) + " > " + this.type.getMaxWidth() + " | " + (frame.getFirstZ() + frame.getHeight()) + " > " + size);
+        MenuInv.getInstance().getLogger().info("test " + (frame.getFirstX() + frame.getWidth()) + " > " + this.type.getMaxWidth() + " | " + (frame.getFirstZ() + frame.getHeight()) + " > " + this.height);
 
-        return frame.getFirstX() < 0 || frame.getFirstZ() < 0 || frame.getFirstX() + frame.getWidth() > this.type.getMaxWidth() || frame.getFirstZ() + frame.getHeight() > size;
+        if (frame.getFirstX() < 0 || frame.getFirstZ() < 0) {
+            throw new MenuInvException("Список кнопок '" + frame.getName() + "' вышел за рамки области имея отрицательное значение координат. (x: " + frame.getFirstX() + " z: " + frame.getFirstZ());
+        }
+
+        if (frame.getFirstX() + frame.getWidth() > this.type.getMaxWidth()) {
+            throw new MenuInvException("Список кнопок '" + frame.getName() + "' вышел за рамки максимального размера области (x: " + (frame.getFirstX() + frame.getWidth()) + " > width: " + this.type.getMaxWidth());
+        }
+
+        if (frame.getFirstZ() + frame.getHeight() > this.height) {
+            throw new MenuInvException("Список кнопок '" + frame.getName() + "' вышел за рамки максимального размера области (z: " + (frame.getFirstZ() + frame.getHeight()) + " > height: " + this.height);
+        }
     }
 
 
