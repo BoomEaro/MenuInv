@@ -1,7 +1,6 @@
 package ru.boomearo.menuinv.objects;
 
 import org.bukkit.inventory.ItemStack;
-import ru.boomearo.menuinv.MenuInv;
 import ru.boomearo.menuinv.api.AbstractButtonHandler;
 import ru.boomearo.menuinv.api.TemplateItemIcon;
 
@@ -20,7 +19,7 @@ public class ItemIcon extends TemplateItemIcon {
         if (((System.currentTimeMillis() - this.updateHandlerCooldown) > (handler.getUpdateTime() * 50)) || force) {
             this.updateHandlerCooldown = System.currentTimeMillis();
 
-            ItemStack item = handler.update(page, page.getPlayer());
+            ItemStack item = handler.onUpdate(page, page.getPlayer());
 
             this.cache = item;
 

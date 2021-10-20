@@ -10,7 +10,7 @@ public interface Updateable<T, C> {
     /**
      * @return новый объект для которого применяется обновление
      */
-    public T update(C consume, Player player);
+    public T onUpdate(C consume, Player player);
 
     /**
      * @return время для обновления метода update. По умолчанию значение равно 20 тиков, то есть одна секунда. (1 тик = 50 мс)

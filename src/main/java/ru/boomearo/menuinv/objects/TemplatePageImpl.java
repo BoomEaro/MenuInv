@@ -1,6 +1,8 @@
 package ru.boomearo.menuinv.objects;
 
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
+import org.bukkit.inventory.ItemStack;
 import ru.boomearo.menuinv.api.*;
 import ru.boomearo.menuinv.exceptions.MenuInvException;
 
@@ -74,5 +76,56 @@ public class TemplatePageImpl implements TemplatePage {
         }
 
         this.listedIcons.put(name, new TemplateListedIcons(name, x, z, width, height, handler));
+    }
+
+    //TODO Добавить куча проверок на пересечение и прочее
+    @Override
+    public void addScrollButton(int slot, String listedButton, ListedIconItems.ScrollType type, ScrollHandler handler) throws MenuInvException {
+        TemplateItemIcon tmp = this.iconsPosition.get(slot);
+        if (tmp != null) {
+            throw new MenuInvException("Кнопка на позиции '" + slot + "' уже добавлена!");
+        }
+
+        TemplateListedIcons tli = this.listedIcons.get(listedButton);
+        if (tli == null) {
+            throw new MenuInvException("Список кнопок '" + listedButton + "' не найден!");
+        }
+
+        TemplateItemIcon icon = new TemplateItemIcon(slot, new AbstractButtonHandler() {
+
+            @Override
+            public void onClick(InventoryPage page, Player player, ClickType clickType) {
+                boolean change = page.getListedIconsItems(listedButton).scrollPage(type);
+                if (change) {
+                    page.update(true);
+                }
+            }
+
+            @Override
+            public ItemStack onUpdate(InventoryPage page, Player player) {
+                ListedIconItems lii = page.getListedIconsItems(listedButton);
+
+                if (type == ListedIconItems.ScrollType.NEXT) {
+                    if (lii.getCurrentPage() >= lii.getMaxPage()) {
+                        return handler.onHide(lii.getCurrentPage(), lii.getMaxPage());
+                    }
+                    else {
+                        return handler.onVisible(lii.getCurrentPage(), lii.getMaxPage());
+                    }
+                }
+                else if (type == ListedIconItems.ScrollType.PREVIOUSLY) {
+                    if (lii.getCurrentPage() <= 1) {
+                        return handler.onHide(lii.getCurrentPage(), lii.getMaxPage());
+                    }
+                    else {
+                        return handler.onVisible(lii.getCurrentPage(), lii.getMaxPage());
+                    }
+                }
+                return null;
+            }
+
+        });
+
+        this.iconsPosition.put(slot, icon);
     }
 }

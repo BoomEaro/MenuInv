@@ -6,7 +6,6 @@ import ru.boomearo.menuinv.api.ListedIconsHandler;
 import ru.boomearo.menuinv.api.TemplateListedIcons;
 
 import java.util.List;
-import java.util.Map;
 
 public class ListedIconItems extends TemplateListedIcons {
 
@@ -40,35 +39,44 @@ public class ListedIconItems extends TemplateListedIcons {
         return this.maxPage;
     }
 
-    public void nextPage() {
-        int next = this.page + 1;
+    public boolean nextPage() {
+        int newPage = this.page + 1;
+
+        int next = newPage;
         if (next > this.maxPage) {
             next = this.maxPage;
         }
 
         this.page = next;
+
+        return this.page != newPage;
     }
 
-    public void previouslyPage() {
-        int back = this.page - 1;
+    public boolean previouslyPage() {
+        int newPage = this.page - 1;
+
+        int back = newPage;
         if (back <= 0) {
             back = 1;
         }
         this.page = back;
+
+        return this.page != newPage;
     }
 
-    public void scrollPage(ScrollType type) {
+    public boolean scrollPage(ScrollType type) {
         if (type == ScrollType.NEXT) {
-            nextPage();
+            return nextPage();
         }
         else if (type == ScrollType.PREVIOUSLY) {
-            previouslyPage();
+            return previouslyPage();
         }
+        return false;
     }
 
     public void updateActiveIcons(InventoryPage page, boolean force) {
         ListedIconsHandler handler = getHandler();
-        List<AbstractButtonHandler> handlers = getHandler().update(page, page.getPlayer());
+        List<AbstractButtonHandler> handlers = getHandler().onUpdate(page, page.getPlayer());
 
         if (((System.currentTimeMillis() - this.updateHandlerCooldown) > (handler.getUpdateTime() * 50)) || force) {
             this.updateHandlerCooldown = System.currentTimeMillis();
@@ -83,12 +91,15 @@ public class ListedIconItems extends TemplateListedIcons {
 
             int pageLimit = (getWidth() * getHeight());
 
+            this.maxPage = maxSize / pageLimit + (maxSize % pageLimit > 0 ? 1 : 0);
+
             int offSet = (currentPage - 1) * pageLimit;
             if (offSet > maxSize) {
                 offSet = maxSize;
-            }
 
-            this.maxPage = maxSize / pageLimit + (maxSize % pageLimit > 0 ? 1 : 0);
+                //TODO возможно придется это как то исправить
+                //this.page = this.maxPage;
+            }
 
             int i = offSet;
             for (int z = 0; z < getHeight(); z++) {

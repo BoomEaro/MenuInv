@@ -18,7 +18,7 @@ public abstract class AbstractButtonHandler implements Updateable<ItemStack, Inv
     /**
      * Обработчик нажатия на кнопку. Для точного определения типа нажатия, используйте аргумент type
      */
-    public abstract void click(InventoryPage page, Player player, ClickType type);
+    public abstract void onClick(InventoryPage page, Player player, ClickType type);
 
     /**
      * @return задержка между выполнением метода click. По умолчанию 250 мс
@@ -31,7 +31,7 @@ public abstract class AbstractButtonHandler implements Updateable<ItemStack, Inv
         if (hasClicked(player.getName(), getClickTime())) {
             clickCd.put(player.getName(), System.currentTimeMillis());
 
-            click(page, player, type);
+            onClick(page, player, type);
         }
     }
 

@@ -11,12 +11,10 @@ import org.bukkit.inventory.ItemStack;
 
 import org.bukkit.inventory.meta.ItemMeta;
 import ru.boomearo.menuinv.MenuInv;
-import ru.boomearo.menuinv.api.AbstractButtonHandler;
-import ru.boomearo.menuinv.api.PluginTemplatePages;
-import ru.boomearo.menuinv.api.TemplatePage;
-import ru.boomearo.menuinv.api.InvType;
+import ru.boomearo.menuinv.api.*;
 import ru.boomearo.menuinv.exceptions.MenuInvException;
 import ru.boomearo.menuinv.objects.InventoryPage;
+import ru.boomearo.menuinv.objects.ListedIconItems;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -39,7 +37,7 @@ public class TestMenu {
             page.addButton(1, new AbstractButtonHandler() {
 
                 @Override
-                public void click(InventoryPage page, Player player, ClickType type) {
+                public void onClick(InventoryPage page, Player player, ClickType type) {
                     try {
                         inv.openMenu(inv, "test2", player);
                     }
@@ -49,57 +47,58 @@ public class TestMenu {
                 }
 
                 @Override
-                public ItemStack update(InventoryPage consume, Player player) {
+                public ItemStack onUpdate(InventoryPage consume, Player player) {
                     return new ItemStack(Material.BEDROCK, 1);
-                }
-            });
-
-            page.addButton(7, new AbstractButtonHandler() {
-
-                @Override
-                public void click(InventoryPage page, Player player, ClickType type) {
-                    page.getListedIconsItems("test").previouslyPage();
-                    page.update(true);
-                }
-
-                @Override
-                public ItemStack update(InventoryPage consume, Player player) {
-                    return new ItemStack(Material.PAPER, 1);
-                }
-            });
-            page.addButton(8, new AbstractButtonHandler() {
-
-                @Override
-                public void click(InventoryPage page, Player player, ClickType type) {
-                    page.getListedIconsItems("test").nextPage();
-                    page.update(true);
-                }
-
-                @Override
-                public ItemStack update(InventoryPage consume, Player player) {
-                    return new ItemStack(Material.PAPER, 1);
                 }
             });
 
             page.addListedButton("test", 2, 2, 5, 4, (consume, player) -> {
                 List<AbstractButtonHandler> tmp = new ArrayList<>();
-                for (int i = 1; i <= 64; i++) {
+                for (int i = 1; i <= 61; i++) {
                     int f = i;
                     tmp.add(new AbstractButtonHandler() {
 
                         @Override
-                        public void click(InventoryPage page, Player player, ClickType type) {
+                        public void onClick(InventoryPage page, Player player, ClickType type) {
                             player.sendMessage("Вот так вот: " + f);
                         }
 
                         @Override
-                        public ItemStack update(InventoryPage consume, Player player) {
+                        public ItemStack onUpdate(InventoryPage consume, Player player) {
                             return new ItemStack(Material.STONE, f);
                         }
 
                     });
                 }
                 return tmp;
+            });
+
+            page.addScrollButton(7, "test", ListedIconItems.ScrollType.PREVIOUSLY, new ScrollHandler() {
+
+                @Override
+                public ItemStack onVisible(int currentPage, int maxPage) {
+                    return new ItemStack(Material.PAPER, 1);
+                }
+
+                @Override
+                public ItemStack onHide(int currentPage, int maxPage) {
+                    return null;
+                }
+
+            });
+
+            page.addScrollButton(8, "test", ListedIconItems.ScrollType.NEXT, new ScrollHandler() {
+
+                @Override
+                public ItemStack onVisible(int currentPage, int maxPage) {
+                    return new ItemStack(Material.PAPER, 1);
+                }
+
+                @Override
+                public ItemStack onHide(int currentPage, int maxPage) {
+                    return null;
+                }
+
             });
         }
         {
@@ -108,7 +107,7 @@ public class TestMenu {
             page.addButton(0, new AbstractButtonHandler() {
 
                 @Override
-                public void click(InventoryPage page, Player player, ClickType type) {
+                public void onClick(InventoryPage page, Player player, ClickType type) {
                     try {
                         inv.openMenu(inv, "test", player);
                     }
@@ -118,7 +117,7 @@ public class TestMenu {
                 }
 
                 @Override
-                public ItemStack update(InventoryPage consume, Player player) {
+                public ItemStack onUpdate(InventoryPage consume, Player player) {
                     ItemStack item = new ItemStack(Material.values()[ThreadLocalRandom.current().nextInt(Material.values().length)], 1);
                     ItemMeta meta = item.getItemMeta();
                     meta.setDisplayName("Привет тест!");
@@ -136,12 +135,12 @@ public class TestMenu {
             page.addButton(1, new AbstractButtonHandler() {
 
                 @Override
-                public void click(InventoryPage page, Player player, ClickType type) {
+                public void onClick(InventoryPage page, Player player, ClickType type) {
 
                 }
 
                 @Override
-                public ItemStack update(InventoryPage consume, Player player) {
+                public ItemStack onUpdate(InventoryPage consume, Player player) {
                     ItemStack item = new ItemStack(Material.values()[ThreadLocalRandom.current().nextInt(Material.values().length)], 1);
                     ItemMeta meta = item.getItemMeta();
                     meta.setDisplayName("Привет тест2!");
@@ -158,12 +157,12 @@ public class TestMenu {
             page.addButton(4, new AbstractButtonHandler() {
 
                 @Override
-                public void click(InventoryPage page, Player player, ClickType type) {
+                public void onClick(InventoryPage page, Player player, ClickType type) {
                     page.close();
                 }
 
                 @Override
-                public ItemStack update(InventoryPage consume, Player player) {
+                public ItemStack onUpdate(InventoryPage consume, Player player) {
                     ItemStack item = new ItemStack(Material.BARRIER, 1);
                     ItemMeta meta = item.getItemMeta();
                     meta.setDisplayName("Закрыть");
