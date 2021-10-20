@@ -14,7 +14,7 @@ import ru.boomearo.menuinv.MenuInv;
 import ru.boomearo.menuinv.api.*;
 import ru.boomearo.menuinv.exceptions.MenuInvException;
 import ru.boomearo.menuinv.objects.InventoryPage;
-import ru.boomearo.menuinv.objects.ListedIconItems;
+import ru.boomearo.menuinv.api.frames.ListedIconItems;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;

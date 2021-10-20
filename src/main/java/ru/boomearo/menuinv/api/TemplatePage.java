@@ -1,7 +1,7 @@
 package ru.boomearo.menuinv.api;
 
 import ru.boomearo.menuinv.exceptions.MenuInvException;
-import ru.boomearo.menuinv.objects.ListedIconItems;
+import ru.boomearo.menuinv.api.frames.ListedIconItems;
 
 public interface TemplatePage {
 

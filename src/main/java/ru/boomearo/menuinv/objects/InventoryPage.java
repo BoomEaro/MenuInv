@@ -9,6 +9,7 @@ import org.bukkit.inventory.ItemStack;
 
 import ru.boomearo.menuinv.MenuInv;
 import ru.boomearo.menuinv.api.InvType;
+import ru.boomearo.menuinv.api.frames.ListedIconItems;
 
 import java.util.*;
 
@@ -44,7 +45,7 @@ public class InventoryPage {
         Arrays.fill(this.activeIcons, null);
 
         for (ItemIcon ii : iconsPosition.values()) {
-            this.activeIcons[ii.getPosition()] = ii;
+            this.activeIcons[ii.getSlot()] = ii;
         }
     }
 
@@ -68,7 +69,7 @@ public class InventoryPage {
         return this.listedIcons.get(name);
     }
 
-    protected ItemIcon[] getActiveIcons() {
+    public ItemIcon[] getUnsafeActiveIcons() {
         return this.activeIcons;
     }
 
@@ -109,7 +110,7 @@ public class InventoryPage {
                 continue;
             }
 
-            array[ii.getPosition()] = ii.getItemStack(this, force);
+            array[ii.getSlot()] = ii.getItemStack(this, force);
         }
 
         this.inventory.setContents(array);

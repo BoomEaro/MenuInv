@@ -3,7 +3,11 @@ package ru.boomearo.menuinv.objects;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
+import ru.boomearo.menuinv.MenuInv;
 import ru.boomearo.menuinv.api.*;
+import ru.boomearo.menuinv.api.frames.FramedIcons;
+import ru.boomearo.menuinv.api.frames.ListedIconItems;
+import ru.boomearo.menuinv.api.frames.TemplateListedIcons;
 import ru.boomearo.menuinv.exceptions.MenuInvException;
 
 import java.util.HashMap;
@@ -46,17 +50,16 @@ public class TemplatePageImpl implements TemplatePage {
     public InventoryPage createNewInventoryPage(Player player) {
         Map<Integer, ItemIcon> itemIcons = new HashMap<>();
         for (TemplateItemIcon tii : this.iconsPosition.values()) {
-            itemIcons.put(tii.getPosition(), new ItemIcon(tii.getPosition(), tii.getHandler()));
+            itemIcons.put(tii.getSlot(), new ItemIcon(tii.getSlot(), tii.getHandler()));
         }
         Map<String, ListedIconItems> listedIcons = new HashMap<>();
         for (TemplateListedIcons tli : this.listedIcons.values()) {
-            listedIcons.put(tli.getName(), new ListedIconItems(tli.getName(), tli.getX(), tli.getZ(), tli.getWidth(), tli.getHeight(), tli.getHandler()));
+            listedIcons.put(tli.getName(), new ListedIconItems(tli.getName(), tli.getFirstX(), tli.getFirstZ(), tli.getWidth(), tli.getHeight(), tli.getHandler()));
         }
 
         return new InventoryPage(this.name, this.type, this.title, this.height, itemIcons, listedIcons, player);
     }
 
-    //TODO Добавить куча проверок на пересечение и прочее
     @Override
     public void addButton(int slot, AbstractButtonHandler handler) throws MenuInvException {
         TemplateItemIcon tmp = this.iconsPosition.get(slot);
@@ -64,10 +67,9 @@ public class TemplatePageImpl implements TemplatePage {
             throw new MenuInvException("Кнопка на позиции '" + slot + "' уже добавлена!");
         }
 
-        this.iconsPosition.put(slot, new TemplateItemIcon(slot, handler));
+        addButton(new TemplateItemIcon(slot, handler));
     }
 
-    //TODO Добавить куча проверок на пересечение и прочее
     @Override
     public void addListedButton(String name, int x, int z, int width, int height, ListedIconsHandler handler) throws MenuInvException {
         TemplateListedIcons tmp = this.listedIcons.get(name);
@@ -75,10 +77,15 @@ public class TemplatePageImpl implements TemplatePage {
             throw new MenuInvException("Список кнопок '" + name + "' уже добавлена!");
         }
 
-        this.listedIcons.put(name, new TemplateListedIcons(name, x, z, width, height, handler));
+        TemplateListedIcons tli = new TemplateListedIcons(name, x, z, width, height, handler);
+
+        if (isWithinBorder(tli)) {
+            throw new MenuInvException("Список кнопок '" + name + "' выходит за пределы области страницы!");
+        }
+
+        this.listedIcons.put(name, tli);
     }
 
-    //TODO Добавить куча проверок на пересечение и прочее
     @Override
     public void addScrollButton(int slot, String listedButton, ListedIconItems.ScrollType type, ScrollHandler handler) throws MenuInvException {
         TemplateItemIcon tmp = this.iconsPosition.get(slot);
@@ -126,6 +133,30 @@ public class TemplatePageImpl implements TemplatePage {
 
         });
 
-        this.iconsPosition.put(slot, icon);
+        addButton(icon);
     }
+
+    public void addButton(TemplateItemIcon icon) throws MenuInvException {
+        int slot = icon.getSlot();
+
+        if (slot < 0) {
+            throw new MenuInvException("Кнопка '" + icon.getSlot() + "' находится на позиции меньше нуля! (slot: " + slot + ")");
+        }
+        int maxSlot = this.type.getMaxWidth() - 1;
+        if (slot > maxSlot) {
+            throw new MenuInvException("Кнопка '" + icon.getSlot() + "' находится на позиции больше допустимой! (slot: " + slot + "/" + maxSlot + ")");
+        }
+
+        this.iconsPosition.put(icon.getSlot(), icon);
+    }
+
+    private boolean isWithinBorder(FramedIcons frame) {
+        int size = this.type.getMaxWidth() * this.height;
+
+        MenuInv.getInstance().getLogger().info("test " + (frame.getFirstX() + frame.getWidth()) + " > " + this.type.getMaxWidth() + " | " + (frame.getFirstZ() + frame.getHeight()) + " > " + size);
+
+        return frame.getFirstX() < 0 || frame.getFirstZ() < 0 || frame.getFirstX() + frame.getWidth() > this.type.getMaxWidth() || frame.getFirstZ() + frame.getHeight() > size;
+    }
+
+
 }

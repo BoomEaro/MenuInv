@@ -1,10 +1,10 @@
-package ru.boomearo.menuinv.objects;
+package ru.boomearo.menuinv.api.frames;
 
-import ru.boomearo.menuinv.MenuInv;
 import ru.boomearo.menuinv.api.AbstractButtonHandler;
 import ru.boomearo.menuinv.api.InvType;
 import ru.boomearo.menuinv.api.ListedIconsHandler;
-import ru.boomearo.menuinv.api.TemplateListedIcons;
+import ru.boomearo.menuinv.objects.InventoryPage;
+import ru.boomearo.menuinv.objects.ItemIcon;
 
 import java.util.List;
 
@@ -86,7 +86,7 @@ public class ListedIconItems extends TemplateListedIcons {
 
             InvType type = page.getType();
 
-            ItemIcon[] activeIcons = page.getActiveIcons();
+            ItemIcon[] activeIcons = page.getUnsafeActiveIcons();
 
             int currentPage = this.page;
 
@@ -106,7 +106,7 @@ public class ListedIconItems extends TemplateListedIcons {
             for (int z = 0; z < getHeight(); z++) {
                 for (int x = 0; x < getWidth(); x++) {
 
-                    int offset = getZ() * type.getMaxWidth() + getX() + x + (z * type.getMaxWidth());
+                    int offset = getFirstZ() * type.getMaxWidth() + getFirstX() + x + (z * type.getMaxWidth());
 
                     if (i > (maxSize - 1)) {
                         activeIcons[offset] = null;
