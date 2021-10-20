@@ -34,7 +34,7 @@ public class TestMenu {
         {
             TemplatePage page = pages.createTemplatePage("test", "Привет", 6);
 
-            page.addButton(1, new AbstractButtonHandler() {
+            page.addButton(1, () -> new AbstractButtonHandler() {
 
                 @Override
                 public void onClick(InventoryPage page, Player player, ClickType type) {
@@ -113,7 +113,7 @@ public class TestMenu {
         {
             TemplatePage page = pages.createTemplatePage("test2", "Привет2", InvType.Hopper);
 
-            page.addButton(0, new AbstractButtonHandler() {
+            page.addButton(0, () -> new AbstractButtonHandler() {
 
                 @Override
                 public void onClick(InventoryPage page, Player player, ClickType type) {
@@ -141,7 +141,7 @@ public class TestMenu {
                 }
 
             });
-            page.addButton(1, new AbstractButtonHandler() {
+            page.addButton(1, () -> new AbstractButtonHandler() {
 
                 @Override
                 public void onClick(InventoryPage page, Player player, ClickType type) {
@@ -163,7 +163,7 @@ public class TestMenu {
                     return 5;
                 }
             });
-            page.addButton(4, new AbstractButtonHandler() {
+            page.addButton(4, () -> new AbstractButtonHandler() {
 
                 @Override
                 public void onClick(InventoryPage page, Player player, ClickType type) {

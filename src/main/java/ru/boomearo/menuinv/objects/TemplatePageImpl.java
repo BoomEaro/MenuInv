@@ -50,7 +50,7 @@ public class TemplatePageImpl implements TemplatePage {
     public InventoryPage createNewInventoryPage(Player player) {
         Map<Integer, ItemIcon> itemIcons = new HashMap<>();
         for (TemplateItemIcon tii : this.iconsPosition.values()) {
-            itemIcons.put(tii.getSlot(), new ItemIcon(tii.getSlot(), tii.getHandler()));
+            itemIcons.put(tii.getSlot(), new ItemIcon(tii.getSlot(), tii.getFactory().create()));
         }
         Map<String, ListedIconItems> listedIcons = new HashMap<>();
         for (TemplateListedIcons tli : this.listedIcons.values()) {
@@ -61,13 +61,13 @@ public class TemplatePageImpl implements TemplatePage {
     }
 
     @Override
-    public void addButton(int slot, AbstractButtonHandler handler) throws MenuInvException {
+    public void addButton(int slot, ButtonHandlerFactory factory) throws MenuInvException {
         TemplateItemIcon tmp = this.iconsPosition.get(slot);
         if (tmp != null) {
             throw new MenuInvException("Кнопка на позиции '" + slot + "' уже добавлена!");
         }
 
-        addButton(new TemplateItemIcon(slot, handler));
+        addButton(new TemplateItemIcon(slot, factory));
     }
 
     @Override
@@ -96,7 +96,7 @@ public class TemplatePageImpl implements TemplatePage {
             throw new MenuInvException("Список кнопок '" + listedButton + "' не найден!");
         }
 
-        TemplateItemIcon icon = new TemplateItemIcon(slot, new AbstractButtonHandler() {
+        TemplateItemIcon icon = new TemplateItemIcon(slot, () -> new AbstractButtonHandler() {
 
             @Override
             public void onClick(InventoryPage page, Player player, ClickType clickType) {
@@ -150,7 +150,7 @@ public class TemplatePageImpl implements TemplatePage {
 
     private void checkBorder(FramedIcons frame) throws MenuInvException {
 
-        MenuInv.getInstance().getLogger().info("test " + (frame.getFirstX() + frame.getWidth()) + " > " + this.type.getMaxWidth() + " | " + (frame.getFirstZ() + frame.getHeight()) + " > " + this.height);
+        //MenuInv.getInstance().getLogger().info("test " + (frame.getFirstX() + frame.getWidth()) + " > " + this.type.getMaxWidth() + " | " + (frame.getFirstZ() + frame.getHeight()) + " > " + this.height);
 
         if (frame.getFirstX() < 0 || frame.getFirstZ() < 0) {
             throw new MenuInvException("Список кнопок '" + frame.getName() + "' вышел за рамки области имея отрицательное значение координат. (x: " + frame.getFirstX() + " z: " + frame.getFirstZ());
