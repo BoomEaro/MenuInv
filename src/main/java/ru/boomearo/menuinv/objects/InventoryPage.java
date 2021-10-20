@@ -20,7 +20,7 @@ public class InventoryPage {
 
     private final Map<String, ListedIconItems> listedIcons;
 
-    private final Map<Integer, ItemIcon> activeIcons;
+    private final ItemIcon[] activeIcons;
 
     private final Inventory inventory;
 
@@ -33,8 +33,6 @@ public class InventoryPage {
         this.listedIcons = listedIcons;
         this.player = player;
 
-        this.activeIcons = new HashMap<>(iconsPosition);
-
         if (this.type == InvType.Chest) {
             this.inventory = Bukkit.createInventory(new MenuInvHolder(this), height * this.type.getMaxWidth(), this.title);
         }
@@ -42,6 +40,12 @@ public class InventoryPage {
             this.inventory = Bukkit.createInventory(new MenuInvHolder(this), this.type.getInventoryType(), this.title);
         }
 
+        this.activeIcons = new ItemIcon[this.inventory.getSize()];
+        Arrays.fill(this.activeIcons, null);
+
+        for (ItemIcon ii : iconsPosition.values()) {
+            this.activeIcons[ii.getPosition()] = ii;
+        }
     }
 
     public String getName() {
@@ -64,7 +68,7 @@ public class InventoryPage {
         return this.listedIcons.get(name);
     }
 
-    protected Map<Integer, ItemIcon> getActiveIcons() {
+    protected ItemIcon[] getActiveIcons() {
         return this.activeIcons;
     }
 
@@ -73,7 +77,7 @@ public class InventoryPage {
     }
 
     public void handleInventoryClick(int slot, ClickType type) {
-        ItemIcon ii = this.activeIcons.get(slot);
+        ItemIcon ii = this.activeIcons[slot];
         if (ii != null) {
 
             ii.getHandler().handleClick(this, this.player, type);
@@ -100,7 +104,11 @@ public class InventoryPage {
 
         //MenuInv.getInstance().getLogger().info("test " + this.activeIcons.toString());
 
-        for (ItemIcon ii : this.activeIcons.values()) {
+        for (ItemIcon ii : this.activeIcons) {
+            if (ii == null) {
+                continue;
+            }
+
             array[ii.getPosition()] = ii.getItemStack(this, force);
         }
 

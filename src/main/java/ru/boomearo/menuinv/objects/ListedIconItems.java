@@ -77,7 +77,7 @@ public class ListedIconItems extends TemplateListedIcons {
 
             InvType type = page.getType();
 
-            Map<Integer, ItemIcon> activeIcons = page.getActiveIcons();
+            ItemIcon[] activeIcons = page.getActiveIcons();
 
             int currentPage = this.page;
 
@@ -97,10 +97,10 @@ public class ListedIconItems extends TemplateListedIcons {
                     int offset = getZ() * type.getMaxWidth() + getX() + x + (z * type.getMaxWidth());
 
                     if (i > (maxSize - 1)) {
-                        activeIcons.remove(offset);
+                        activeIcons[offset] = null;
                     }
                     else {
-                        activeIcons.put(offset, new ItemIcon(offset, handlers.get(i)));
+                        activeIcons[offset] = new ItemIcon(offset, handlers.get(i));
                     }
 
                     i++;
