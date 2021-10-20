@@ -77,45 +77,54 @@ public class ListedIconItems extends TemplateListedIcons {
 
     public void updateActiveIcons(InventoryPage page, boolean force) {
         ListedIconsHandler handler = getHandler();
-        List<AbstractButtonHandler> handlers = getHandler().onUpdate(page, page.getPlayer());
 
         if (((System.currentTimeMillis() - this.updateHandlerCooldown) > (handler.getUpdateTime() * 50)) || force) {
             this.updateHandlerCooldown = System.currentTimeMillis();
 
-            int maxSize = handlers.size();
-
-            InvType type = page.getType();
-
-            ItemIcon[] activeIcons = page.getUnsafeActiveIcons();
-
-            int currentPage = this.page;
-
-            int pageLimit = (getWidth() * getHeight());
-
-            this.maxPage = maxSize / pageLimit + (maxSize % pageLimit > 0 ? 1 : 0);
-
-            int offSet = (currentPage - 1) * pageLimit;
-            if (offSet > maxSize) {
-                offSet = maxSize;
-
-                //TODO возможно придется это как то исправить
-                //this.page = this.maxPage;
+            List<AbstractButtonHandler> handlers = null;
+            try {
+                handlers = getHandler().onUpdate(page, page.getPlayer());
+            }
+            catch (Exception e) {
+                e.printStackTrace();
             }
 
-            int i = offSet;
-            for (int z = 0; z < getHeight(); z++) {
-                for (int x = 0; x < getWidth(); x++) {
+            if (handlers != null) {
+                int maxSize = handlers.size();
 
-                    int offset = getFirstZ() * type.getMaxWidth() + getFirstX() + x + (z * type.getMaxWidth());
+                InvType type = page.getType();
 
-                    if (i > (maxSize - 1)) {
-                        activeIcons[offset] = null;
+                ItemIcon[] activeIcons = page.getUnsafeActiveIcons();
+
+                int currentPage = this.page;
+
+                int pageLimit = (getWidth() * getHeight());
+
+                this.maxPage = maxSize / pageLimit + (maxSize % pageLimit > 0 ? 1 : 0);
+
+                int offSet = (currentPage - 1) * pageLimit;
+                if (offSet > maxSize) {
+                    offSet = maxSize;
+
+                    //TODO возможно придется это как то исправить
+                    //this.page = this.maxPage;
+                }
+
+                int i = offSet;
+                for (int z = 0; z < getHeight(); z++) {
+                    for (int x = 0; x < getWidth(); x++) {
+
+                        int offset = getFirstZ() * type.getMaxWidth() + getFirstX() + x + (z * type.getMaxWidth());
+
+                        if (i > (maxSize - 1)) {
+                            activeIcons[offset] = null;
+                        }
+                        else {
+                            activeIcons[offset] = new ItemIcon(offset, handlers.get(i));
+                        }
+
+                        i++;
                     }
-                    else {
-                        activeIcons[offset] = new ItemIcon(offset, handlers.get(i));
-                    }
-
-                    i++;
                 }
             }
         }

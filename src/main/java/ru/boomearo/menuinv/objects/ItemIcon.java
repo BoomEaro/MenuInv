@@ -19,7 +19,13 @@ public class ItemIcon extends TemplateItemIcon {
         if (((System.currentTimeMillis() - this.updateHandlerCooldown) > (handler.getUpdateTime() * 50)) || force) {
             this.updateHandlerCooldown = System.currentTimeMillis();
 
-            ItemStack item = handler.onUpdate(page, page.getPlayer());
+            ItemStack item = null;
+            try {
+                item = handler.onUpdate(page, page.getPlayer());
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
 
             this.cache = item;
 

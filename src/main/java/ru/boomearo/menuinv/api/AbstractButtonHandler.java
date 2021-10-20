@@ -31,7 +31,12 @@ public abstract class AbstractButtonHandler implements Updateable<ItemStack, Inv
         if (hasClicked(player.getName(), getClickTime())) {
             clickCd.put(player.getName(), System.currentTimeMillis());
 
-            onClick(page, player, type);
+            try {
+                onClick(page, player, type);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
