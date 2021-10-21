@@ -143,7 +143,7 @@ public class TestMenu {
             page.addScrollButton(8, "test", PagedItems.ScrollType.NEXT, new DefaultScrollHandlerFactory(PagedItems.ScrollType.NEXT));
         }
         {
-            TemplatePage page = pages.createTemplatePage("test2", "Привет2", InvType.HOPPER);
+            TemplatePage page = pages.createTemplatePage("test2", "Привет2", InvType.WORKBENCH);
 
             page.addButton(0, () -> new IconHandler() {
 
@@ -195,7 +195,7 @@ public class TestMenu {
                     return 5;
                 }
             });
-            page.addButton(4, () -> new IconHandler() {
+            page.addButton(9, () -> new IconHandler() {
 
                 @Override
                 public void onClick(InventoryPage page, Player player, ClickType type) {

@@ -18,7 +18,9 @@ public enum InvType {
     SMITHING(InventoryType.SMITHING, 3, 1),
     SMOKER(InventoryType.SMOKER, 3, 1),
     STONECUTTER(InventoryType.STONECUTTER, 2, 1),
-    WORKBENCH(InventoryType.WORKBENCH, 3, 3),
+    //Причина, по которой именно 10 в том, что иначе не получится засунуть предмет в результат..
+    //Жертвуя высотой, хоть как то можно решить эту проблему.
+    WORKBENCH(InventoryType.WORKBENCH, 10, 1),
     CHEST_9X1(InventoryType.CHEST, 9, 1),
     CHEST_9X2(InventoryType.CHEST, 9, 2),
     CHEST_9X3(InventoryType.CHEST, 9, 3),
