@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * Представляет обработчик нажатий на кнопку
  */
-public abstract class IconHandler implements Updateable<ItemStack, InventoryPage> {
+public abstract class IconHandler implements Updatable<ItemStack, InventoryPage> {
 
     private static final Map<String, Long> clickCd = new HashMap<>();
 

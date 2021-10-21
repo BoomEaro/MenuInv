@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 /**
  * Представляет обновляемый элемент
  */
-public interface Updateable<T, C> {
+public interface Updatable<T, C> {
 
     /**
      * @return новый объект для которого применяется обновление

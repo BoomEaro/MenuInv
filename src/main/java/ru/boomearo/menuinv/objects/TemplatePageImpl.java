@@ -71,7 +71,7 @@ public class TemplatePageImpl implements TemplatePage {
     }
 
     @Override
-    public void addListedButton(String name, int x, int z, int width, int height, FramedIconsHandlerFactory factory) throws MenuInvException {
+    public void addPagedItems(String name, int x, int z, int width, int height, FramedIconsHandlerFactory factory) throws MenuInvException {
         FramedIconsTemplate tmp = this.pagedItems.get(name);
         if (tmp != null) {
             throw new MenuInvException("Список кнопок '" + name + "' уже добавлена!");

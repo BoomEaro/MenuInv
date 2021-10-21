@@ -52,7 +52,7 @@ public class TestMenu {
                 }
             });
 
-            page.addListedButton("test", 2, 2, 5, 4, () -> (consume, player) -> {
+            page.addPagedItems("test", 2, 2, 5, 4, () -> (consume, player) -> {
                 List<IconHandler> tmp = new ArrayList<>();
                 for (Material mat : Material.values()) {
                     tmp.add(new IconHandler() {
