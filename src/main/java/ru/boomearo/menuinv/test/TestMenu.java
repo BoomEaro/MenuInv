@@ -91,21 +91,45 @@ public class TestMenu {
                 }
             });
 
-            page.addPagedItems("test", 2, 2, 5, 4, () -> (pageInv, player) -> {
+            page.addPagedItems("test", 0, 2, 3, 3, () -> (pageInv, player) -> {
                 TestSession ts = (TestSession) pageInv.getSession();
 
                 List<IconHandler> tmp = new ArrayList<>();
-                for (ItemStack item : ts.getItems()) {
+                for (int i = 1; i <= new Random().nextInt(5000); i++) {
+                    int t = i;
                     tmp.add(new IconHandler() {
 
                         @Override
                         public void onClick(InventoryPage page, Player player, ClickType type) {
-                            player.sendMessage("Вот так вот: " + item);
+                            player.sendMessage("Вот так вот: " + t);
                         }
 
                         @Override
                         public ItemStack onUpdate(InventoryPage consume, Player player) {
-                            return item.clone();
+                            return new ItemStack(Material.DIAMOND, t);
+                        }
+
+                    });
+                }
+                return tmp;
+            });
+
+            page.addPagedItems("test2", 6, 2, 3, 3, () -> (pageInv, player) -> {
+                TestSession ts = (TestSession) pageInv.getSession();
+
+                List<IconHandler> tmp = new ArrayList<>();
+                for (int i = 1; i <= new Random().nextInt(20); i++) {
+                    int t = i;
+                    tmp.add(new IconHandler() {
+
+                        @Override
+                        public void onClick(InventoryPage page, Player player, ClickType type) {
+                            player.sendMessage("Вот так вот: " + t);
+                        }
+
+                        @Override
+                        public ItemStack onUpdate(InventoryPage consume, Player player) {
+                            return new ItemStack(Material.REDSTONE_ORE, t);
                         }
 
                     });

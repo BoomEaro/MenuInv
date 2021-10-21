@@ -16,6 +16,7 @@ import ru.boomearo.menuinv.objects.TemplatePageImpl;
 import ru.boomearo.menuinv.runnable.MenuUpdater;
 import ru.boomearo.menuinv.test.TestMenu;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,18 +32,25 @@ public final class MenuInv extends JavaPlugin {
     public void onEnable() {
         instance = this;
 
+        File configFile = new File(getDataFolder() + File.separator + "config.yml");
+        if (!configFile.exists()) {
+            getLogger().info("Конфиг не найден, создаю новый...");
+            saveDefaultConfig();
+        }
+
+        if (this.getConfig().getBoolean("debug")) {
+            try {
+                TestMenu.setupTest();
+                this.getLogger().warning("Активирован режим дебага!");
+            }
+            catch (MenuInvException e) {
+                e.printStackTrace();
+            }
+        }
+
         this.getServer().getPluginManager().registerEvents(new InventoryListener(), this);
 
         this.updater = new MenuUpdater();
-
-        //TODO TEST
-        try {
-            TestMenu.setupTest();
-        }
-        catch (MenuInvException e) {
-            e.printStackTrace();
-        }
-        //TODO
 
         this.getLogger().info("Плагин включен.");
     }
