@@ -14,7 +14,7 @@ import ru.boomearo.menuinv.MenuInv;
 import ru.boomearo.menuinv.api.*;
 import ru.boomearo.menuinv.api.scrolls.DefaultScrollHandlerFactory;
 import ru.boomearo.menuinv.exceptions.MenuInvException;
-import ru.boomearo.menuinv.objects.InventoryPage;
+import ru.boomearo.menuinv.objects.InventoryPageImpl;
 import ru.boomearo.menuinv.api.frames.inventory.PagedItems;
 
 import java.util.*;
@@ -26,7 +26,6 @@ public class TestMenu {
         setupMenu();
         registerEvents();
     }
-
 
     public static void setupMenu() throws MenuInvException {
         MenuInv inv = MenuInv.getInstance();

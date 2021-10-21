@@ -10,7 +10,7 @@ import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
-import ru.boomearo.menuinv.objects.InventoryPage;
+import ru.boomearo.menuinv.objects.InventoryPageImpl;
 import ru.boomearo.menuinv.objects.MenuInvHolder;
 
 public class InventoryListener implements Listener {
@@ -70,7 +70,7 @@ public class InventoryListener implements Listener {
 
         MenuInvHolder menuHolder = (MenuInvHolder) holder;
 
-        InventoryPage page = menuHolder.getPage();
+        InventoryPageImpl page = menuHolder.getPage();
 
         page.handleInventoryClick(e.getSlot(), e.getClick());
     }

@@ -20,7 +20,7 @@ public class ItemIcon extends SlotElement {
         return this.handler;
     }
 
-    public ItemStack getItemStack(InventoryPage page, boolean force) {
+    public ItemStack getItemStack(InventoryPageImpl page, boolean force) {
         IconHandler handler = this.handler;
 
         if (((System.currentTimeMillis() - this.updateHandlerCooldown) > (handler.getUpdateTime() * 50)) || force) {

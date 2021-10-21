@@ -9,11 +9,12 @@ import org.bukkit.inventory.ItemStack;
 
 import ru.boomearo.menuinv.MenuInv;
 import ru.boomearo.menuinv.api.InvType;
+import ru.boomearo.menuinv.api.InventoryPage;
 import ru.boomearo.menuinv.api.frames.inventory.PagedItems;
 
 import java.util.*;
 
-public class InventoryPage {
+public class InventoryPageImpl implements InventoryPage {
 
     private final String name;
     private final InvType type;
@@ -27,7 +28,7 @@ public class InventoryPage {
 
     private final Player player;
 
-    public InventoryPage(String name, InvType type, String title, int height, Map<Integer, ItemIcon> iconsPosition, Map<String, PagedItems> listedIcons, Player player) {
+    public InventoryPageImpl(String name, InvType type, String title, int height, Map<Integer, ItemIcon> iconsPosition, Map<String, PagedItems> listedIcons, Player player) {
         this.name = name;
         this.type = type;
         this.title = title;
@@ -49,22 +50,27 @@ public class InventoryPage {
         }
     }
 
+    @Override
     public String getName() {
         return this.name;
     }
 
+    @Override
     public InvType getType() {
         return this.type;
     }
 
+    @Override
     public String getTitle() {
         return this.title;
     }
 
+    @Override
     public Player getPlayer() {
         return this.player;
     }
 
+    @Override
     public PagedItems getListedIconsItems(String name) {
         return this.listedIcons.get(name);
     }
@@ -85,6 +91,7 @@ public class InventoryPage {
         }
     }
 
+    @Override
     public void update() {
         //long start = System.nanoTime();
         update(false);
@@ -94,6 +101,7 @@ public class InventoryPage {
     }
     //TODO Я хз, нужно ли оптимизировать, так как вызывается обновление каждый тик.
     //TODO По замерам вроде вообще проблем нет
+    @Override
     public void update(boolean force) {
 
         ItemStack[] array = new ItemStack[this.inventory.getSize()];
@@ -118,6 +126,7 @@ public class InventoryPage {
         this.player.updateInventory();
     }
 
+    @Override
     public void close() {
         Bukkit.getScheduler().runTask(MenuInv.getInstance(), this.player::closeInventory);
     }

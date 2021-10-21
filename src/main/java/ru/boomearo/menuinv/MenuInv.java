@@ -7,7 +7,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import ru.boomearo.menuinv.api.PluginTemplatePages;
 import ru.boomearo.menuinv.exceptions.MenuInvException;
 import ru.boomearo.menuinv.listeners.InventoryListener;
-import ru.boomearo.menuinv.objects.InventoryPage;
+import ru.boomearo.menuinv.objects.InventoryPageImpl;
 import ru.boomearo.menuinv.objects.PluginTemplatePagesImpl;
 import ru.boomearo.menuinv.objects.TemplatePageImpl;
 import ru.boomearo.menuinv.runnable.MenuUpdater;
@@ -104,7 +104,7 @@ public final class MenuInv extends JavaPlugin {
         Bukkit.getScheduler().runTask(this, () -> {
             try {
                 //TODO
-                InventoryPage newPage = templatePage.createNewInventoryPage(player);
+                InventoryPageImpl newPage = templatePage.createNewInventoryPage(player);
                 newPage.update(true);
 
                 player.openInventory(newPage.getInventory());

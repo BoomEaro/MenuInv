@@ -3,7 +3,7 @@ package ru.boomearo.menuinv.api.frames.inventory;
 import ru.boomearo.menuinv.api.IconHandler;
 import ru.boomearo.menuinv.api.InvType;
 import ru.boomearo.menuinv.api.FramedIconsHandler;
-import ru.boomearo.menuinv.objects.InventoryPage;
+import ru.boomearo.menuinv.objects.InventoryPageImpl;
 import ru.boomearo.menuinv.objects.ItemIcon;
 
 import java.util.List;
@@ -75,7 +75,7 @@ public class PagedItems extends FramedIcons {
         return false;
     }
 
-    public void updateActiveIcons(InventoryPage page, boolean force) {
+    public void updateActiveIcons(InventoryPageImpl page, boolean force) {
         FramedIconsHandler handler = getHandler();
 
         if (((System.currentTimeMillis() - this.updateHandlerCooldown) > (handler.getUpdateTime() * 50)) || force) {

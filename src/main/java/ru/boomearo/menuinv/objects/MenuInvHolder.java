@@ -5,9 +5,9 @@ import org.bukkit.inventory.InventoryHolder;
 
 public class MenuInvHolder implements InventoryHolder {
 
-    private final InventoryPage page;
+    private final InventoryPageImpl page;
 
-    public MenuInvHolder(InventoryPage page) {
+    public MenuInvHolder(InventoryPageImpl page) {
         this.page = page;
     }
 
@@ -16,7 +16,7 @@ public class MenuInvHolder implements InventoryHolder {
         return this.page.getInventory();
     }
 
-    public InventoryPage getPage() {
+    public InventoryPageImpl getPage() {
         return this.page;
     }
 
