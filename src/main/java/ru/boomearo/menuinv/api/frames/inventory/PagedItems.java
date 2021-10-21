@@ -1,5 +1,6 @@
 package ru.boomearo.menuinv.api.frames.inventory;
 
+import ru.boomearo.menuinv.MenuInv;
 import ru.boomearo.menuinv.api.IconHandler;
 import ru.boomearo.menuinv.api.InvType;
 import ru.boomearo.menuinv.api.FramedIconsHandler;
@@ -25,15 +26,16 @@ public class PagedItems extends FramedIcons {
     }
 
     public void setCurrentPage(int page) {
-        if (page <= 0) {
-            page = 1;
+        int nextPage = page;
+
+        if (nextPage > this.maxPage) {
+            nextPage = this.maxPage;
+        }
+        if (nextPage <= 0) {
+            nextPage = 1;
         }
 
-        if (page > this.maxPage) {
-            page = this.maxPage;
-        }
-
-        this.page = page;
+        this.page = nextPage;
     }
 
     public int getMaxPage() {
@@ -46,6 +48,9 @@ public class PagedItems extends FramedIcons {
         int next = newPage;
         if (next > this.maxPage) {
             next = this.maxPage;
+        }
+        if (next <= 0) {
+            next = 1;
         }
 
         this.page = next;
@@ -102,19 +107,26 @@ public class PagedItems extends FramedIcons {
 
                 this.maxPage = maxSize / pageLimit + (maxSize % pageLimit > 0 ? 1 : 0);
 
+                if (currentPage > this.maxPage) {
+                    currentPage = this.maxPage;
+                }
+                if (currentPage <= 0) {
+                    currentPage = 1;
+                }
+                this.page = currentPage;
+
                 int offSet = (currentPage - 1) * pageLimit;
                 if (offSet > maxSize) {
                     offSet = maxSize;
-
-                    //TODO возможно придется это как то исправить
-                    //this.page = this.maxPage;
                 }
 
                 int i = offSet;
+
                 for (int z = 0; z < getHeight(); z++) {
                     for (int x = 0; x < getWidth(); x++) {
 
                         int offset = getFirstZ() * type.getMaxWidth() + getFirstX() + x + (z * type.getMaxWidth());
+
 
                         if (i > (maxSize - 1)) {
                             activeIcons[offset] = null;

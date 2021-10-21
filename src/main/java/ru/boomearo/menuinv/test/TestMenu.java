@@ -14,7 +14,6 @@ import ru.boomearo.menuinv.MenuInv;
 import ru.boomearo.menuinv.api.*;
 import ru.boomearo.menuinv.api.scrolls.DefaultScrollHandlerFactory;
 import ru.boomearo.menuinv.exceptions.MenuInvException;
-import ru.boomearo.menuinv.objects.InventoryPageImpl;
 import ru.boomearo.menuinv.api.frames.inventory.PagedItems;
 
 import java.util.*;
@@ -39,7 +38,7 @@ public class TestMenu {
                 @Override
                 public void onClick(InventoryPage page, Player player, ClickType type) {
                     try {
-                        inv.openMenu(inv, "test2", player);
+                        inv.openMenu(inv, "test2", player, page.getSession());
                     }
                     catch (MenuInvException e) {
                         e.printStackTrace();
@@ -52,19 +51,61 @@ public class TestMenu {
                 }
             });
 
-            page.addPagedItems("test", 2, 2, 5, 4, () -> (consume, player) -> {
+            page.addButton(3, () -> new IconHandler() {
+
+                @Override
+                public void onClick(InventoryPage page, Player player, ClickType type) {
+                    TestSession ts = (TestSession) page.getSession();
+
+                    List<ItemStack> items = ts.getItems();
+                    if (items.isEmpty()) {
+                        return;
+                    }
+
+
+                    items.remove(items.size() - 1);
+
+                    page.update(true);
+                }
+
+                @Override
+                public ItemStack onUpdate(InventoryPage consume, Player player) {
+                    return new ItemStack(Material.REDSTONE_ORE, 1);
+                }
+            });
+
+            page.addButton(4, () -> new IconHandler() {
+
+                @Override
+                public void onClick(InventoryPage page, Player player, ClickType type) {
+                    TestSession ts = (TestSession) page.getSession();
+
+                    ts.getItems().add(new ItemStack(Material.DIAMOND, 1));
+
+                    page.update(true);
+                }
+
+                @Override
+                public ItemStack onUpdate(InventoryPage consume, Player player) {
+                    return new ItemStack(Material.EMERALD_BLOCK, 1);
+                }
+            });
+
+            page.addPagedItems("test", 2, 2, 5, 4, () -> (pageInv, player) -> {
+                TestSession ts = (TestSession) pageInv.getSession();
+
                 List<IconHandler> tmp = new ArrayList<>();
-                for (Material mat : Material.values()) {
+                for (ItemStack item : ts.getItems()) {
                     tmp.add(new IconHandler() {
 
                         @Override
                         public void onClick(InventoryPage page, Player player, ClickType type) {
-                            player.sendMessage("Вот так вот: " + mat);
+                            player.sendMessage("Вот так вот: " + item);
                         }
 
                         @Override
                         public ItemStack onUpdate(InventoryPage consume, Player player) {
-                            return new ItemStack(mat, 1);
+                            return item.clone();
                         }
 
                     });
@@ -84,7 +125,7 @@ public class TestMenu {
                 @Override
                 public void onClick(InventoryPage page, Player player, ClickType type) {
                     try {
-                        inv.openMenu(inv, "test", player);
+                        inv.openMenu(inv, "test", player, page.getSession());
                     }
                     catch (MenuInvException e) {
                         e.printStackTrace();
@@ -161,12 +202,22 @@ public class TestMenu {
 
             if (e.getAction() == Action.LEFT_CLICK_BLOCK) {
                 try {
-                    MenuInv.getInstance().openMenu(MenuInv.getInstance(), "test", pl);
+                    MenuInv.getInstance().openMenu(MenuInv.getInstance(), "test", pl, new TestSession());
                 }
                 catch (MenuInvException ex) {
                     ex.printStackTrace();
                 }
             }
+        }
+
+    }
+
+    private static class TestSession implements InventorySession{
+
+        private final List<ItemStack> items = new ArrayList<>();
+
+        public List<ItemStack> getItems() {
+            return this.items;
         }
 
     }
