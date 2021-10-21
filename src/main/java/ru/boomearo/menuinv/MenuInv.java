@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import ru.boomearo.menuinv.api.InventorySession;
 import ru.boomearo.menuinv.api.PluginTemplatePages;
 import ru.boomearo.menuinv.exceptions.MenuInvException;
 import ru.boomearo.menuinv.listeners.InventoryListener;
@@ -15,12 +16,12 @@ import ru.boomearo.menuinv.objects.TemplatePageImpl;
 import ru.boomearo.menuinv.runnable.MenuUpdater;
 import ru.boomearo.menuinv.test.TestMenu;
 
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
+import java.util.HashMap;
+import java.util.Map;
 
 public final class MenuInv extends JavaPlugin {
 
-    private final ConcurrentMap<Class<? extends JavaPlugin>, PluginTemplatePagesImpl> menu = new ConcurrentHashMap<>();
+    private final Map<Class<? extends JavaPlugin>, PluginTemplatePagesImpl> menu = new HashMap<>();
 
     private MenuUpdater updater = null;
 
@@ -56,6 +57,7 @@ public final class MenuInv extends JavaPlugin {
 
                 InventoryPageImpl page = mih.getPage();
 
+                //TODO Я не знаю, плохо ли принудительно закрывать инвентарь.. Возможно смогут стырить в какой то момент вещь
                 page.close(true);
             }
         }
@@ -110,16 +112,20 @@ public final class MenuInv extends JavaPlugin {
                 //Не будем сравнивать ссылки, потому что думаю, что может быть такая ситуация когда плагин не выгрузился.
                 //Поэтому просто сравниваем имена, а потом закрываем этим игрокам инвентари
                 if (page.getTemplatePage().getPluginTemplatePages().getPlugin().getName().equals(plugin.getName())) {
+                    //TODO Я не знаю, плохо ли принудительно закрывать инвентарь.. Возможно смогут стырить в какой то момент вещь
                     page.close(true);
                 }
             }
         }
     }
 
-
     public void openMenu(JavaPlugin plugin, String page, Player player) throws MenuInvException {
+        openMenu(plugin, page, player, null);
+    }
+
+    public void openMenu(JavaPlugin plugin, String page, Player player, InventorySession session) throws MenuInvException {
         if (plugin == null || page == null || player == null) {
-            throw new MenuInvException("Аргументы являются нулл!");
+            throw new MenuInvException("Аргументы являются нулевыми!");
         }
 
         PluginTemplatePagesImpl pp = this.menu.get(plugin.getClass());
@@ -134,13 +140,11 @@ public final class MenuInv extends JavaPlugin {
 
         Bukkit.getScheduler().runTask(this, () -> {
             try {
-                //TODO
-                InventoryPageImpl newPage = templatePage.createNewInventoryPage(player);
+                InventoryPageImpl newPage = templatePage.createNewInventoryPage(player, session);
 
                 newPage.update(true);
 
                 player.openInventory(newPage.getInventory());
-                //TODO добавить в this.menu
             }
             catch (Exception e) {
                 e.printStackTrace();

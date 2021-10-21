@@ -10,6 +10,7 @@ import org.bukkit.inventory.ItemStack;
 import ru.boomearo.menuinv.MenuInv;
 import ru.boomearo.menuinv.api.InvType;
 import ru.boomearo.menuinv.api.InventoryPage;
+import ru.boomearo.menuinv.api.InventorySession;
 import ru.boomearo.menuinv.api.frames.inventory.PagedItems;
 
 import java.util.*;
@@ -28,16 +29,20 @@ public class InventoryPageImpl implements InventoryPage {
 
     private final Player player;
 
+    private final InventorySession session;
+
     //Используется только для того, чтобы узнать от кого был создан этого экземпляр и чтобы можно было узнать плагин создавший этот чертеж.
     private final TemplatePageImpl templatePage;
 
-    public InventoryPageImpl(String name, InvType type, String title, int height, Map<Integer, ItemIcon> iconsPosition, Map<String, PagedItems> listedIcons, Player player, TemplatePageImpl tempaltePage) {
+    public InventoryPageImpl(String name, InvType type, String title, int height, Map<Integer, ItemIcon> iconsPosition, Map<String, PagedItems> listedIcons,
+                             Player player, InventorySession session, TemplatePageImpl templatePage) {
         this.name = name;
         this.type = type;
         this.title = title;
         this.listedIcons = listedIcons;
         this.player = player;
-        this.templatePage = tempaltePage;
+        this.session = session;
+        this.templatePage = templatePage;
 
         if (this.type == InvType.Chest) {
             this.inventory = Bukkit.createInventory(new MenuInvHolder(this), height * this.type.getMaxWidth(), this.title);
@@ -72,6 +77,11 @@ public class InventoryPageImpl implements InventoryPage {
     @Override
     public Player getPlayer() {
         return this.player;
+    }
+
+    @Override
+    public InventorySession getSession() {
+        return this.session;
     }
 
     @Override

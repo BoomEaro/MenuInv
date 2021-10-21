@@ -20,7 +20,6 @@ public class MenuUpdater extends BukkitRunnable {
 
     @Override
     public void run() {
-        //TODO мб итерировать только те что открыты (то есть в карте плагина)
         for (Player pl : Bukkit.getOnlinePlayers()) {
             Inventory inv = pl.getOpenInventory().getTopInventory();
 

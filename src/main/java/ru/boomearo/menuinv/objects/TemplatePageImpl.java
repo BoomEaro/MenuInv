@@ -55,7 +55,7 @@ public class TemplatePageImpl implements TemplatePage {
         return this.pluginTemplatePages;
     }
 
-    public InventoryPageImpl createNewInventoryPage(Player player) {
+    public InventoryPageImpl createNewInventoryPage(Player player, InventorySession session) {
         Map<Integer, ItemIcon> itemIconsActive = new HashMap<>();
         for (ItemIconTemplate tii : this.itemIcons.values()) {
             itemIconsActive.put(tii.getSlot(), new ItemIcon(tii.getSlot(), tii.getFactory().create()));
@@ -65,7 +65,7 @@ public class TemplatePageImpl implements TemplatePage {
             pagedIconsActive.put(tli.getName(), new PagedItems(tli.getName(), tli.getFirstX(), tli.getFirstZ(), tli.getWidth(), tli.getHeight(), tli.getFactory().create()));
         }
 
-        return new InventoryPageImpl(this.name, this.type, this.title, this.height, itemIconsActive, pagedIconsActive, player, this);
+        return new InventoryPageImpl(this.name, this.type, this.title, this.height, itemIconsActive, pagedIconsActive, player, session, this);
     }
 
     @Override

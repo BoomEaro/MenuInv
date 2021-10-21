@@ -15,6 +15,8 @@ public interface InventoryPage {
 
     public PagedItems getListedIconsItems(String name);
 
+    public InventorySession getSession();
+
     public void update();
 
     public void update(boolean force);
