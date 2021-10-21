@@ -72,43 +72,9 @@ public class TestMenu {
                 return tmp;
             });
 
-            page.addScrollButton(7, "test", PagedItems.ScrollType.PREVIOUSLY, () -> new ScrollHandler() {
+            page.addScrollButton(7, "test", PagedItems.ScrollType.PREVIOUSLY, new DefaultScrollHandlerFactory(false));
 
-                @Override
-                public ItemStack onVisible(int currentPage, int maxPage) {
-                    ItemStack item = new ItemStack(Material.PAPER, 1);
-                    ItemMeta meta = item.getItemMeta();
-                    meta.setDisplayName("");
-                    meta.setLore(Arrays.asList("Назад (" + (currentPage - 1) + "/" + maxPage + ")"));
-                    item.setItemMeta(meta);
-                    return item;
-                }
-
-                @Override
-                public ItemStack onHide(int currentPage, int maxPage) {
-                    return null;
-                }
-
-            });
-
-            page.addScrollButton(8, "test", PagedItems.ScrollType.NEXT, () -> new ScrollHandler() {
-
-                @Override
-                public ItemStack onVisible(int currentPage, int maxPage) {
-                    ItemStack item = new ItemStack(Material.PAPER, 1);
-                    ItemMeta meta = item.getItemMeta();
-                    meta.setDisplayName("");
-                    meta.setLore(Arrays.asList("Вперед (" + (currentPage + 1) + "/" + maxPage + ")"));
-                    item.setItemMeta(meta);
-                    return item;
-                }
-
-                @Override
-                public ItemStack onHide(int currentPage, int maxPage) {
-                    return null;
-                }
-
-            });
+            page.addScrollButton(8, "test", PagedItems.ScrollType.NEXT, new DefaultScrollHandlerFactory(true));
         }
         {
             TemplatePage page = pages.createTemplatePage("test2", "Привет2", InvType.Hopper);
