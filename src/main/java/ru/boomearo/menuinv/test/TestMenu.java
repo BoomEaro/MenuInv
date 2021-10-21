@@ -145,7 +145,7 @@ public class TestMenu {
         {
             TemplatePage page = pages.createTemplatePage("test2", "Привет2", InvType.WORKBENCH);
 
-            page.addButton(0, () -> new IconHandler() {
+            page.addButton(9, () -> new IconHandler() {
 
                 @Override
                 public void onClick(InventoryPage page, Player player, ClickType type) {
@@ -173,7 +173,7 @@ public class TestMenu {
                 }
 
             });
-            page.addButton(1, () -> new IconHandler() {
+            page.addButton(0, () -> new IconHandler() {
 
                 @Override
                 public void onClick(InventoryPage page, Player player, ClickType type) {
@@ -195,7 +195,7 @@ public class TestMenu {
                     return 5;
                 }
             });
-            page.addButton(9, () -> new IconHandler() {
+            page.addButton(1, () -> new IconHandler() {
 
                 @Override
                 public void onClick(InventoryPage page, Player player, ClickType type) {

@@ -1,5 +1,6 @@
 package ru.boomearo.menuinv.objects;
 
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
@@ -155,6 +156,7 @@ public class TemplatePageImpl implements TemplatePage {
                     boolean change = page.getListedIconsItems(ScrollIconHandlerFactory.this.pagedItems).scrollPage(ScrollIconHandlerFactory.this.type);
                     if (change) {
                         page.update(true);
+                        player.playSound(player.getLocation(), Sound.BLOCK_DISPENSER_FAIL, 1, 1);
                     }
                 }
 
