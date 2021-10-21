@@ -132,8 +132,29 @@ public class PagedItems extends FramedIcons {
 
     public static enum ScrollType {
 
-        NEXT,
-        PREVIOUSLY;
+        NEXT("Вперёд") {
+            @Override
+            public int getNextPage(int currentPage) {
+                return currentPage + 1;
+            }
+        },
+        PREVIOUSLY("Назад") {
+            @Override
+            public int getNextPage(int currentPage) {
+                return currentPage - 1;
+            }
+        };
 
+        private final String name;
+
+        ScrollType(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return this.name;
+        }
+
+        public abstract int getNextPage(int currentPage);
     }
 }

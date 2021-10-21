@@ -12,6 +12,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import ru.boomearo.menuinv.MenuInv;
 import ru.boomearo.menuinv.api.*;
+import ru.boomearo.menuinv.api.scrolls.DefaultScrollHandlerFactory;
 import ru.boomearo.menuinv.exceptions.MenuInvException;
 import ru.boomearo.menuinv.objects.InventoryPage;
 import ru.boomearo.menuinv.api.frames.inventory.PagedItems;
@@ -72,9 +73,9 @@ public class TestMenu {
                 return tmp;
             });
 
-            page.addScrollButton(7, "test", PagedItems.ScrollType.PREVIOUSLY, new DefaultScrollHandlerFactory(false));
+            page.addScrollButton(7, "test", PagedItems.ScrollType.PREVIOUSLY, new DefaultScrollHandlerFactory(PagedItems.ScrollType.PREVIOUSLY));
 
-            page.addScrollButton(8, "test", PagedItems.ScrollType.NEXT, new DefaultScrollHandlerFactory(true));
+            page.addScrollButton(8, "test", PagedItems.ScrollType.NEXT, new DefaultScrollHandlerFactory(PagedItems.ScrollType.NEXT));
         }
         {
             TemplatePage page = pages.createTemplatePage("test2", "Привет2", InvType.Hopper);

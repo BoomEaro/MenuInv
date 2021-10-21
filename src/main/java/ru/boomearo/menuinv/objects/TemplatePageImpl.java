@@ -8,6 +8,8 @@ import ru.boomearo.menuinv.api.*;
 import ru.boomearo.menuinv.api.frames.Frame;
 import ru.boomearo.menuinv.api.frames.inventory.PagedItems;
 import ru.boomearo.menuinv.api.frames.template.FramedIconsTemplate;
+import ru.boomearo.menuinv.api.scrolls.ScrollHandler;
+import ru.boomearo.menuinv.api.scrolls.ScrollHandlerFactory;
 import ru.boomearo.menuinv.exceptions.MenuInvException;
 
 import java.util.HashMap;

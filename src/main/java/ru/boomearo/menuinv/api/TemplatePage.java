@@ -1,6 +1,7 @@
 package ru.boomearo.menuinv.api;
 
 import ru.boomearo.menuinv.api.frames.inventory.PagedItems;
+import ru.boomearo.menuinv.api.scrolls.ScrollHandlerFactory;
 import ru.boomearo.menuinv.exceptions.MenuInvException;
 
 public interface TemplatePage {
