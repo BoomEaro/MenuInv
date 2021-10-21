@@ -7,15 +7,26 @@ import org.bukkit.inventory.InventoryHolder;
 
 public enum InvType {
 
-    Chest_9X1(InventoryType.CHEST, 9, 1),
-    Chest_9X2(InventoryType.CHEST, 9, 2),
-    Chest_9X3(InventoryType.CHEST, 9, 3),
-    Chest_9X4(InventoryType.CHEST, 9, 4),
-    Chest_9X5(InventoryType.CHEST, 9, 5),
-    Chest_9X6(InventoryType.CHEST, 9, 6),
-
-    Hopper(InventoryType.HOPPER, 5, 1),
-    Dropper(InventoryType.DROPPER, 3, 3);
+    ANVIL(InventoryType.ANVIL, 3, 1),
+    BEACON(InventoryType.BEACON, 1, 1),
+    BLAST_FURNACE(InventoryType.BLAST_FURNACE, 3, 1),
+    FURNACE(InventoryType.FURNACE, 3, 1),
+    BREWING(InventoryType.BREWING, 5, 1),
+    CARTOGRAPHY(InventoryType.CARTOGRAPHY, 3, 1),
+    ENCHANTING(InventoryType.ENCHANTING, 5, 1),
+    LOOM(InventoryType.LOOM, 4, 1),
+    SMITHING(InventoryType.SMITHING, 3, 1),
+    SMOKER(InventoryType.SMOKER, 3, 1),
+    STONECUTTER(InventoryType.STONECUTTER, 2, 1),
+    WORKBENCH(InventoryType.WORKBENCH, 3, 3),
+    CHEST_9X1(InventoryType.CHEST, 9, 1),
+    CHEST_9X2(InventoryType.CHEST, 9, 2),
+    CHEST_9X3(InventoryType.CHEST, 9, 3),
+    CHEST_9X4(InventoryType.CHEST, 9, 4),
+    CHEST_9X5(InventoryType.CHEST, 9, 5),
+    CHEST_9X6(InventoryType.CHEST, 9, 6),
+    HOPPER(InventoryType.HOPPER, 5, 1),
+    DROPPER(InventoryType.DROPPER, 3, 3);
 
     private final InventoryType type;
     private final int width;

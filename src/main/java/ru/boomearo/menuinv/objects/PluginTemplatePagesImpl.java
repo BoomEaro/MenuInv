@@ -30,7 +30,7 @@ public class PluginTemplatePagesImpl implements PluginTemplatePages {
 
     @Override
     public TemplatePage createTemplatePage(String name, String title) throws MenuInvException {
-        return createTemplatePage(name, title, InvType.Chest_9X6);
+        return createTemplatePage(name, title, InvType.CHEST_9X6);
     }
 
     @Override
