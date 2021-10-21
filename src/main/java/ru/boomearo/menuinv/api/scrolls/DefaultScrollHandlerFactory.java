@@ -4,6 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
 import ru.boomearo.menuinv.api.frames.inventory.PagedItems;
 
 public class DefaultScrollHandlerFactory implements ScrollHandlerFactory {

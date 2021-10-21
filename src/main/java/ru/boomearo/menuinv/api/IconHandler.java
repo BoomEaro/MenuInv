@@ -3,7 +3,6 @@ package ru.boomearo.menuinv.api;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
-import ru.boomearo.menuinv.objects.InventoryPageImpl;
 
 import java.util.HashMap;
 import java.util.Map;

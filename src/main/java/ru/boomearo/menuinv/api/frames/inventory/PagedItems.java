@@ -1,6 +1,5 @@
 package ru.boomearo.menuinv.api.frames.inventory;
 
-import ru.boomearo.menuinv.MenuInv;
 import ru.boomearo.menuinv.api.IconHandler;
 import ru.boomearo.menuinv.api.InvType;
 import ru.boomearo.menuinv.api.FramedIconsHandler;
