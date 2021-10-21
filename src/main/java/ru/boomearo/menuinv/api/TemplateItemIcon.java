@@ -2,14 +2,14 @@ package ru.boomearo.menuinv.api;
 
 public class TemplateItemIcon extends SlotElement {
 
-    private final ButtonHandlerFactory factory;
+    private final IconHandlerFactory factory;
 
-    public TemplateItemIcon(int slot, ButtonHandlerFactory factory) {
+    public TemplateItemIcon(int slot, IconHandlerFactory factory) {
         super(slot);
         this.factory = factory;
     }
 
-    public ButtonHandlerFactory getFactory() {
+    public IconHandlerFactory getFactory() {
         return this.factory;
     }
 }

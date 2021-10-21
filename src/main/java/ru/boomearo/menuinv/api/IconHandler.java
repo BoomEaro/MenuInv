@@ -11,14 +11,14 @@ import java.util.Map;
 /**
  * Представляет обработчик нажатий на кнопку
  */
-public abstract class AbstractButtonHandler implements Updateable<ItemStack, InventoryPage> {
+public abstract class IconHandler implements Updateable<ItemStack, InventoryPage> {
 
     private static final Map<String, Long> clickCd = new HashMap<>();
 
     /**
      * Обработчик нажатия на кнопку. Для точного определения типа нажатия, используйте аргумент type
      */
-    public abstract void onClick(InventoryPage page, Player player, ClickType type);
+    public abstract void onClick(InventoryPage page, Player player, ClickType click);
 
     /**
      * @return задержка между выполнением метода click. По умолчанию 250 мс

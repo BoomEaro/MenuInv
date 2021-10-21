@@ -1,14 +1,14 @@
-package ru.boomearo.menuinv.api.frames;
+package ru.boomearo.menuinv.api.frames.inventory;
 
-import ru.boomearo.menuinv.api.AbstractButtonHandler;
+import ru.boomearo.menuinv.api.IconHandler;
 import ru.boomearo.menuinv.api.InvType;
-import ru.boomearo.menuinv.api.ListedIconsHandler;
+import ru.boomearo.menuinv.api.FramedIconsHandler;
 import ru.boomearo.menuinv.objects.InventoryPage;
 import ru.boomearo.menuinv.objects.ItemIcon;
 
 import java.util.List;
 
-public class ListedIconItems extends TemplateListedIcons {
+public class PagedItems extends FramedIcons {
 
     private long updateHandlerCooldown = 0;
 
@@ -16,7 +16,7 @@ public class ListedIconItems extends TemplateListedIcons {
 
     private int maxPage;
 
-    public ListedIconItems(String name, int x, int z, int width, int height, ListedIconsHandler handler) {
+    public PagedItems(String name, int x, int z, int width, int height, FramedIconsHandler handler) {
         super(name, x, z, width, height, handler);
     }
 
@@ -76,12 +76,12 @@ public class ListedIconItems extends TemplateListedIcons {
     }
 
     public void updateActiveIcons(InventoryPage page, boolean force) {
-        ListedIconsHandler handler = getHandler();
+        FramedIconsHandler handler = getHandler();
 
         if (((System.currentTimeMillis() - this.updateHandlerCooldown) > (handler.getUpdateTime() * 50)) || force) {
             this.updateHandlerCooldown = System.currentTimeMillis();
 
-            List<AbstractButtonHandler> handlers = null;
+            List<IconHandler> handlers = null;
             try {
                 handlers = getHandler().onUpdate(page, page.getPlayer());
             }

@@ -14,7 +14,7 @@ import ru.boomearo.menuinv.MenuInv;
 import ru.boomearo.menuinv.api.*;
 import ru.boomearo.menuinv.exceptions.MenuInvException;
 import ru.boomearo.menuinv.objects.InventoryPage;
-import ru.boomearo.menuinv.api.frames.ListedIconItems;
+import ru.boomearo.menuinv.api.frames.inventory.PagedItems;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -34,7 +34,7 @@ public class TestMenu {
         {
             TemplatePage page = pages.createTemplatePage("test", "Привет", 6);
 
-            page.addButton(1, () -> new AbstractButtonHandler() {
+            page.addButton(1, () -> new IconHandler() {
 
                 @Override
                 public void onClick(InventoryPage page, Player player, ClickType type) {
@@ -52,10 +52,10 @@ public class TestMenu {
                 }
             });
 
-            page.addListedButton("test", 2, 2, 5, 4, (consume, player) -> {
-                List<AbstractButtonHandler> tmp = new ArrayList<>();
+            page.addListedButton("test", 2, 2, 5, 4, () -> (consume, player) -> {
+                List<IconHandler> tmp = new ArrayList<>();
                 for (Material mat : Material.values()) {
-                    tmp.add(new AbstractButtonHandler() {
+                    tmp.add(new IconHandler() {
 
                         @Override
                         public void onClick(InventoryPage page, Player player, ClickType type) {
@@ -72,7 +72,7 @@ public class TestMenu {
                 return tmp;
             });
 
-            page.addScrollButton(7, "test", ListedIconItems.ScrollType.PREVIOUSLY, new ScrollHandler() {
+            page.addScrollButton(7, "test", PagedItems.ScrollType.PREVIOUSLY, () -> new ScrollHandler() {
 
                 @Override
                 public ItemStack onVisible(int currentPage, int maxPage) {
@@ -91,7 +91,7 @@ public class TestMenu {
 
             });
 
-            page.addScrollButton(8, "test", ListedIconItems.ScrollType.NEXT, new ScrollHandler() {
+            page.addScrollButton(8, "test", PagedItems.ScrollType.NEXT, () -> new ScrollHandler() {
 
                 @Override
                 public ItemStack onVisible(int currentPage, int maxPage) {
@@ -113,7 +113,7 @@ public class TestMenu {
         {
             TemplatePage page = pages.createTemplatePage("test2", "Привет2", InvType.Hopper);
 
-            page.addButton(0, () -> new AbstractButtonHandler() {
+            page.addButton(0, () -> new IconHandler() {
 
                 @Override
                 public void onClick(InventoryPage page, Player player, ClickType type) {
@@ -141,7 +141,7 @@ public class TestMenu {
                 }
 
             });
-            page.addButton(1, () -> new AbstractButtonHandler() {
+            page.addButton(1, () -> new IconHandler() {
 
                 @Override
                 public void onClick(InventoryPage page, Player player, ClickType type) {
@@ -163,7 +163,7 @@ public class TestMenu {
                     return 5;
                 }
             });
-            page.addButton(4, () -> new AbstractButtonHandler() {
+            page.addButton(4, () -> new IconHandler() {
 
                 @Override
                 public void onClick(InventoryPage page, Player player, ClickType type) {

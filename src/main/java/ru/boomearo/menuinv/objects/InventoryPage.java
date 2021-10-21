@@ -9,7 +9,7 @@ import org.bukkit.inventory.ItemStack;
 
 import ru.boomearo.menuinv.MenuInv;
 import ru.boomearo.menuinv.api.InvType;
-import ru.boomearo.menuinv.api.frames.ListedIconItems;
+import ru.boomearo.menuinv.api.frames.inventory.PagedItems;
 
 import java.util.*;
 
@@ -19,7 +19,7 @@ public class InventoryPage {
     private final InvType type;
     private final String title;
 
-    private final Map<String, ListedIconItems> listedIcons;
+    private final Map<String, PagedItems> listedIcons;
 
     private final ItemIcon[] activeIcons;
 
@@ -27,7 +27,7 @@ public class InventoryPage {
 
     private final Player player;
 
-    public InventoryPage(String name, InvType type, String title, int height, Map<Integer, ItemIcon> iconsPosition, Map<String, ListedIconItems> listedIcons, Player player) {
+    public InventoryPage(String name, InvType type, String title, int height, Map<Integer, ItemIcon> iconsPosition, Map<String, PagedItems> listedIcons, Player player) {
         this.name = name;
         this.type = type;
         this.title = title;
@@ -65,7 +65,7 @@ public class InventoryPage {
         return this.player;
     }
 
-    public ListedIconItems getListedIconsItems(String name) {
+    public PagedItems getListedIconsItems(String name) {
         return this.listedIcons.get(name);
     }
 
@@ -99,7 +99,7 @@ public class InventoryPage {
         ItemStack[] array = new ItemStack[this.inventory.getSize()];
         Arrays.fill(array, null);
 
-        for (ListedIconItems lii : this.listedIcons.values()) {
+        for (PagedItems lii : this.listedIcons.values()) {
             lii.updateActiveIcons(this, force);
         }
 

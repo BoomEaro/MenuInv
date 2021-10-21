@@ -1,7 +1,7 @@
 package ru.boomearo.menuinv.objects;
 
 import org.bukkit.inventory.ItemStack;
-import ru.boomearo.menuinv.api.AbstractButtonHandler;
+import ru.boomearo.menuinv.api.IconHandler;
 import ru.boomearo.menuinv.api.SlotElement;
 
 public class ItemIcon extends SlotElement {
@@ -9,19 +9,19 @@ public class ItemIcon extends SlotElement {
     private long updateHandlerCooldown = 0;
     private ItemStack cache = null;
 
-    private final AbstractButtonHandler handler;
+    private final IconHandler handler;
 
-    public ItemIcon(int position, AbstractButtonHandler handler) {
+    public ItemIcon(int position, IconHandler handler) {
         super(position);
         this.handler = handler;
     }
 
-    public AbstractButtonHandler getHandler() {
+    public IconHandler getHandler() {
         return this.handler;
     }
 
     public ItemStack getItemStack(InventoryPage page, boolean force) {
-        AbstractButtonHandler handler = this.handler;
+        IconHandler handler = this.handler;
 
         if (((System.currentTimeMillis() - this.updateHandlerCooldown) > (handler.getUpdateTime() * 50)) || force) {
             this.updateHandlerCooldown = System.currentTimeMillis();

@@ -3,11 +3,11 @@ package ru.boomearo.menuinv.objects;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
-import ru.boomearo.menuinv.MenuInv;
+
 import ru.boomearo.menuinv.api.*;
-import ru.boomearo.menuinv.api.frames.FramedIcons;
-import ru.boomearo.menuinv.api.frames.ListedIconItems;
-import ru.boomearo.menuinv.api.frames.TemplateListedIcons;
+import ru.boomearo.menuinv.api.frames.Frame;
+import ru.boomearo.menuinv.api.frames.inventory.PagedItems;
+import ru.boomearo.menuinv.api.frames.template.FramedIconsTemplate;
 import ru.boomearo.menuinv.exceptions.MenuInvException;
 
 import java.util.HashMap;
@@ -22,7 +22,7 @@ public class TemplatePageImpl implements TemplatePage {
     private final int height;
 
     private final Map<Integer, TemplateItemIcon> iconsPosition = new HashMap<>();
-    private final Map<String, TemplateListedIcons> listedIcons = new HashMap<>();
+    private final Map<String, FramedIconsTemplate> listedIcons = new HashMap<>();
 
     public TemplatePageImpl(String name, String title, InvType type, int height) {
         this.name = name;
@@ -52,16 +52,16 @@ public class TemplatePageImpl implements TemplatePage {
         for (TemplateItemIcon tii : this.iconsPosition.values()) {
             itemIcons.put(tii.getSlot(), new ItemIcon(tii.getSlot(), tii.getFactory().create()));
         }
-        Map<String, ListedIconItems> listedIcons = new HashMap<>();
-        for (TemplateListedIcons tli : this.listedIcons.values()) {
-            listedIcons.put(tli.getName(), new ListedIconItems(tli.getName(), tli.getFirstX(), tli.getFirstZ(), tli.getWidth(), tli.getHeight(), tli.getHandler()));
+        Map<String, PagedItems> listedIcons = new HashMap<>();
+        for (FramedIconsTemplate tli : this.listedIcons.values()) {
+            listedIcons.put(tli.getName(), new PagedItems(tli.getName(), tli.getFirstX(), tli.getFirstZ(), tli.getWidth(), tli.getHeight(), tli.getFactory().create()));
         }
 
         return new InventoryPage(this.name, this.type, this.title, this.height, itemIcons, listedIcons, player);
     }
 
     @Override
-    public void addButton(int slot, ButtonHandlerFactory factory) throws MenuInvException {
+    public void addButton(int slot, IconHandlerFactory factory) throws MenuInvException {
         TemplateItemIcon tmp = this.iconsPosition.get(slot);
         if (tmp != null) {
             throw new MenuInvException("Кнопка на позиции '" + slot + "' уже добавлена!");
@@ -71,13 +71,13 @@ public class TemplatePageImpl implements TemplatePage {
     }
 
     @Override
-    public void addListedButton(String name, int x, int z, int width, int height, ListedIconsHandler handler) throws MenuInvException {
-        TemplateListedIcons tmp = this.listedIcons.get(name);
+    public void addListedButton(String name, int x, int z, int width, int height, FramedIconsHandlerFactory factory) throws MenuInvException {
+        FramedIconsTemplate tmp = this.listedIcons.get(name);
         if (tmp != null) {
             throw new MenuInvException("Список кнопок '" + name + "' уже добавлена!");
         }
 
-        TemplateListedIcons tli = new TemplateListedIcons(name, x, z, width, height, handler);
+        FramedIconsTemplate tli = new FramedIconsTemplate(name, x, z, width, height, factory);
 
         checkBorder(tli);
 
@@ -85,53 +85,18 @@ public class TemplatePageImpl implements TemplatePage {
     }
 
     @Override
-    public void addScrollButton(int slot, String listedButton, ListedIconItems.ScrollType type, ScrollHandler handler) throws MenuInvException {
+    public void addScrollButton(int slot, String pagedItems, PagedItems.ScrollType type, ScrollHandlerFactory factory) throws MenuInvException {
         TemplateItemIcon tmp = this.iconsPosition.get(slot);
         if (tmp != null) {
             throw new MenuInvException("Кнопка на позиции '" + slot + "' уже добавлена!");
         }
 
-        TemplateListedIcons tli = this.listedIcons.get(listedButton);
+        FramedIconsTemplate tli = this.listedIcons.get(pagedItems);
         if (tli == null) {
-            throw new MenuInvException("Список кнопок '" + listedButton + "' не найден!");
+            throw new MenuInvException("Список кнопок '" + pagedItems + "' не найден!");
         }
 
-        TemplateItemIcon icon = new TemplateItemIcon(slot, () -> new AbstractButtonHandler() {
-
-            @Override
-            public void onClick(InventoryPage page, Player player, ClickType clickType) {
-                boolean change = page.getListedIconsItems(listedButton).scrollPage(type);
-                if (change) {
-                    page.update(true);
-                }
-            }
-
-            @Override
-            public ItemStack onUpdate(InventoryPage page, Player player) {
-                ListedIconItems lii = page.getListedIconsItems(listedButton);
-
-                if (type == ListedIconItems.ScrollType.NEXT) {
-                    if (lii.getCurrentPage() >= lii.getMaxPage()) {
-                        return handler.onHide(lii.getCurrentPage(), lii.getMaxPage());
-                    }
-                    else {
-                        return handler.onVisible(lii.getCurrentPage(), lii.getMaxPage());
-                    }
-                }
-                else if (type == ListedIconItems.ScrollType.PREVIOUSLY) {
-                    if (lii.getCurrentPage() <= 1) {
-                        return handler.onHide(lii.getCurrentPage(), lii.getMaxPage());
-                    }
-                    else {
-                        return handler.onVisible(lii.getCurrentPage(), lii.getMaxPage());
-                    }
-                }
-                return null;
-            }
-
-        });
-
-        addButton(icon);
+        addButton(new TemplateItemIcon(slot, new ScrollIconHandlerFactory(pagedItems, type, factory)));
     }
 
     public void addButton(TemplateItemIcon icon) throws MenuInvException {
@@ -148,7 +113,7 @@ public class TemplatePageImpl implements TemplatePage {
         this.iconsPosition.put(icon.getSlot(), icon);
     }
 
-    private void checkBorder(FramedIcons frame) throws MenuInvException {
+    private void checkBorder(Frame frame) throws MenuInvException {
 
         //MenuInv.getInstance().getLogger().info("test " + (frame.getFirstX() + frame.getWidth()) + " > " + this.type.getMaxWidth() + " | " + (frame.getFirstZ() + frame.getHeight()) + " > " + this.height);
 
@@ -165,5 +130,57 @@ public class TemplatePageImpl implements TemplatePage {
         }
     }
 
+    private static class ScrollIconHandlerFactory implements IconHandlerFactory {
+
+        private final String pagedItems;
+        private final PagedItems.ScrollType type;
+        private final ScrollHandlerFactory scrollHandlerFactory;
+
+        public ScrollIconHandlerFactory(String pagedItems, PagedItems.ScrollType type, ScrollHandlerFactory scrollHandlerFactory) {
+            this.pagedItems = pagedItems;
+            this.type = type;
+            this.scrollHandlerFactory = scrollHandlerFactory;
+        }
+
+        @Override
+        public IconHandler create() {
+            ScrollHandler handler = this.scrollHandlerFactory.create();
+
+            return new IconHandler() {
+
+                @Override
+                public void onClick(InventoryPage page, Player player, ClickType clickType) {
+                    boolean change = page.getListedIconsItems(ScrollIconHandlerFactory.this.pagedItems).scrollPage(ScrollIconHandlerFactory.this.type);
+                    if (change) {
+                        page.update(true);
+                    }
+                }
+
+                @Override
+                public ItemStack onUpdate(InventoryPage page, Player player) {
+                    PagedItems lii = page.getListedIconsItems(ScrollIconHandlerFactory.this.pagedItems);
+
+                    if (ScrollIconHandlerFactory.this.type == PagedItems.ScrollType.NEXT) {
+                        if (lii.getCurrentPage() >= lii.getMaxPage()) {
+                            return handler.onHide(lii.getCurrentPage(), lii.getMaxPage());
+                        }
+                        else {
+                            return handler.onVisible(lii.getCurrentPage(), lii.getMaxPage());
+                        }
+                    }
+                    else if (ScrollIconHandlerFactory.this.type == PagedItems.ScrollType.PREVIOUSLY) {
+                        if (lii.getCurrentPage() <= 1) {
+                            return handler.onHide(lii.getCurrentPage(), lii.getMaxPage());
+                        }
+                        else {
+                            return handler.onVisible(lii.getCurrentPage(), lii.getMaxPage());
+                        }
+                    }
+                    return null;
+                }
+
+            };
+        }
+    }
 
 }

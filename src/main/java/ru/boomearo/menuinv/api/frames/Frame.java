@@ -1,6 +1,6 @@
 package ru.boomearo.menuinv.api.frames;
 
-public abstract class FramedIcons {
+public abstract class Frame {
 
     private final String name;
 
@@ -12,7 +12,7 @@ public abstract class FramedIcons {
     private final int width;
     private final int height;
 
-    public FramedIcons(String name, int x, int z, int width, int height) {
+    public Frame(String name, int x, int z, int width, int height) {
         this.name = name;
         this.firstX = x;
         this.secondX = x + width - 1;

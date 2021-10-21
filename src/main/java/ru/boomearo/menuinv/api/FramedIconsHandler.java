@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Представляет обработчик списка иконок
  */
-public interface ListedIconsHandler extends Updateable<List<AbstractButtonHandler>, InventoryPage> {
+public interface FramedIconsHandler extends Updateable<List<IconHandler>, InventoryPage> {
 
 
 }
