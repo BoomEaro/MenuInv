@@ -20,4 +20,6 @@ public interface InventoryPage {
     public void update(boolean force);
 
     public void close();
+
+    public void close(boolean force);
 }

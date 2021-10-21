@@ -28,12 +28,16 @@ public class InventoryPageImpl implements InventoryPage {
 
     private final Player player;
 
-    public InventoryPageImpl(String name, InvType type, String title, int height, Map<Integer, ItemIcon> iconsPosition, Map<String, PagedItems> listedIcons, Player player) {
+    //Используется только для того, чтобы узнать от кого был создан этого экземпляр и чтобы можно было узнать плагин создавший этот чертеж.
+    private final TemplatePageImpl templatePage;
+
+    public InventoryPageImpl(String name, InvType type, String title, int height, Map<Integer, ItemIcon> iconsPosition, Map<String, PagedItems> listedIcons, Player player, TemplatePageImpl tempaltePage) {
         this.name = name;
         this.type = type;
         this.title = title;
         this.listedIcons = listedIcons;
         this.player = player;
+        this.templatePage = tempaltePage;
 
         if (this.type == InvType.Chest) {
             this.inventory = Bukkit.createInventory(new MenuInvHolder(this), height * this.type.getMaxWidth(), this.title);
@@ -91,6 +95,10 @@ public class InventoryPageImpl implements InventoryPage {
         }
     }
 
+    public TemplatePageImpl getTemplatePage() {
+        return this.templatePage;
+    }
+
     @Override
     public void update() {
         //long start = System.nanoTime();
@@ -128,6 +136,16 @@ public class InventoryPageImpl implements InventoryPage {
 
     @Override
     public void close() {
+        close(false);
+    }
+
+    @Override
+    public void close(boolean force) {
+        if (force) {
+            this.player.closeInventory();
+            return;
+        }
+
         Bukkit.getScheduler().runTask(MenuInv.getInstance(), this.player::closeInventory);
     }
 

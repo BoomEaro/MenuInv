@@ -20,17 +20,19 @@ public class TemplatePageImpl implements TemplatePage {
     private final String name;
     private final String title;
     private final InvType type;
-
     private final int height;
+
+    private final PluginTemplatePagesImpl pluginTemplatePages;
 
     private final Map<Integer, ItemIconTemplate> itemIcons = new HashMap<>();
     private final Map<String, FramedIconsTemplate> pagedItems = new HashMap<>();
 
-    public TemplatePageImpl(String name, String title, InvType type, int height) {
+    public TemplatePageImpl(String name, String title, InvType type, int height, PluginTemplatePagesImpl pluginTemplatePages) {
         this.name = name;
         this.title = title;
         this.type = type;
         this.height = height;
+        this.pluginTemplatePages = pluginTemplatePages;
     }
 
     public String getName() {
@@ -49,6 +51,10 @@ public class TemplatePageImpl implements TemplatePage {
         return this.height;
     }
 
+    public PluginTemplatePagesImpl getPluginTemplatePages() {
+        return this.pluginTemplatePages;
+    }
+
     public InventoryPageImpl createNewInventoryPage(Player player) {
         Map<Integer, ItemIcon> itemIconsActive = new HashMap<>();
         for (ItemIconTemplate tii : this.itemIcons.values()) {
@@ -59,7 +65,7 @@ public class TemplatePageImpl implements TemplatePage {
             pagedIconsActive.put(tli.getName(), new PagedItems(tli.getName(), tli.getFirstX(), tli.getFirstZ(), tli.getWidth(), tli.getHeight(), tli.getFactory().create()));
         }
 
-        return new InventoryPageImpl(this.name, this.type, this.title, this.height, itemIconsActive, pagedIconsActive, player);
+        return new InventoryPageImpl(this.name, this.type, this.title, this.height, itemIconsActive, pagedIconsActive, player, this);
     }
 
     @Override

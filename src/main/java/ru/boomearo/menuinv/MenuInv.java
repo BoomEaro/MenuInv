@@ -2,12 +2,14 @@ package ru.boomearo.menuinv;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import ru.boomearo.menuinv.api.PluginTemplatePages;
 import ru.boomearo.menuinv.exceptions.MenuInvException;
 import ru.boomearo.menuinv.listeners.InventoryListener;
 import ru.boomearo.menuinv.objects.InventoryPageImpl;
+import ru.boomearo.menuinv.objects.MenuInvHolder;
 import ru.boomearo.menuinv.objects.PluginTemplatePagesImpl;
 import ru.boomearo.menuinv.objects.TemplatePageImpl;
 import ru.boomearo.menuinv.runnable.MenuUpdater;
@@ -32,18 +34,32 @@ public final class MenuInv extends JavaPlugin {
 
         this.updater = new MenuUpdater();
 
+        //TODO TEST
         try {
             TestMenu.setupTest();
         }
         catch (MenuInvException e) {
             e.printStackTrace();
         }
+        //TODO
 
         this.getLogger().info("Плагин включен.");
     }
 
     @Override
     public void onDisable() {
+        //Закрываем всем инвентари этого меню, вне зависимости от всего
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            InventoryHolder holder = player.getOpenInventory().getTopInventory().getHolder();
+            if (holder instanceof MenuInvHolder) {
+                MenuInvHolder mih = (MenuInvHolder) holder;
+
+                InventoryPageImpl page = mih.getPage();
+
+                page.close(true);
+            }
+        }
+
         this.getLogger().info("Плагин выключен.");
     }
 
@@ -83,6 +99,21 @@ public final class MenuInv extends JavaPlugin {
         }
 
         this.menu.remove(plugin.getClass());
+
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            InventoryHolder holder = player.getOpenInventory().getTopInventory().getHolder();
+            if (holder instanceof MenuInvHolder) {
+                MenuInvHolder mih = (MenuInvHolder) holder;
+
+                InventoryPageImpl page = mih.getPage();
+
+                //Не будем сравнивать ссылки, потому что думаю, что может быть такая ситуация когда плагин не выгрузился.
+                //Поэтому просто сравниваем имена, а потом закрываем этим игрокам инвентари
+                if (page.getTemplatePage().getPluginTemplatePages().getPlugin().getName().equals(plugin.getName())) {
+                    page.close(true);
+                }
+            }
+        }
     }
 
 
@@ -105,6 +136,7 @@ public final class MenuInv extends JavaPlugin {
             try {
                 //TODO
                 InventoryPageImpl newPage = templatePage.createNewInventoryPage(player);
+
                 newPage.update(true);
 
                 player.openInventory(newPage.getInventory());

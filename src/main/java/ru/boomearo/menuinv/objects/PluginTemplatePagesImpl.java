@@ -19,12 +19,13 @@ public class PluginTemplatePagesImpl implements PluginTemplatePages {
         this.plugin = plugin;
     }
 
-    public JavaPlugin getPlugin() {
-        return this.plugin;
-    }
-
     public TemplatePageImpl getTemplatePage(String name) {
         return this.pages.get(name);
+    }
+
+    @Override
+    public JavaPlugin getPlugin() {
+        return this.plugin;
     }
 
     @Override
@@ -62,7 +63,7 @@ public class PluginTemplatePagesImpl implements PluginTemplatePages {
             newHeight = type.getMaxHeight();
         }
 
-        TemplatePageImpl newPage = new TemplatePageImpl(name, title, type, newHeight);
+        TemplatePageImpl newPage = new TemplatePageImpl(name, title, type, newHeight, this);
 
         this.pages.put(name, newPage);
 
