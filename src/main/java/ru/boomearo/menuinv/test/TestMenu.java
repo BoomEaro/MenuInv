@@ -2,6 +2,7 @@ package ru.boomearo.menuinv.test;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -225,6 +226,9 @@ public class TestMenu {
             Player pl = e.getPlayer();
 
             if (e.getAction() == Action.LEFT_CLICK_BLOCK) {
+                e.setUseInteractedBlock(Event.Result.DENY);
+                e.setUseItemInHand(Event.Result.DENY);
+
                 try {
                     MenuInv.getInstance().openMenu(MenuInv.getInstance(), "test", pl, new TestSession());
                 }
