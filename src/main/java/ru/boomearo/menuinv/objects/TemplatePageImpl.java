@@ -21,8 +21,8 @@ public class TemplatePageImpl implements TemplatePage {
 
     private final int height;
 
-    private final Map<Integer, TemplateItemIcon> iconsPosition = new HashMap<>();
-    private final Map<String, FramedIconsTemplate> listedIcons = new HashMap<>();
+    private final Map<Integer, ItemIconTemplate> itemIcons = new HashMap<>();
+    private final Map<String, FramedIconsTemplate> pagedItems = new HashMap<>();
 
     public TemplatePageImpl(String name, String title, InvType type, int height) {
         this.name = name;
@@ -48,31 +48,31 @@ public class TemplatePageImpl implements TemplatePage {
     }
 
     public InventoryPage createNewInventoryPage(Player player) {
-        Map<Integer, ItemIcon> itemIcons = new HashMap<>();
-        for (TemplateItemIcon tii : this.iconsPosition.values()) {
-            itemIcons.put(tii.getSlot(), new ItemIcon(tii.getSlot(), tii.getFactory().create()));
+        Map<Integer, ItemIcon> itemIconsActive = new HashMap<>();
+        for (ItemIconTemplate tii : this.itemIcons.values()) {
+            itemIconsActive.put(tii.getSlot(), new ItemIcon(tii.getSlot(), tii.getFactory().create()));
         }
-        Map<String, PagedItems> listedIcons = new HashMap<>();
-        for (FramedIconsTemplate tli : this.listedIcons.values()) {
-            listedIcons.put(tli.getName(), new PagedItems(tli.getName(), tli.getFirstX(), tli.getFirstZ(), tli.getWidth(), tli.getHeight(), tli.getFactory().create()));
+        Map<String, PagedItems> pagedIconsActive = new HashMap<>();
+        for (FramedIconsTemplate tli : this.pagedItems.values()) {
+            pagedIconsActive.put(tli.getName(), new PagedItems(tli.getName(), tli.getFirstX(), tli.getFirstZ(), tli.getWidth(), tli.getHeight(), tli.getFactory().create()));
         }
 
-        return new InventoryPage(this.name, this.type, this.title, this.height, itemIcons, listedIcons, player);
+        return new InventoryPage(this.name, this.type, this.title, this.height, itemIconsActive, pagedIconsActive, player);
     }
 
     @Override
     public void addButton(int slot, IconHandlerFactory factory) throws MenuInvException {
-        TemplateItemIcon tmp = this.iconsPosition.get(slot);
+        ItemIconTemplate tmp = this.itemIcons.get(slot);
         if (tmp != null) {
             throw new MenuInvException("Кнопка на позиции '" + slot + "' уже добавлена!");
         }
 
-        addButton(new TemplateItemIcon(slot, factory));
+        addButton(new ItemIconTemplate(slot, factory));
     }
 
     @Override
     public void addListedButton(String name, int x, int z, int width, int height, FramedIconsHandlerFactory factory) throws MenuInvException {
-        FramedIconsTemplate tmp = this.listedIcons.get(name);
+        FramedIconsTemplate tmp = this.pagedItems.get(name);
         if (tmp != null) {
             throw new MenuInvException("Список кнопок '" + name + "' уже добавлена!");
         }
@@ -81,25 +81,25 @@ public class TemplatePageImpl implements TemplatePage {
 
         checkBorder(tli);
 
-        this.listedIcons.put(name, tli);
+        this.pagedItems.put(name, tli);
     }
 
     @Override
     public void addScrollButton(int slot, String pagedItems, PagedItems.ScrollType type, ScrollHandlerFactory factory) throws MenuInvException {
-        TemplateItemIcon tmp = this.iconsPosition.get(slot);
+        ItemIconTemplate tmp = this.itemIcons.get(slot);
         if (tmp != null) {
             throw new MenuInvException("Кнопка на позиции '" + slot + "' уже добавлена!");
         }
 
-        FramedIconsTemplate tli = this.listedIcons.get(pagedItems);
+        FramedIconsTemplate tli = this.pagedItems.get(pagedItems);
         if (tli == null) {
             throw new MenuInvException("Список кнопок '" + pagedItems + "' не найден!");
         }
 
-        addButton(new TemplateItemIcon(slot, new ScrollIconHandlerFactory(pagedItems, type, factory)));
+        addButton(new ItemIconTemplate(slot, new ScrollIconHandlerFactory(pagedItems, type, factory)));
     }
 
-    public void addButton(TemplateItemIcon icon) throws MenuInvException {
+    public void addButton(ItemIconTemplate icon) throws MenuInvException {
         int slot = icon.getSlot();
 
         if (slot < 0) {
@@ -110,7 +110,7 @@ public class TemplatePageImpl implements TemplatePage {
             throw new MenuInvException("Кнопка '" + icon.getSlot() + "' находится на позиции больше допустимой! (slot: " + slot + "/" + maxSlot + ")");
         }
 
-        this.iconsPosition.put(icon.getSlot(), icon);
+        this.itemIcons.put(icon.getSlot(), icon);
     }
 
     private void checkBorder(Frame frame) throws MenuInvException {
