@@ -124,7 +124,7 @@ public class PagedItems extends FramedIcons {
                 for (int z = 0; z < getHeight(); z++) {
                     for (int x = 0; x < getWidth(); x++) {
 
-                        int offset = getFirstZ() * type.getMaxWidth() + getFirstX() + x + (z * type.getMaxWidth());
+                        int offset = getFirstZ() * type.getWidth() + getFirstX() + x + (z * type.getWidth());
 
 
                         if (i > (maxSize - 1)) {

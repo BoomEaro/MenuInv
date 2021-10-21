@@ -20,18 +20,16 @@ public class TemplatePageImpl implements TemplatePage {
     private final String name;
     private final String title;
     private final InvType type;
-    private final int height;
 
     private final PluginTemplatePagesImpl pluginTemplatePages;
 
     private final Map<Integer, ItemIconTemplate> itemIcons = new HashMap<>();
     private final Map<String, FramedIconsTemplate> pagedItems = new HashMap<>();
 
-    public TemplatePageImpl(String name, String title, InvType type, int height, PluginTemplatePagesImpl pluginTemplatePages) {
+    public TemplatePageImpl(String name, String title, InvType type, PluginTemplatePagesImpl pluginTemplatePages) {
         this.name = name;
         this.title = title;
         this.type = type;
-        this.height = height;
         this.pluginTemplatePages = pluginTemplatePages;
     }
 
@@ -45,10 +43,6 @@ public class TemplatePageImpl implements TemplatePage {
 
     public InvType getType() {
         return this.type;
-    }
-
-    public int getHeight() {
-        return this.height;
     }
 
     public PluginTemplatePagesImpl getPluginTemplatePages() {
@@ -65,7 +59,7 @@ public class TemplatePageImpl implements TemplatePage {
             pagedIconsActive.put(tli.getName(), new PagedItems(tli.getName(), tli.getFirstX(), tli.getFirstZ(), tli.getWidth(), tli.getHeight(), tli.getFactory().create()));
         }
 
-        return new InventoryPageImpl(this.name, this.type, this.title, this.height, itemIconsActive, pagedIconsActive, player, session, this);
+        return new InventoryPageImpl(this.name, this.type, this.title, itemIconsActive, pagedIconsActive, player, session, this);
     }
 
     @Override
@@ -113,7 +107,7 @@ public class TemplatePageImpl implements TemplatePage {
         if (slot < 0) {
             throw new MenuInvException("Кнопка '" + icon.getSlot() + "' находится на позиции меньше нуля! (slot: " + slot + ")");
         }
-        int maxSlot = this.type.getMaxWidth() - 1;
+        int maxSlot = this.type.getWidth() - 1;
         if (slot > maxSlot) {
             throw new MenuInvException("Кнопка '" + icon.getSlot() + "' находится на позиции больше допустимой! (slot: " + slot + "/" + maxSlot + ")");
         }
@@ -129,12 +123,12 @@ public class TemplatePageImpl implements TemplatePage {
             throw new MenuInvException("Список кнопок '" + frame.getName() + "' вышел за рамки области имея отрицательное значение координат. (x: " + frame.getFirstX() + " z: " + frame.getFirstZ());
         }
 
-        if (frame.getFirstX() + frame.getWidth() > this.type.getMaxWidth()) {
-            throw new MenuInvException("Список кнопок '" + frame.getName() + "' вышел за рамки максимального размера области (x: " + (frame.getFirstX() + frame.getWidth()) + " > width: " + this.type.getMaxWidth());
+        if (frame.getFirstX() + frame.getWidth() > this.type.getWidth()) {
+            throw new MenuInvException("Список кнопок '" + frame.getName() + "' вышел за рамки максимального размера области (x: " + (frame.getFirstX() + frame.getWidth()) + " > width: " + this.type.getWidth());
         }
 
-        if (frame.getFirstZ() + frame.getHeight() > this.height) {
-            throw new MenuInvException("Список кнопок '" + frame.getName() + "' вышел за рамки максимального размера области (z: " + (frame.getFirstZ() + frame.getHeight()) + " > height: " + this.height);
+        if (frame.getFirstZ() + frame.getHeight() > this.type.getHeight()) {
+            throw new MenuInvException("Список кнопок '" + frame.getName() + "' вышел за рамки максимального размера области (z: " + (frame.getFirstZ() + frame.getHeight()) + " > height: " + this.type.getHeight());
         }
     }
 

@@ -34,7 +34,7 @@ public class InventoryPageImpl implements InventoryPage {
     //Используется только для того, чтобы узнать от кого был создан этого экземпляр и чтобы можно было узнать плагин создавший этот чертеж.
     private final TemplatePageImpl templatePage;
 
-    public InventoryPageImpl(String name, InvType type, String title, int height, Map<Integer, ItemIcon> iconsPosition, Map<String, PagedItems> listedIcons,
+    public InventoryPageImpl(String name, InvType type, String title, Map<Integer, ItemIcon> iconsPosition, Map<String, PagedItems> listedIcons,
                              Player player, InventorySession session, TemplatePageImpl templatePage) {
         this.name = name;
         this.type = type;
@@ -44,12 +44,7 @@ public class InventoryPageImpl implements InventoryPage {
         this.session = session;
         this.templatePage = templatePage;
 
-        if (this.type == InvType.Chest) {
-            this.inventory = Bukkit.createInventory(new MenuInvHolder(this), height * this.type.getMaxWidth(), this.title);
-        }
-        else {
-            this.inventory = Bukkit.createInventory(new MenuInvHolder(this), this.type.getInventoryType(), this.title);
-        }
+        this.inventory = this.type.createInventory(new MenuInvHolder(this), this.title);
 
         this.activeIcons = new ItemIcon[this.inventory.getSize()];
         Arrays.fill(this.activeIcons, null);

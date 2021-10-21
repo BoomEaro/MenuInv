@@ -30,40 +30,18 @@ public class PluginTemplatePagesImpl implements PluginTemplatePages {
 
     @Override
     public TemplatePage createTemplatePage(String name, String title) throws MenuInvException {
-        return createTemplatePage(name, title, InvType.Chest);
-    }
-
-    @Override
-    public TemplatePage createTemplatePage(String name, String title, int height) throws MenuInvException {
-        return createTemplatePage(name, title, InvType.Chest, height);
+        return createTemplatePage(name, title, InvType.Chest_9X6);
     }
 
     @Override
     public TemplatePage createTemplatePage(String name, String title, InvType type) throws MenuInvException {
-        return createTemplatePage(name, title, type, type.getMaxHeight());
-    }
-
-    @Override
-    public TemplatePage createTemplatePage(String name, String title, InvType type, int height) throws MenuInvException {
         TemplatePage tmp = this.pages.get(name);
         if (tmp != null) {
             throw new MenuInvException("Страница '" + name + "' уже создана!");
         }
 
-        int newHeight = height;
-        if (type != InvType.Chest) {
-            newHeight = type.getMaxHeight();
-        }
 
-        if (newHeight <= 0) {
-            newHeight = 1;
-        }
-
-        if (newHeight > type.getMaxHeight()) {
-            newHeight = type.getMaxHeight();
-        }
-
-        TemplatePageImpl newPage = new TemplatePageImpl(name, title, type, newHeight, this);
+        TemplatePageImpl newPage = new TemplatePageImpl(name, title, type,this);
 
         this.pages.put(name, newPage);
 

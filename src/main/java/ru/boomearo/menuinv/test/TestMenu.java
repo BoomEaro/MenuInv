@@ -32,7 +32,7 @@ public class TestMenu {
         PluginTemplatePages pages = inv.registerPages(inv);
 
         {
-            TemplatePage page = pages.createTemplatePage("test", "Привет", 6);
+            TemplatePage page = pages.createTemplatePage("test", "Привет", InvType.Chest_9X6);
 
             page.addButton(1, () -> new IconHandler() {
 
