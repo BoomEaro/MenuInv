@@ -124,7 +124,7 @@ public class InventoryPageImpl implements InventoryPage {
     @Override
     public void update(boolean force) {
 
-        ItemStack[] array = new ItemStack[this.inventory.getSize()];
+        ItemStack[] array = new ItemStack[this.type.getSize()];
         Arrays.fill(array, null);
 
         for (PagedItems lii : this.listedIcons.values()) {
