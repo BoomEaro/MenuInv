@@ -6,8 +6,10 @@ import ru.boomearo.menuinv.api.SlotElement;
 
 public class ItemIcon extends SlotElement {
 
-    private long updateHandlerCooldown = 0;
+    private long updateHandlerCooldown = System.currentTimeMillis();
+
     private ItemStack cache = null;
+    private boolean firstUpdate = true;
 
     private final IconHandler handler;
 
@@ -21,25 +23,44 @@ public class ItemIcon extends SlotElement {
     }
 
     public ItemStack getItemStack(InventoryPageImpl page, boolean force) {
-        IconHandler handler = this.handler;
+        /*
+         * Проверяем в самом начале, первый ли раз вызывается извлечение предмета
+         * Если это так, получаем обновленный предмет и возвращаем его.
+         * В дальнейшем, будет ли обновление, зависит от реализации обработчика IconHandler
+         */
+        if (this.firstUpdate) {
+            ItemStack newItem = getUpdatedItem(page);
 
-        if (((System.currentTimeMillis() - this.updateHandlerCooldown) > (handler.getUpdateTime() * 50)) || force) {
-            this.updateHandlerCooldown = System.currentTimeMillis();
+            this.cache = newItem;
 
-            ItemStack item = null;
-            try {
-                item = handler.onUpdate(page, page.getPlayer());
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
+            this.firstUpdate = false;
 
-            this.cache = item;
-
-            return item;
+            return newItem;
         }
 
-        return cache;
+        if (this.handler.shouldUpdate() && (((System.currentTimeMillis() - this.updateHandlerCooldown) > (this.handler.getUpdateTime() * 50)) || force)) {
+            this.updateHandlerCooldown = System.currentTimeMillis();
+
+            ItemStack newItem = getUpdatedItem(page);
+
+            this.cache = newItem;
+
+            return newItem;
+        }
+
+        return this.cache;
     }
 
+    private ItemStack getUpdatedItem(InventoryPageImpl page) {
+
+        ItemStack item = null;
+        try {
+            item = this.handler.onUpdate(page, page.getPlayer());
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return item;
+    }
 }

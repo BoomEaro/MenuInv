@@ -18,4 +18,11 @@ public interface Updatable<T, C> {
     public default long getUpdateTime() {
         return 20;
     }
+
+    /**
+     * @return действительно ли элемент будет обновлен
+     */
+    public default boolean shouldUpdate() {
+        return true;
+    }
 }

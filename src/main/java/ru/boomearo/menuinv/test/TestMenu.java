@@ -154,6 +154,11 @@ public class TestMenu {
                     return new ItemStack(Material.BLACK_STAINED_GLASS_PANE, 1);
                 }
 
+                @Override
+                public boolean shouldUpdate() {
+                    return false;
+                }
+
             });
         }
         {
@@ -225,6 +230,25 @@ public class TestMenu {
                     item.setItemMeta(meta);
                     return item;
                 }
+            });
+
+            page.setBackground(() -> new IconHandler() {
+
+                @Override
+                public void onClick(InventoryPage page, Player player, ClickType click) {
+
+                }
+
+                @Override
+                public ItemStack onUpdate(InventoryPage consume, Player player) {
+                    return new ItemStack(Material.BLUE_STAINED_GLASS_PANE, 1);
+                }
+
+                @Override
+                public boolean shouldUpdate() {
+                    return false;
+                }
+
             });
         }
     }
