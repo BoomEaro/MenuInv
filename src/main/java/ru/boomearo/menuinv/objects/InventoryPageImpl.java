@@ -8,6 +8,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import ru.boomearo.menuinv.MenuInv;
+import ru.boomearo.menuinv.api.IconHandlerFactory;
 import ru.boomearo.menuinv.api.InvType;
 import ru.boomearo.menuinv.api.InventoryPage;
 import ru.boomearo.menuinv.api.InventorySession;
@@ -35,7 +36,7 @@ public class InventoryPageImpl implements InventoryPage {
     private final TemplatePageImpl templatePage;
 
     public InventoryPageImpl(String name, InvType type, String title, Map<Integer, ItemIcon> iconsPosition, Map<String, PagedItems> listedIcons,
-                             Player player, InventorySession session, TemplatePageImpl templatePage) {
+                             IconHandlerFactory background, Player player, InventorySession session, TemplatePageImpl templatePage) {
         this.name = name;
         this.type = type;
         this.title = title;
@@ -46,8 +47,14 @@ public class InventoryPageImpl implements InventoryPage {
 
         this.inventory = this.type.createInventory(new MenuInvHolder(this), this.title);
 
-        this.activeIcons = new ItemIcon[this.inventory.getSize()];
+        this.activeIcons = new ItemIcon[this.type.getSize()];
         Arrays.fill(this.activeIcons, null);
+
+        if (background != null) {
+            for (int i = 0; i < this.type.getSize(); i++) {
+                this.activeIcons[i] = new ItemIcon(i, background.create());
+            }
+        }
 
         for (ItemIcon ii : iconsPosition.values()) {
             this.activeIcons[ii.getSlot()] = ii;

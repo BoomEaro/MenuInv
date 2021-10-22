@@ -141,6 +141,20 @@ public class TestMenu {
             page.addScrollButton(7, "test", PagedItems.ScrollType.PREVIOUSLY, new DefaultScrollHandlerFactory(PagedItems.ScrollType.PREVIOUSLY));
 
             page.addScrollButton(8, "test", PagedItems.ScrollType.NEXT, new DefaultScrollHandlerFactory(PagedItems.ScrollType.NEXT));
+
+            page.setBackground(() -> new IconHandler() {
+
+                @Override
+                public void onClick(InventoryPage page, Player player, ClickType click) {
+
+                }
+
+                @Override
+                public ItemStack onUpdate(InventoryPage consume, Player player) {
+                    return new ItemStack(Material.BLACK_STAINED_GLASS_PANE, 1);
+                }
+
+            });
         }
         {
             TemplatePage page = pages.createTemplatePage("test2", "Привет2", InvType.WORKBENCH);

@@ -26,6 +26,7 @@ public class TemplatePageImpl implements TemplatePage {
 
     private final Map<Integer, ItemIconTemplate> itemIcons = new HashMap<>();
     private final Map<String, FramedIconsTemplate> pagedItems = new HashMap<>();
+    private IconHandlerFactory backbround = null;
 
     public TemplatePageImpl(String name, String title, InvType type, PluginTemplatePagesImpl pluginTemplatePages) {
         this.name = name;
@@ -60,7 +61,7 @@ public class TemplatePageImpl implements TemplatePage {
             pagedIconsActive.put(tli.getName(), new PagedItems(tli.getName(), tli.getFirstX(), tli.getFirstZ(), tli.getWidth(), tli.getHeight(), tli.getFactory().create()));
         }
 
-        return new InventoryPageImpl(this.name, this.type, this.title, itemIconsActive, pagedIconsActive, player, session, this);
+        return new InventoryPageImpl(this.name, this.type, this.title, itemIconsActive, pagedIconsActive, this.backbround, player, session, this);
     }
 
     @Override
@@ -100,6 +101,15 @@ public class TemplatePageImpl implements TemplatePage {
         }
 
         addButton(new ItemIconTemplate(slot, new ScrollIconHandlerFactory(pagedItems, type, factory)));
+    }
+
+    @Override
+    public void setBackground(IconHandlerFactory factory) throws MenuInvException {
+        if (this.backbround != null) {
+            throw new MenuInvException("Фон уже установлен!");
+        }
+
+        this.backbround = factory;
     }
 
     public void addButton(ItemIconTemplate icon) throws MenuInvException {

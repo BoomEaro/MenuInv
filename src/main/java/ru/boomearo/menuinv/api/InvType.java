@@ -52,13 +52,13 @@ public enum InvType {
         return this.height;
     }
 
-    public int getMaxSize() {
+    public int getSize() {
         return this.width * this.height;
     }
 
     public Inventory createInventory(InventoryHolder holder, String title) {
         if (this.type == InventoryType.CHEST) {
-            return Bukkit.createInventory(holder,getHeight() * getWidth(), title);
+            return Bukkit.createInventory(holder, getSize(), title);
         }
 
         return Bukkit.createInventory(holder, this.type, title);
