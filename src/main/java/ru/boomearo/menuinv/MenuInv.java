@@ -81,6 +81,11 @@ public final class MenuInv extends JavaPlugin {
         return this.updater;
     }
 
+    /**
+     * Регистрирует плагин для создания шаблона страниц
+     * @param plugin Плагин, который регистрирует страницы
+     * @return Шаблон страниц плагина
+     */
     public PluginTemplatePages registerPages(JavaPlugin plugin) throws MenuInvException {
         if (plugin == null) {
             throw new MenuInvException("plugin является нулевым!");
@@ -98,6 +103,11 @@ public final class MenuInv extends JavaPlugin {
         return pages;
     }
 
+    /**
+     * Отменяет регистрацию плагина, удаляя все страницы которые были им добавлены.
+     * При удалении страниц, игроки у которых эти страницы остались открыты, будут принудительно закрыты.
+     * @param plugin Плагин, который зарегистрировал страницы
+     */
     public void unregisterPages(JavaPlugin plugin) throws MenuInvException {
         if (plugin == null) {
             throw new MenuInvException("plugin является нулевым!");
@@ -127,10 +137,23 @@ public final class MenuInv extends JavaPlugin {
         }
     }
 
+    /**
+     * Открывает меню со страницей плагина
+     * @param plugin Плагин, который зарегистрировал страницу
+     * @param page Страница, которая была зарегистрирована плагином
+     * @param player Игрок, которому надо открыть страницу
+     */
     public void openMenu(JavaPlugin plugin, String page, Player player) throws MenuInvException {
         openMenu(plugin, page, player, null);
     }
 
+    /**
+     * Открывает меню со страницей плагина
+     * @param plugin Плагин, который зарегистрировал страницу
+     * @param page Страница, которая была зарегистрирована плагином
+     * @param player Игрок, которому надо открыть страницу
+     * @param session Сессия, используемся для хранения внутренних параметров между страницами
+     */
     public void openMenu(JavaPlugin plugin, String page, Player player, InventorySession session) throws MenuInvException {
         if (plugin == null || page == null || player == null) {
             throw new MenuInvException("Указанные аргументы являются нулевыми!");

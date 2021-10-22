@@ -16,6 +16,9 @@ import ru.boomearo.menuinv.api.frames.inventory.PagedItems;
 
 import java.util.*;
 
+/**
+ * Реализация страницы инвентаря
+ */
 public class InventoryPageImpl implements InventoryPage {
 
     private final String name;
@@ -32,7 +35,7 @@ public class InventoryPageImpl implements InventoryPage {
 
     private final InventorySession session;
 
-    //Используется только для того, чтобы узнать от кого был создан этого экземпляр и чтобы можно было узнать плагин создавший этот чертеж.
+    //Используется только для того, чтобы узнать от кого был создан этот экземпляр и чтобы можно было узнать плагин создавший этот шаблон.
     private final TemplatePageImpl templatePage;
 
     public InventoryPageImpl(String name, InvType type, String title, Map<Integer, ItemIcon> iconsPosition, Map<String, PagedItems> listedIcons,
@@ -45,17 +48,22 @@ public class InventoryPageImpl implements InventoryPage {
         this.session = session;
         this.templatePage = templatePage;
 
+        //Создаем новый инвентарь баккита и добавляет в него свой холдер для идентификации инвентари
         this.inventory = this.type.createInventory(new MenuInvHolder(this), this.title);
 
+        //Создаем массив активных предметов размеров в текущий инвентарь
         this.activeIcons = new ItemIcon[this.type.getSize()];
+        //Заполняем массив нулями
         Arrays.fill(this.activeIcons, null);
 
+        //Сначала заполняем массив активных предметов задним фоном.
         if (background != null) {
             for (int i = 0; i < this.type.getSize(); i++) {
                 this.activeIcons[i] = new ItemIcon(i, background.create());
             }
         }
 
+        //Затем заполняем массив активных предметов самостоятельными предметами.
         for (ItemIcon ii : iconsPosition.values()) {
             this.activeIcons[ii.getSlot()] = ii;
         }
@@ -119,6 +127,7 @@ public class InventoryPageImpl implements InventoryPage {
 
         //MenuInv.getInstance().getLogger().info("test " + (end - start));
     }
+
     //TODO Я хз, нужно ли оптимизировать, так как вызывается обновление каждый тик.
     //TODO По замерам вроде вообще проблем нет
     @Override
@@ -127,12 +136,14 @@ public class InventoryPageImpl implements InventoryPage {
         ItemStack[] array = new ItemStack[this.type.getSize()];
         Arrays.fill(array, null);
 
+        //Обновляем текущий массив активных предметов, используя рамочные предметы.
         for (PagedItems lii : this.listedIcons.values()) {
             lii.updateActiveIcons(this, force);
         }
 
         //MenuInv.getInstance().getLogger().info("test " + this.activeIcons.toString());
 
+        //Используя массив активных предметов, заполняем массив баккитовских предметов
         for (ItemIcon ii : this.activeIcons) {
             if (ii == null) {
                 continue;

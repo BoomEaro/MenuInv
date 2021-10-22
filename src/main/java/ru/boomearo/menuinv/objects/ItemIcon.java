@@ -4,6 +4,9 @@ import org.bukkit.inventory.ItemStack;
 import ru.boomearo.menuinv.api.IconHandler;
 import ru.boomearo.menuinv.api.SlotElement;
 
+/**
+ * Представляет активный предмет с позицией, активно используемый для обработки инвентаря
+ */
 public class ItemIcon extends SlotElement {
 
     private long updateHandlerCooldown = System.currentTimeMillis();
@@ -38,7 +41,7 @@ public class ItemIcon extends SlotElement {
             return newItem;
         }
 
-        if (this.handler.shouldUpdate() && (((System.currentTimeMillis() - this.updateHandlerCooldown) > (this.handler.getUpdateTime() * 50)) || force)) {
+        if (this.handler.shouldUpdate() && (((System.currentTimeMillis() - this.updateHandlerCooldown) > this.handler.getUpdateTime()) || force)) {
             this.updateHandlerCooldown = System.currentTimeMillis();
 
             ItemStack newItem = getUpdatedItem(page);

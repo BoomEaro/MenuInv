@@ -5,7 +5,8 @@ import ru.boomearo.menuinv.objects.InventoryPageImpl;
 import java.util.List;
 
 /**
- * Представляет обработчик списка иконок
+ * Представляет обработчик рамочных предметов.
+ * На данный момент это маркерный интерфейс, реализующий Updatable с некоторыми дженериками.
  */
 public interface FramedIconsHandler extends Updatable<List<IconHandler>, InventoryPageImpl> {
 

@@ -8,6 +8,9 @@ import ru.boomearo.menuinv.objects.ItemIcon;
 
 import java.util.List;
 
+/**
+ * Представляет страничную рамки, которую можно скроллить (перемещать вперед/назад)
+ */
 public class PagedItems extends FramedIcons {
 
     private long updateHandlerCooldown = 0;
@@ -20,10 +23,17 @@ public class PagedItems extends FramedIcons {
         super(name, x, z, width, height, handler);
     }
 
+    /**
+     * @return Текущую страницу
+     */
     public int getCurrentPage() {
         return this.page;
     }
 
+    /**
+     * Устанавливает страницу
+     * @param page Номер страницы
+     */
     public void setCurrentPage(int page) {
         int nextPage = page;
 
@@ -37,10 +47,17 @@ public class PagedItems extends FramedIcons {
         this.page = nextPage;
     }
 
+    /**
+     * @return Максимальную страницу
+     */
     public int getMaxPage() {
         return this.maxPage;
     }
 
+    /**
+     * Прокручивает страницу вперед на 1 номер
+     * @return true если удалось прокрутить страницу
+     */
     public boolean nextPage() {
         int newPage = this.page + 1;
 
@@ -57,6 +74,10 @@ public class PagedItems extends FramedIcons {
         return this.page == newPage;
     }
 
+    /**
+     * Прокручивает страницу назад на 1 номер
+     * @return true если удалось прокрутить страницу
+     */
     public boolean previouslyPage() {
         int newPage = this.page - 1;
 
@@ -69,6 +90,11 @@ public class PagedItems extends FramedIcons {
         return this.page == newPage;
     }
 
+    /**
+     * Прокручивает страницу на 1 номер
+     * @param type Тип прокрутки
+     * @return true если удалось прокрутить страницу
+     */
     public boolean scrollPage(ScrollType type) {
         if (type == ScrollType.NEXT) {
             return nextPage();
@@ -79,6 +105,11 @@ public class PagedItems extends FramedIcons {
         return false;
     }
 
+    /**
+     * Обновляет актуальное состояние страницы
+     * @param page Страница инвентаря
+     * @param force Игнорировать ли задержку обновления
+     */
     public void updateActiveIcons(InventoryPageImpl page, boolean force) {
         FramedIconsHandler handler = getHandler();
 

@@ -7,6 +7,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import ru.boomearo.menuinv.api.frames.inventory.PagedItems;
 
+/**
+ * Представляет готовую реализацию скролла, для предотвращения создания/копирования одних и тех же по функциональности классов
+ */
 public class DefaultScrollHandlerFactory implements ScrollHandlerFactory {
 
     private final PagedItems.ScrollType type;

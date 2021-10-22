@@ -5,6 +5,9 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
+/**
+ * Енум, представляющий все возможные инвентари с которым можно взаимодействовать
+ */
 public enum InvType {
 
     ANVIL(InventoryType.ANVIL, 3, 1),

@@ -8,19 +8,19 @@ import org.bukkit.entity.Player;
 public interface Updatable<T, C> {
 
     /**
-     * @return новый объект для которого применяется обновление
+     * @return Новый объект для которого применяется обновление
      */
     public T onUpdate(C consume, Player player);
 
     /**
-     * @return время для обновления метода update. По умолчанию значение равно 20 тиков, то есть одна секунда. (1 тик = 50 мс)
+     * @return Время для обновления метода update. По умолчанию значение равно 250 миллисекунд.
      */
     public default long getUpdateTime() {
-        return 20;
+        return 250;
     }
 
     /**
-     * @return действительно ли элемент будет обновлен
+     * @return Действительно ли элемент будет обновлен
      */
     public default boolean shouldUpdate() {
         return true;

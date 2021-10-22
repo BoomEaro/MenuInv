@@ -16,6 +16,9 @@ import ru.boomearo.menuinv.exceptions.MenuInvException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Представляет реализацию шаблона страницы
+ */
 public class TemplatePageImpl implements TemplatePage {
 
     private final String name;
@@ -65,7 +68,7 @@ public class TemplatePageImpl implements TemplatePage {
     }
 
     @Override
-    public void addButton(int slot, IconHandlerFactory factory) throws MenuInvException {
+    public void addItem(int slot, IconHandlerFactory factory) throws MenuInvException {
         if (factory == null) {
             throw new MenuInvException("factory является нулевым!");
         }

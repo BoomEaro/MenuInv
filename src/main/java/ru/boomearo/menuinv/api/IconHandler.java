@@ -8,30 +8,39 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Представляет обработчик нажатий на кнопку
+ * Представляет абстрактный обработчик предмета
  */
 public abstract class IconHandler implements Updatable<ItemStack, InventoryPage> {
 
     private static final Map<String, Long> clickCd = new HashMap<>();
 
     /**
-     * Обработчик нажатия на кнопку. Для точного определения типа нажатия, используйте аргумент type
+     * Обрабатывает нажатия на предмет
+     * @param page Страница инвентаря
+     * @param player Игрок нажавший на предмет
+     * @param click Тип клика
      */
     public abstract void onClick(InventoryPage page, Player player, ClickType click);
 
     /**
-     * @return задержка между выполнением метода click. По умолчанию 250 мс
+     * @return Задержку между выполнением метода onClick. По умолчанию 250 мс
      */
     public long getClickTime() {
         return 250;
     }
 
-    public void handleClick(InventoryPage page, Player player, ClickType type) {
+    /**
+     * Обрабатывает нажатие на предмет, учитывая задержку и реализацию текущего класса
+     * @param page Страница инвентаря
+     * @param player Игрок нажавший на предмет
+     * @param click Тип клика
+     */
+    public void handleClick(InventoryPage page, Player player, ClickType click) {
         if (hasClicked(player.getName(), getClickTime())) {
             clickCd.put(player.getName(), System.currentTimeMillis());
 
             try {
-                onClick(page, player, type);
+                onClick(page, player, click);
             }
             catch (Exception e) {
                 e.printStackTrace();

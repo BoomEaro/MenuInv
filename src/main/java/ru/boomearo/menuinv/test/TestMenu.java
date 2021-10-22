@@ -9,8 +9,8 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-
 import org.bukkit.inventory.meta.ItemMeta;
+
 import ru.boomearo.menuinv.MenuInv;
 import ru.boomearo.menuinv.api.*;
 import ru.boomearo.menuinv.api.scrolls.DefaultScrollHandlerFactory;
@@ -20,6 +20,9 @@ import ru.boomearo.menuinv.api.frames.inventory.PagedItems;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * Тестовый класс, используется только для отладки
+ */
 public class TestMenu {
 
     public static void setupTest() throws MenuInvException {
@@ -34,7 +37,7 @@ public class TestMenu {
         {
             TemplatePage page = pages.createTemplatePage("test", "Привет", InvType.CHEST_9X6);
 
-            page.addButton(1, () -> new IconHandler() {
+            page.addItem(1, () -> new IconHandler() {
 
                 @Override
                 public void onClick(InventoryPage page, Player player, ClickType type) {
@@ -52,7 +55,7 @@ public class TestMenu {
                 }
             });
 
-            page.addButton(3, () -> new IconHandler() {
+            page.addItem(3, () -> new IconHandler() {
 
                 @Override
                 public void onClick(InventoryPage page, Player player, ClickType type) {
@@ -75,7 +78,7 @@ public class TestMenu {
                 }
             });
 
-            page.addButton(4, () -> new IconHandler() {
+            page.addItem(4, () -> new IconHandler() {
 
                 @Override
                 public void onClick(InventoryPage page, Player player, ClickType type) {
@@ -164,7 +167,7 @@ public class TestMenu {
         {
             TemplatePage page = pages.createTemplatePage("test2", "Привет2", InvType.WORKBENCH);
 
-            page.addButton(9, () -> new IconHandler() {
+            page.addItem(9, () -> new IconHandler() {
 
                 @Override
                 public void onClick(InventoryPage page, Player player, ClickType type) {
@@ -192,7 +195,7 @@ public class TestMenu {
                 }
 
             });
-            page.addButton(0, () -> new IconHandler() {
+            page.addItem(0, () -> new IconHandler() {
 
                 @Override
                 public void onClick(InventoryPage page, Player player, ClickType type) {
@@ -211,10 +214,10 @@ public class TestMenu {
 
                 @Override
                 public long getUpdateTime() {
-                    return 5;
+                    return 500;
                 }
             });
-            page.addButton(1, () -> new IconHandler() {
+            page.addItem(1, () -> new IconHandler() {
 
                 @Override
                 public void onClick(InventoryPage page, Player player, ClickType type) {

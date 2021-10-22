@@ -1,5 +1,8 @@
 package ru.boomearo.menuinv.api.frames;
 
+/**
+ * Представляет абстрактную рамку
+ */
 public abstract class Frame {
 
     private final String name;
@@ -23,41 +26,73 @@ public abstract class Frame {
         this.height = height;
     }
 
+    /**
+     * @return Имя рамки
+     */
     public String getName() {
         return this.name;
     }
 
+    /**
+     * @return Первые координаты x
+     */
     public int getFirstX() {
         return this.firstX;
     }
 
+    /**
+     * @return Первые координаты z
+     */
     public int getFirstZ() {
         return this.firstZ;
     }
 
+    /**
+     * @return Вторые координаты x
+     */
     public int getSecondX() {
         return this.secondX;
     }
 
+    /**
+     * @return Вторые координаты z
+     */
     public int getSecondZ() {
         return this.secondZ;
     }
 
+    /**
+     * @return Ширина рамки
+     */
     public int getWidth() {
         return this.width;
     }
 
+    /**
+     * @return Высота рамки
+     */
     public int getHeight() {
         return this.height;
     }
 
+    /**
+     * Проверяет, находится ли позиция в рамке
+     * @param slot Проверяемая позиция
+     * @return true если указанная позиция внутри рамки
+     */
     public boolean isInsideFrame(int slot) {
         int y = slot / this.width;
         int x = slot - (y * this.width);
         return isInsideFrame(x, y);
     }
 
-    public boolean isInsideFrame(int x, int y) {
-        return x >= this.firstX && y >= this.firstZ && x <= this.secondX && y <= this.secondZ;
+    /**
+     * Проверяет, находится ли координаты в рамке
+     * @param x Первая точка позиции
+     * @param z Вторая точка позиции
+     * @return true если указанные координаты внутри рамки
+     */
+    public boolean isInsideFrame(int x, int z) {
+        return x >= this.firstX && z >= this.firstZ && x <= this.secondX && z <= this.secondZ;
     }
 }

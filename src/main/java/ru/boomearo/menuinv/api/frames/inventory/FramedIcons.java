@@ -3,6 +3,9 @@ package ru.boomearo.menuinv.api.frames.inventory;
 import ru.boomearo.menuinv.api.FramedIconsHandler;
 import ru.boomearo.menuinv.api.frames.Frame;
 
+/**
+ * Представляет рамку, использующую обработчик рамочных предметов.
+ */
 public class FramedIcons extends Frame {
 
     private final FramedIconsHandler handler;

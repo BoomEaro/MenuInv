@@ -3,6 +3,9 @@ package ru.boomearo.menuinv.api.frames.template;
 import ru.boomearo.menuinv.api.FramedIconsHandlerFactory;
 import ru.boomearo.menuinv.api.frames.Frame;
 
+/**
+ * Представляет шаблон рамки, использующий фабрику рамочных предметов
+ */
 public class FramedIconsTemplate extends Frame {
 
     private final FramedIconsHandlerFactory factory;

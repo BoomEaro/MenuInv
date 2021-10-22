@@ -10,6 +10,9 @@ import ru.boomearo.menuinv.exceptions.MenuInvException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Представляет реализацию шаблона страниц плагина
+ */
 public class PluginTemplatePagesImpl implements PluginTemplatePages {
 
     private final JavaPlugin plugin;
