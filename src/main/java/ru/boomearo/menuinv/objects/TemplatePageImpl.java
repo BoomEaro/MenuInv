@@ -66,6 +66,10 @@ public class TemplatePageImpl implements TemplatePage {
 
     @Override
     public void addButton(int slot, IconHandlerFactory factory) throws MenuInvException {
+        if (factory == null) {
+            throw new MenuInvException("factory является нулевым!");
+        }
+
         ItemIconTemplate tmp = this.itemIcons.get(slot);
         if (tmp != null) {
             throw new MenuInvException("Кнопка на позиции '" + slot + "' уже добавлена!");
@@ -76,6 +80,10 @@ public class TemplatePageImpl implements TemplatePage {
 
     @Override
     public void addPagedItems(String name, int x, int z, int width, int height, FramedIconsHandlerFactory factory) throws MenuInvException {
+        if (name == null || factory == null) {
+            throw new MenuInvException("Указанные аргументы являются нулевыми!");
+        }
+
         FramedIconsTemplate tmp = this.pagedItems.get(name);
         if (tmp != null) {
             throw new MenuInvException("Список кнопок '" + name + "' уже добавлена!");
@@ -90,6 +98,10 @@ public class TemplatePageImpl implements TemplatePage {
 
     @Override
     public void addScrollButton(int slot, String pagedItems, PagedItems.ScrollType type, ScrollHandlerFactory factory) throws MenuInvException {
+        if (pagedItems == null || type == null || factory == null) {
+            throw new MenuInvException("Указанные аргументы являются нулевыми!");
+        }
+
         ItemIconTemplate tmp = this.itemIcons.get(slot);
         if (tmp != null) {
             throw new MenuInvException("Кнопка на позиции '" + slot + "' уже добавлена!");
@@ -105,6 +117,10 @@ public class TemplatePageImpl implements TemplatePage {
 
     @Override
     public void setBackground(IconHandlerFactory factory) throws MenuInvException {
+        if (factory == null) {
+            throw new MenuInvException("factory является нулевым!");
+        }
+
         if (this.backbround != null) {
             throw new MenuInvException("Фон уже установлен!");
         }

@@ -83,7 +83,7 @@ public final class MenuInv extends JavaPlugin {
 
     public PluginTemplatePages registerPages(JavaPlugin plugin) throws MenuInvException {
         if (plugin == null) {
-            throw new MenuInvException("Аргумент являются нулл!");
+            throw new MenuInvException("plugin является нулевым!");
         }
 
         PluginTemplatePagesImpl tmp = this.menu.get(plugin.getClass());
@@ -100,7 +100,7 @@ public final class MenuInv extends JavaPlugin {
 
     public void unregisterPages(JavaPlugin plugin) throws MenuInvException {
         if (plugin == null) {
-            throw new MenuInvException("Аргумент являются нулл!");
+            throw new MenuInvException("plugin является нулевым!");
         }
 
         PluginTemplatePagesImpl tmp = this.menu.get(plugin.getClass());
@@ -133,7 +133,7 @@ public final class MenuInv extends JavaPlugin {
 
     public void openMenu(JavaPlugin plugin, String page, Player player, InventorySession session) throws MenuInvException {
         if (plugin == null || page == null || player == null) {
-            throw new MenuInvException("Аргументы являются нулевыми!");
+            throw new MenuInvException("Указанные аргументы являются нулевыми!");
         }
 
         PluginTemplatePagesImpl pp = this.menu.get(plugin.getClass());

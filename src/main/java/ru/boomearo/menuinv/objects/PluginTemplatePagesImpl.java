@@ -35,11 +35,14 @@ public class PluginTemplatePagesImpl implements PluginTemplatePages {
 
     @Override
     public TemplatePage createTemplatePage(String name, String title, InvType type) throws MenuInvException {
+        if (name == null || title == null || type == null) {
+            throw new MenuInvException("Указанные аргументы являются нулевыми!");
+        }
+
         TemplatePage tmp = this.pages.get(name);
         if (tmp != null) {
             throw new MenuInvException("Страница '" + name + "' уже создана!");
         }
-
 
         TemplatePageImpl newPage = new TemplatePageImpl(name, title, type,this);
 
