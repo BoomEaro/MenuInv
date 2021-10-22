@@ -25,6 +25,18 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class TestMenu {
 
+    private static final List<Material> allMaterials;
+
+    static {
+        List<Material> tmp = new ArrayList<>();
+        for (Material mat : Material.values()) {
+            if (mat.isItem()) {
+                tmp.add(mat);
+            }
+        }
+        allMaterials = tmp;
+    }
+
     public static void setupTest() throws MenuInvException {
         setupMenu();
         registerEvents();
@@ -181,7 +193,7 @@ public class TestMenu {
 
                 @Override
                 public ItemStack onUpdate(InventoryPage consume, Player player) {
-                    ItemStack item = new ItemStack(Material.values()[ThreadLocalRandom.current().nextInt(Material.values().length)], 1);
+                    ItemStack item = new ItemStack(allMaterials.get(ThreadLocalRandom.current().nextInt(allMaterials.size())), 1);
                     ItemMeta meta = item.getItemMeta();
                     meta.setDisplayName("Привет тест!");
                     meta.setLore(Arrays.asList("Time: " + System.currentTimeMillis()));
@@ -204,7 +216,7 @@ public class TestMenu {
 
                 @Override
                 public ItemStack onUpdate(InventoryPage consume, Player player) {
-                    ItemStack item = new ItemStack(Material.values()[ThreadLocalRandom.current().nextInt(Material.values().length)], 1);
+                    ItemStack item = new ItemStack(allMaterials.get(ThreadLocalRandom.current().nextInt(allMaterials.size())), 1);
                     ItemMeta meta = item.getItemMeta();
                     meta.setDisplayName("Привет тест2!");
                     meta.setLore(Arrays.asList("Time2: " + System.currentTimeMillis()));
