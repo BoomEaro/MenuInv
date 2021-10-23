@@ -2,6 +2,7 @@ package ru.boomearo.menuinv.objects;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
+import ru.boomearo.menuinv.api.InventoryCreationHandler;
 import ru.boomearo.menuinv.api.PluginTemplatePages;
 import ru.boomearo.menuinv.api.TemplatePage;
 import ru.boomearo.menuinv.api.InvType;
@@ -32,13 +33,13 @@ public class PluginTemplatePagesImpl implements PluginTemplatePages {
     }
 
     @Override
-    public TemplatePage createTemplatePage(String name, String title) throws MenuInvException {
-        return createTemplatePage(name, title, InvType.CHEST_9X6);
+    public TemplatePage createTemplatePage(String name, InventoryCreationHandler titleHandler) throws MenuInvException {
+        return createTemplatePage(name, InvType.CHEST_9X6, titleHandler);
     }
 
     @Override
-    public TemplatePage createTemplatePage(String name, String title, InvType type) throws MenuInvException {
-        if (name == null || title == null || type == null) {
+    public TemplatePage createTemplatePage(String name,  InvType type, InventoryCreationHandler titleHandler) throws MenuInvException {
+        if (name == null || titleHandler == null || type == null) {
             throw new MenuInvException("Указанные аргументы являются нулевыми!");
         }
 
@@ -47,7 +48,7 @@ public class PluginTemplatePagesImpl implements PluginTemplatePages {
             throw new MenuInvException("Страница '" + name + "' уже создана!");
         }
 
-        TemplatePageImpl newPage = new TemplatePageImpl(name, title, type,this);
+        TemplatePageImpl newPage = new TemplatePageImpl(name, type, titleHandler,this);
 
         this.pages.put(name, newPage);
 

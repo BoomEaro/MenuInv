@@ -22,8 +22,8 @@ import java.util.Map;
 public class TemplatePageImpl implements TemplatePage {
 
     private final String name;
-    private final String title;
     private final InvType type;
+    private final InventoryCreationHandler creationHandler;
 
     private final PluginTemplatePagesImpl pluginTemplatePages;
 
@@ -31,10 +31,10 @@ public class TemplatePageImpl implements TemplatePage {
     private final Map<String, FramedIconsTemplate> pagedItems = new HashMap<>();
     private IconHandlerFactory backbround = null;
 
-    public TemplatePageImpl(String name, String title, InvType type, PluginTemplatePagesImpl pluginTemplatePages) {
+    public TemplatePageImpl(String name, InvType type, InventoryCreationHandler creationHandler, PluginTemplatePagesImpl pluginTemplatePages) {
         this.name = name;
-        this.title = title;
         this.type = type;
+        this.creationHandler = creationHandler;
         this.pluginTemplatePages = pluginTemplatePages;
     }
 
@@ -42,12 +42,12 @@ public class TemplatePageImpl implements TemplatePage {
         return this.name;
     }
 
-    public String getTitle() {
-        return this.title;
-    }
-
     public InvType getType() {
         return this.type;
+    }
+
+    public InventoryCreationHandler getInventoryCreationHandler() {
+        return this.creationHandler;
     }
 
     public PluginTemplatePagesImpl getPluginTemplatePages() {
@@ -64,7 +64,7 @@ public class TemplatePageImpl implements TemplatePage {
             pagedIconsActive.put(tli.getName(), new PagedItems(tli.getName(), tli.getFirstX(), tli.getFirstZ(), tli.getWidth(), tli.getHeight(), tli.getFactory().create()));
         }
 
-        return new InventoryPageImpl(this.name, this.type, this.title, itemIconsActive, pagedIconsActive, this.backbround, player, session, this);
+        return new InventoryPageImpl(this.name, this.type, this.creationHandler.createTitle(session), itemIconsActive, pagedIconsActive, this.backbround, player, session, this);
     }
 
     @Override

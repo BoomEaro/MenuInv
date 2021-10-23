@@ -16,18 +16,18 @@ public interface PluginTemplatePages {
     /**
      * Создает новый шаблон страниц. По умолчанию тип инвентаря InvType.CHEST_9X6
      * @param name Название страницы
-     * @param title Тайтл страницы, который отображается в названии инвентаря
+     * @param titleHandler Обработчик тайтла страницы
      * @return Шаблон страницы
      */
-    public TemplatePage createTemplatePage(String name, String title) throws MenuInvException;
+    public TemplatePage createTemplatePage(String name, InventoryCreationHandler titleHandler) throws MenuInvException;
 
     /**
      * Создает новый шаблон страниц.
      * @param name Название страницы
-     * @param title Тайтл страницы, который отображается в названии инвентаря
+     * @param titleHandler Обработчик тайтла страницы
      * @param type Тип инвентаря
      * @return Шаблон страницы
      */
-    public TemplatePage createTemplatePage(String name, String title, InvType type) throws MenuInvException;
+    public TemplatePage createTemplatePage(String name, InvType type, InventoryCreationHandler titleHandler) throws MenuInvException;
 
 }

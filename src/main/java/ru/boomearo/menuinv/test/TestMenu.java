@@ -47,7 +47,7 @@ public class TestMenu {
         PluginTemplatePages pages = inv.registerPages(inv);
 
         {
-            TemplatePage page = pages.createTemplatePage("test", "Привет", InvType.CHEST_9X6);
+            TemplatePage page = pages.createTemplatePage("test", InvType.CHEST_9X6, (session) -> "Привет1");
 
             page.addItem(1, () -> new IconHandler() {
 
@@ -177,7 +177,7 @@ public class TestMenu {
             });
         }
         {
-            TemplatePage page = pages.createTemplatePage("test2", "Привет2", InvType.WORKBENCH);
+            TemplatePage page = pages.createTemplatePage("test2", InvType.WORKBENCH, (session) -> "Привет2");
 
             page.addItem(9, () -> new IconHandler() {
 
