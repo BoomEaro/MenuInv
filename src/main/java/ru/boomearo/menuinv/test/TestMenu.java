@@ -54,7 +54,7 @@ public class TestMenu {
                 @Override
                 public void onClick(InventoryPage page, Player player, ClickType type) {
                     try {
-                        inv.openMenu(inv, "test2", player, page.getSession());
+                        inv.openMenu(new PageData(inv, "test2"), player, page.getSession());
                     }
                     catch (MenuInvException e) {
                         e.printStackTrace();
@@ -184,7 +184,7 @@ public class TestMenu {
                 @Override
                 public void onClick(InventoryPage page, Player player, ClickType type) {
                     try {
-                        inv.openMenu(inv, "test", player, page.getSession());
+                        inv.openMenu(new PageData(inv, "test"), player, page.getSession());
                     }
                     catch (MenuInvException e) {
                         e.printStackTrace();
@@ -283,17 +283,16 @@ public class TestMenu {
                 e.setUseItemInHand(Event.Result.DENY);
 
                 try {
-                    MenuInv.getInstance().openMenu(MenuInv.getInstance(), "test", pl, new TestSession());
+                    MenuInv.getInstance().openMenu(new PageData(MenuInv.getInstance(), "test"), pl, new TestSession());
                 }
                 catch (MenuInvException ex) {
                     ex.printStackTrace();
                 }
             }
         }
-
     }
 
-    private static class TestSession implements InventorySession{
+    private static class TestSession extends InventorySession {
 
         private final List<ItemStack> items = new ArrayList<>();
 

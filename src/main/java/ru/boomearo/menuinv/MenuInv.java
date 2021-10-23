@@ -6,6 +6,7 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import ru.boomearo.menuinv.api.InventorySession;
+import ru.boomearo.menuinv.api.PageData;
 import ru.boomearo.menuinv.api.PluginTemplatePages;
 import ru.boomearo.menuinv.exceptions.MenuInvException;
 import ru.boomearo.menuinv.listeners.InventoryListener;
@@ -139,25 +140,26 @@ public final class MenuInv extends JavaPlugin {
 
     /**
      * Открывает меню со страницей плагина
-     * @param plugin Плагин, который зарегистрировал страницу
-     * @param page Страница, которая была зарегистрирована плагином
+     * @param pageData Страница, которая была зарегистрирована плагином
      * @param player Игрок, которому надо открыть страницу
      */
-    public void openMenu(JavaPlugin plugin, String page, Player player) throws MenuInvException {
-        openMenu(plugin, page, player, null);
+    public void openMenu(PageData pageData, Player player) throws MenuInvException {
+        openMenu(pageData, player, null);
     }
 
     /**
      * Открывает меню со страницей плагина
-     * @param plugin Плагин, который зарегистрировал страницу
-     * @param page Страница, которая была зарегистрирована плагином
+     * @param pageData Страница, которая была зарегистрирована плагином
      * @param player Игрок, которому надо открыть страницу
      * @param session Сессия, используемся для хранения внутренних параметров между страницами
      */
-    public void openMenu(JavaPlugin plugin, String page, Player player, InventorySession session) throws MenuInvException {
-        if (plugin == null || page == null || player == null) {
+    public void openMenu(PageData pageData, Player player, InventorySession session) throws MenuInvException {
+        if (pageData == null || player == null) {
             throw new MenuInvException("Указанные аргументы являются нулевыми!");
         }
+
+        JavaPlugin plugin = pageData.getPlugin();
+        String page = pageData.getPage();
 
         PluginTemplatePagesImpl pp = this.menu.get(plugin.getClass());
         if (pp == null) {
@@ -171,6 +173,10 @@ public final class MenuInv extends JavaPlugin {
 
         Bukkit.getScheduler().runTask(this, () -> {
             try {
+                if (session != null) {
+                    session.setCurrentPage(pageData);
+                }
+
                 InventoryPageImpl newPage = templatePage.createNewInventoryPage(player, session);
 
                 newPage.update(true);
