@@ -100,7 +100,7 @@ public class TemplatePageImpl implements TemplatePage {
     }
 
     @Override
-    public void addScrollButton(int slot, String pagedItems, PagedItems.ScrollType type, ScrollHandlerFactory factory) throws MenuInvException {
+    public void addScrollItem(int slot, String pagedItems, PagedItems.ScrollType type, ScrollHandlerFactory factory) throws MenuInvException {
         if (pagedItems == null || type == null || factory == null) {
             throw new MenuInvException("Указанные аргументы являются нулевыми!");
         }

@@ -34,7 +34,7 @@ public interface TemplatePage {
      * @param type Тип прокручивания (вперед/назад)
      * @param factory Фабрика обработчика прокрутки
      */
-    public void addScrollButton(int slot, String pagedItems, PagedItems.ScrollType type, ScrollHandlerFactory factory) throws MenuInvException;
+    public void addScrollItem(int slot, String pagedItems, PagedItems.ScrollType type, ScrollHandlerFactory factory) throws MenuInvException;
 
     /**
      * Заполняет предметами задний фон. Любой самостоятельный предмет или рамка предметов всегда будут на первом плане.
