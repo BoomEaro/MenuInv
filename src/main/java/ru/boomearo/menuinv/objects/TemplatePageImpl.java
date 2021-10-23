@@ -78,7 +78,7 @@ public class TemplatePageImpl implements TemplatePage {
             throw new MenuInvException("Кнопка на позиции '" + slot + "' уже добавлена!");
         }
 
-        addButton(new ItemIconTemplate(slot, factory));
+        addItem(new ItemIconTemplate(slot, factory));
     }
 
     @Override
@@ -115,7 +115,7 @@ public class TemplatePageImpl implements TemplatePage {
             throw new MenuInvException("Список кнопок '" + pagedItems + "' не найден!");
         }
 
-        addButton(new ItemIconTemplate(slot, new ScrollIconHandlerFactory(pagedItems, type, factory)));
+        addItem(new ItemIconTemplate(slot, new ScrollIconHandlerFactory(pagedItems, type, factory)));
     }
 
     @Override
@@ -131,13 +131,13 @@ public class TemplatePageImpl implements TemplatePage {
         this.backbround = factory;
     }
 
-    public void addButton(ItemIconTemplate icon) throws MenuInvException {
+    private void addItem(ItemIconTemplate icon) throws MenuInvException {
         int slot = icon.getSlot();
 
         if (slot < 0) {
             throw new MenuInvException("Кнопка '" + icon.getSlot() + "' находится на позиции меньше нуля! (slot: " + slot + ")");
         }
-        int maxSlot = this.type.getWidth() - 1;
+        int maxSlot = this.type.getSize() - 1;
         if (slot > maxSlot) {
             throw new MenuInvException("Кнопка '" + icon.getSlot() + "' находится на позиции больше допустимой! (slot: " + slot + "/" + maxSlot + ")");
         }
