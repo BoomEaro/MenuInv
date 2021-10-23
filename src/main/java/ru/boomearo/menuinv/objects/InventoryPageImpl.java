@@ -121,17 +121,14 @@ public class InventoryPageImpl implements InventoryPage {
 
     @Override
     public void update() {
-        //long start = System.nanoTime();
         update(false);
-        //long end = System.nanoTime();
-
-        //MenuInv.getInstance().getLogger().info("test " + (end - start));
     }
 
     //TODO Я хз, нужно ли оптимизировать, так как вызывается обновление каждый тик.
     //TODO По замерам вроде вообще проблем нет
     @Override
     public void update(boolean force) {
+        //long start = System.nanoTime();
 
         ItemStack[] array = new ItemStack[this.type.getSize()];
         Arrays.fill(array, null);
@@ -154,7 +151,14 @@ public class InventoryPageImpl implements InventoryPage {
 
         this.inventory.setContents(array);
 
-        this.player.updateInventory();
+        //TODO Похоже, не требуется постоянное обновление инвентаря игрока, потому что метод setContents()
+        //TODO уже обновляет инвентарь для тех кто открыл его. Но все таки под вопросом синхронизация.
+        //TODO А так же выяснилось, что этот метод как никак, потребляет лишние ресурсы при обновлении.
+        //this.player.updateInventory();
+
+        //long end = System.nanoTime();
+
+        //MenuInv.getInstance().getLogger().info("test " + (end - start));
     }
 
     @Override
