@@ -13,10 +13,10 @@ public interface Updatable<T, C> {
     public T onUpdate(C consume, Player player);
 
     /**
-     * @return Время для обновления метода update. По умолчанию значение равно 250 миллисекунд.
+     * @return Время для обновления метода update. По умолчанию значение равно 1000 миллисекунд или одной секундой.
      */
     public default long getUpdateTime() {
-        return 250;
+        return 1000;
     }
 
     /**
