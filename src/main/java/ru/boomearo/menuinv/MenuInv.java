@@ -101,6 +101,8 @@ public final class MenuInv extends JavaPlugin {
 
         this.menu.put(plugin.getClass(), pages);
 
+        this.getLogger().info("Плагин '" + plugin.getName() + "' успешно зарегистрировал страницы!");
+
         return pages;
     }
 
@@ -136,6 +138,8 @@ public final class MenuInv extends JavaPlugin {
                 }
             }
         }
+
+        this.getLogger().info("Плагин '" + plugin.getName() + "' успешно отменил регистрацию страниц!");
     }
 
     /**
