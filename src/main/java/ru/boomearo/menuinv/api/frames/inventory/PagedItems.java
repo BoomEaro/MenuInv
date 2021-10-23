@@ -6,6 +6,7 @@ import ru.boomearo.menuinv.api.FramedIconsHandler;
 import ru.boomearo.menuinv.objects.InventoryPageImpl;
 import ru.boomearo.menuinv.objects.ItemIcon;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -123,50 +124,51 @@ public class PagedItems extends FramedIcons {
             catch (Exception e) {
                 e.printStackTrace();
             }
+            if (handlers == null) {
+                handlers = new ArrayList<>();
+            }
 
-            if (handlers != null) {
-                int maxSize = handlers.size();
+            int maxSize = handlers.size();
 
-                InvType type = page.getType();
+            InvType type = page.getType();
 
-                ItemIcon[] activeIcons = page.getUnsafeActiveIcons();
+            ItemIcon[] activeIcons = page.getUnsafeActiveIcons();
 
-                int currentPage = this.page;
+            int currentPage = this.page;
 
-                int pageLimit = (getWidth() * getHeight());
+            int pageLimit = (getWidth() * getHeight());
 
-                this.maxPage = maxSize / pageLimit + (maxSize % pageLimit > 0 ? 1 : 0);
+            this.maxPage = maxSize / pageLimit + (maxSize % pageLimit > 0 ? 1 : 0);
 
-                if (currentPage > this.maxPage) {
-                    currentPage = this.maxPage;
-                }
-                if (currentPage <= 0) {
-                    currentPage = 1;
-                }
-                this.page = currentPage;
+            if (currentPage > this.maxPage) {
+                currentPage = this.maxPage;
+            }
+            if (currentPage <= 0) {
+                currentPage = 1;
+            }
+            this.page = currentPage;
 
-                int offSet = (currentPage - 1) * pageLimit;
-                if (offSet > maxSize) {
-                    offSet = maxSize;
-                }
+            int offSet = (currentPage - 1) * pageLimit;
+            if (offSet > maxSize) {
+                offSet = maxSize;
+            }
 
-                int i = offSet;
+            int i = offSet;
 
-                for (int z = 0; z < getHeight(); z++) {
-                    for (int x = 0; x < getWidth(); x++) {
+            for (int z = 0; z < getHeight(); z++) {
+                for (int x = 0; x < getWidth(); x++) {
 
-                        int offset = getFirstZ() * type.getWidth() + getFirstX() + x + (z * type.getWidth());
+                    int offset = getFirstZ() * type.getWidth() + getFirstX() + x + (z * type.getWidth());
 
 
-                        if (i > (maxSize - 1)) {
-                            activeIcons[offset] = null;
-                        }
-                        else {
-                            activeIcons[offset] = new ItemIcon(offset, handlers.get(i));
-                        }
-
-                        i++;
+                    if (i > (maxSize - 1)) {
+                        activeIcons[offset] = null;
                     }
+                    else {
+                        activeIcons[offset] = new ItemIcon(offset, handlers.get(i));
+                    }
+
+                    i++;
                 }
             }
         }
