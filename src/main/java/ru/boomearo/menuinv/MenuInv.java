@@ -222,7 +222,7 @@ public final class MenuInv extends JavaPlugin {
                 return null;
             }
 
-            return data.getInventoryName();
+            return data.getInventoryName(session);
         });
 
         //Кнопка отмены
@@ -242,7 +242,7 @@ public final class MenuInv extends JavaPlugin {
                     return;
                 }
 
-                confirm.executeCancel();
+                confirm.executeCancel(inventoryPage);
             }
 
             @Override
@@ -259,7 +259,7 @@ public final class MenuInv extends JavaPlugin {
                     return null;
                 }
 
-                return confirm.getCancelItem();
+                return confirm.getCancelItem(inventoryPage);
             }
 
         });
@@ -281,7 +281,7 @@ public final class MenuInv extends JavaPlugin {
                     return;
                 }
 
-                confirm.executeConfirm();
+                confirm.executeConfirm(inventoryPage);
             }
 
             @Override
@@ -298,7 +298,7 @@ public final class MenuInv extends JavaPlugin {
                     return null;
                 }
 
-                return confirm.getConfirmItem();
+                return confirm.getConfirmItem(inventoryPage);
             }
 
         });

@@ -3,6 +3,7 @@ package ru.boomearo.menuinv.api.session;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import ru.boomearo.menuinv.api.InventoryPage;
 
 import java.util.Collections;
 
@@ -11,13 +12,13 @@ import java.util.Collections;
  */
 public interface ConfirmData {
 
-    public void executeConfirm();
+    public void executeConfirm(InventoryPage page);
 
-    public void executeCancel();
+    public void executeCancel(InventoryPage page);
 
-    public ItemStack getConfirmItem();
+    public ItemStack getConfirmItem(InventoryPage page);
 
-    public default ItemStack getCancelItem() {
+    public default ItemStack getCancelItem(InventoryPage page) {
         ItemStack item = new ItemStack(Material.BARRIER, 1);
         ItemMeta meta = item.getItemMeta();
 
@@ -32,6 +33,6 @@ public interface ConfirmData {
         return item;
     }
 
-    public String getInventoryName();
+    public String getInventoryName(InventorySession session);
 
 }
