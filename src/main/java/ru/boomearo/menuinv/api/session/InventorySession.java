@@ -3,9 +3,10 @@ package ru.boomearo.menuinv.api.session;
 import ru.boomearo.menuinv.api.PageData;
 
 /**
- * Абстрактная сессия инвентаря, используемая для хранения внутренней информацией для наследника внутри меню
+ * Сессия инвентаря, используемая для хранения внутренней информацией.
+ * Может быть расширена путем наследования для расширения функциональности меню.
  */
-public abstract class InventorySession {
+public class InventorySession {
 
     private PageData currentPage = null;
     private PageData lastPage = null;
