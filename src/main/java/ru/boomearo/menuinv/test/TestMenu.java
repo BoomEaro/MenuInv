@@ -14,6 +14,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import ru.boomearo.menuinv.MenuInv;
 import ru.boomearo.menuinv.api.*;
 import ru.boomearo.menuinv.api.scrolls.DefaultScrollHandlerFactory;
+import ru.boomearo.menuinv.api.session.InventorySession;
 import ru.boomearo.menuinv.exceptions.MenuInvException;
 import ru.boomearo.menuinv.api.frames.inventory.PagedItems;
 

@@ -2,12 +2,14 @@ package ru.boomearo.menuinv;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import ru.boomearo.menuinv.api.InventorySession;
-import ru.boomearo.menuinv.api.PageData;
-import ru.boomearo.menuinv.api.PluginTemplatePages;
+import ru.boomearo.menuinv.api.*;
+import ru.boomearo.menuinv.api.session.ConfirmData;
+import ru.boomearo.menuinv.api.session.InventorySession;
 import ru.boomearo.menuinv.exceptions.MenuInvException;
 import ru.boomearo.menuinv.listeners.InventoryListener;
 import ru.boomearo.menuinv.objects.InventoryPageImpl;
@@ -37,6 +39,13 @@ public final class MenuInv extends JavaPlugin {
         if (!configFile.exists()) {
             getLogger().info("Конфиг не найден, создаю новый...");
             saveDefaultConfig();
+        }
+
+        try {
+            registerOwnMenu(this);
+        }
+        catch (MenuInvException e) {
+            e.printStackTrace();
         }
 
         if (this.getConfig().getBoolean("debug")) {
@@ -190,6 +199,108 @@ public final class MenuInv extends JavaPlugin {
             catch (Exception e) {
                 e.printStackTrace();
             }
+        });
+    }
+
+    //Регистрируем своё личное меню для остальных плагинов
+    private static void registerOwnMenu(MenuInv menuInv) throws MenuInvException {
+        PluginTemplatePages pages = menuInv.registerPages(menuInv);
+
+        initConfirmMenu(pages);
+    }
+
+    //Страница подтверждения, для использования другими плагинами, чтобы не копировать код много раз
+    private static void initConfirmMenu(PluginTemplatePages pages) throws MenuInvException {
+        TemplatePage page = pages.createTemplatePage("confirm", InvType.HOPPER, (session) -> {
+            if (session == null) {
+                return null;
+            }
+
+            ConfirmData data = session.getConfirmData();
+
+            if (data == null) {
+                return null;
+            }
+
+            return data.getInventoryName();
+        });
+
+        //Кнопка отмены
+        page.addItem(0, () -> new IconHandler() {
+
+            @Override
+            public void onClick(InventoryPage inventoryPage, Player player, ClickType clickType) {
+                InventorySession session = inventoryPage.getSession();
+
+                if (session == null) {
+                    return;
+                }
+
+                ConfirmData confirm = session.getConfirmData();
+
+                if (confirm == null) {
+                    return;
+                }
+
+                confirm.executeCancel();
+            }
+
+            @Override
+            public ItemStack onUpdate(InventoryPage inventoryPage, Player player) {
+                InventorySession session = inventoryPage.getSession();
+
+                if (session == null) {
+                    return null;
+                }
+
+                ConfirmData confirm = session.getConfirmData();
+
+                if (confirm == null) {
+                    return null;
+                }
+
+                return confirm.getCancelItem();
+            }
+
+        });
+
+        //Кнопка подтверждения
+        page.addItem(4, () -> new IconHandler() {
+
+            @Override
+            public void onClick(InventoryPage inventoryPage, Player player, ClickType clickType) {
+                InventorySession session = inventoryPage.getSession();
+
+                if (session == null) {
+                    return;
+                }
+
+                ConfirmData confirm = session.getConfirmData();
+
+                if (confirm == null) {
+                    return;
+                }
+
+                confirm.executeConfirm();
+            }
+
+            @Override
+            public ItemStack onUpdate(InventoryPage inventoryPage, Player player) {
+                InventorySession session = inventoryPage.getSession();
+
+                if (session == null) {
+                    return null;
+                }
+
+                ConfirmData confirm = session.getConfirmData();
+
+                if (confirm == null) {
+                    return null;
+                }
+
+                return confirm.getConfirmItem();
+            }
+
         });
     }
 }

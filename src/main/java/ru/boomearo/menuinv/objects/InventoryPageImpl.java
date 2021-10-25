@@ -11,7 +11,7 @@ import ru.boomearo.menuinv.MenuInv;
 import ru.boomearo.menuinv.api.IconHandlerFactory;
 import ru.boomearo.menuinv.api.InvType;
 import ru.boomearo.menuinv.api.InventoryPage;
-import ru.boomearo.menuinv.api.InventorySession;
+import ru.boomearo.menuinv.api.session.InventorySession;
 import ru.boomearo.menuinv.api.frames.inventory.PagedItems;
 
 import java.util.*;

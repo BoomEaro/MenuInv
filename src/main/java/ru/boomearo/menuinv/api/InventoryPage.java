@@ -2,6 +2,7 @@ package ru.boomearo.menuinv.api;
 
 import org.bukkit.entity.Player;
 import ru.boomearo.menuinv.api.frames.inventory.PagedItems;
+import ru.boomearo.menuinv.api.session.InventorySession;
 
 /**
  * Представляет страницу инвентаря, которая непосредственно используется для взаимодействия с обычным инвентарем баккита
