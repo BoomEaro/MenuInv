@@ -110,7 +110,7 @@ public final class MenuInv extends JavaPlugin {
 
         this.menu.put(plugin.getClass(), pages);
 
-        this.getLogger().info("Плагин '" + plugin.getName() + "' успешно зарегистрировал страницы!");
+        this.getLogger().info("Плагин '" + plugin.getName() + "' успешно зарегистрировал список страниц!");
 
         return pages;
     }

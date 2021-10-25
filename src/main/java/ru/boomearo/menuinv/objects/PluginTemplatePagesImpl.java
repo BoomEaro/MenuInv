@@ -2,6 +2,7 @@ package ru.boomearo.menuinv.objects;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
+import ru.boomearo.menuinv.MenuInv;
 import ru.boomearo.menuinv.api.InventoryCreationHandler;
 import ru.boomearo.menuinv.api.PluginTemplatePages;
 import ru.boomearo.menuinv.api.TemplatePage;
@@ -51,6 +52,8 @@ public class PluginTemplatePagesImpl implements PluginTemplatePages {
         TemplatePageImpl newPage = new TemplatePageImpl(name, type, titleHandler,this);
 
         this.pages.put(name, newPage);
+
+        MenuInv.getInstance().getLogger().info("Плагин '" + this.plugin.getName() + "' успешно зарегистрировал страницу '" + name + "'. Тип страницы '" + type.name());
 
         return newPage;
     }
