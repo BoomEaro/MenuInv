@@ -65,7 +65,7 @@ public class TemplatePageImpl implements TemplatePage {
             pagedIconsActive.put(tli.getName(), new PagedItems(tli.getName(), tli.getFirstX(), tli.getFirstZ(), tli.getWidth(), tli.getHeight(), tli.getFactory().create()));
         }
 
-        return new InventoryPageImpl(this.name, this.type, this.creationHandler.createTitle(session), itemIconsActive, pagedIconsActive, this.backbround, player, session, this);
+        return new InventoryPageImpl(this.name, this.type, itemIconsActive, pagedIconsActive, this.creationHandler, this.backbround, player, session, this);
     }
 
     @Override

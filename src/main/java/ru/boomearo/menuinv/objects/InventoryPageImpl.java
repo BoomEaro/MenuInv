@@ -10,6 +10,7 @@ import org.bukkit.inventory.ItemStack;
 import ru.boomearo.menuinv.MenuInv;
 import ru.boomearo.menuinv.api.IconHandlerFactory;
 import ru.boomearo.menuinv.api.InvType;
+import ru.boomearo.menuinv.api.InventoryCreationHandler;
 import ru.boomearo.menuinv.api.InventoryPage;
 import ru.boomearo.menuinv.api.session.InventorySession;
 import ru.boomearo.menuinv.api.frames.inventory.PagedItems;
@@ -23,13 +24,13 @@ public class InventoryPageImpl implements InventoryPage {
 
     private final String name;
     private final InvType type;
-    private final String title;
+    private final InventoryCreationHandler creationHandler;
 
     private final Map<String, PagedItems> listedIcons;
 
     private final ItemIcon[] activeIcons;
 
-    private final Inventory inventory;
+    private Inventory inventory;
 
     private final Player player;
 
@@ -38,18 +39,18 @@ public class InventoryPageImpl implements InventoryPage {
     //Используется только для того, чтобы узнать от кого был создан этот экземпляр и чтобы можно было узнать плагин создавший этот шаблон.
     private final TemplatePageImpl templatePage;
 
-    public InventoryPageImpl(String name, InvType type, String title, Map<Integer, ItemIcon> iconsPosition, Map<String, PagedItems> listedIcons,
+    public InventoryPageImpl(String name, InvType type, Map<Integer, ItemIcon> iconsPosition, Map<String, PagedItems> listedIcons, InventoryCreationHandler creationHandler,
                              IconHandlerFactory background, Player player, InventorySession session, TemplatePageImpl templatePage) {
         this.name = name;
         this.type = type;
-        this.title = title;
         this.listedIcons = listedIcons;
+        this.creationHandler = creationHandler;
         this.player = player;
         this.session = session;
         this.templatePage = templatePage;
 
         //Создаем новый инвентарь баккита и добавляет в него свой холдер для идентификации инвентари
-        this.inventory = this.type.createInventory(new MenuInvHolder(this), this.title);
+        this.inventory = this.type.createInventory(new MenuInvHolder(this), this.creationHandler.createTitle(this.session));
 
         //Создаем массив активных предметов размеров в текущий инвентарь
         this.activeIcons = new ItemIcon[this.type.getSize()];
@@ -77,11 +78,6 @@ public class InventoryPageImpl implements InventoryPage {
     @Override
     public InvType getType() {
         return this.type;
-    }
-
-    @Override
-    public String getTitle() {
-        return this.title;
     }
 
     @Override
@@ -117,11 +113,6 @@ public class InventoryPageImpl implements InventoryPage {
 
     public TemplatePageImpl getTemplatePage() {
         return this.templatePage;
-    }
-
-    @Override
-    public void update() {
-        update(false);
     }
 
     //TODO Я хз, нужно ли оптимизировать, так как вызывается обновление каждый тик.
@@ -162,8 +153,19 @@ public class InventoryPageImpl implements InventoryPage {
     }
 
     @Override
-    public void close() {
-        close(false);
+    public void reopen(boolean force) {
+        if (force) {
+            performReopen();
+            return;
+        }
+
+        Bukkit.getScheduler().runTask(MenuInv.getInstance(), this::performReopen);
+    }
+
+    private void performReopen() {
+        this.inventory = this.type.createInventory(new MenuInvHolder(this), this.creationHandler.createTitle(this.session));
+        this.player.openInventory(this.inventory);
+        update(true);
     }
 
     @Override

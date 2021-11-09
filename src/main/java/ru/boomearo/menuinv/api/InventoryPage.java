@@ -20,11 +20,6 @@ public interface InventoryPage {
     public InvType getType();
 
     /**
-     * @return Тайтл инвентаря
-     */
-    public String getTitle();
-
-    /**
      * @return Игрок, открывший эту страницу
      */
     public Player getPlayer();
@@ -42,7 +37,9 @@ public interface InventoryPage {
     /**
      * Обновляет внутренние элементы инвентаря.
      */
-    public void update();
+    public default void update() {
+        update(false);
+    }
 
     /**
      * Обновляет внутренние элементы инвентаря.
@@ -51,13 +48,31 @@ public interface InventoryPage {
     public void update(boolean force);
 
     /**
-     * Закрывает этот инвентарь.
+     * Открывает новый экземпляр баккитовского Inventory.
+     * На данный момент используется для обновления тайтла.
      */
-    public void close();
+    public default void reopen() {
+        reopen(false);
+    }
+
+    /**
+     * Открывает новый экземпляр баккитовского Inventory.
+     * На данный момент используется для обновления тайтла.
+     * @param force Открыть ли новый инвентарь срочно. (прямо во время текущего тика, а не на следующем)
+     */
+    public void reopen(boolean force);
 
     /**
      * Закрывает этот инвентарь.
-     * @param force Закрыть ли инвентарь срочно (прямо во время текущего тика, а не на следующем)
+     */
+    public default void close() {
+        close(false);
+    }
+
+    /**
+     * Закрывает этот инвентарь.
+     * @param force Закрыть ли инвентарь срочно. (прямо во время текущего тика, а не на следующем)
      */
     public void close(boolean force);
+
 }
