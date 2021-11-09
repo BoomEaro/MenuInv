@@ -39,6 +39,8 @@ public class InventoryPageImpl implements InventoryPage {
     //Используется только для того, чтобы узнать от кого был создан этот экземпляр и чтобы можно было узнать плагин создавший этот шаблон.
     private final TemplatePageImpl templatePage;
 
+    private boolean changes = false;
+
     public InventoryPageImpl(String name, InvType type, Map<Integer, ItemIcon> iconsPosition, Map<String, PagedItems> listedIcons, InventoryCreationHandler creationHandler,
                              IconHandlerFactory background, Player player, InventorySession session, TemplatePageImpl templatePage) {
         this.name = name;
@@ -50,7 +52,7 @@ public class InventoryPageImpl implements InventoryPage {
         this.templatePage = templatePage;
 
         //Создаем новый инвентарь баккита и добавляет в него свой холдер для идентификации инвентари
-        this.inventory = this.type.createInventory(new MenuInvHolder(this), this.creationHandler.createTitle(this.session));
+        this.inventory = this.type.createInventory(new MenuInvHolder(this), this.creationHandler.createTitle(this));
 
         //Создаем массив активных предметов размеров в текущий инвентарь
         this.activeIcons = new ItemIcon[this.type.getSize()];
@@ -91,6 +93,11 @@ public class InventoryPageImpl implements InventoryPage {
     }
 
     @Override
+    public void setChanges() {
+        this.changes = true;
+    }
+
+    @Override
     public PagedItems getListedIconsItems(String name) {
         return this.listedIcons.get(name);
     }
@@ -115,18 +122,31 @@ public class InventoryPageImpl implements InventoryPage {
         return this.templatePage;
     }
 
-    //TODO Я хз, нужно ли оптимизировать, так как вызывается обновление каждый тик.
-    //TODO По замерам вроде вообще проблем нет
     @Override
     public void update(boolean force) {
+        performUpdate(force, true);
+    }
+
+    //TODO Я хз, нужно ли оптимизировать, так как вызывается обновление каждый тик.
+    //TODO По замерам вроде вообще проблем нет
+    private void performUpdate(boolean force, boolean reopenIfNeed) {
         //long start = System.nanoTime();
+
+        boolean forceUpdate = this.changes || force;
+
+        if (reopenIfNeed) {
+            if (this.creationHandler.reopenCondition(this, forceUpdate)) {
+                reopen(true);
+                return;
+            }
+        }
 
         ItemStack[] array = new ItemStack[this.type.getSize()];
         Arrays.fill(array, null);
 
         //Обновляем текущий массив активных предметов, используя рамочные предметы.
         for (PagedItems lii : this.listedIcons.values()) {
-            lii.updateActiveIcons(this, force);
+            lii.updateActiveIcons(this, forceUpdate);
         }
 
         //MenuInv.getInstance().getLogger().info("test " + this.activeIcons.toString());
@@ -137,7 +157,7 @@ public class InventoryPageImpl implements InventoryPage {
                 continue;
             }
 
-            array[ii.getSlot()] = ii.getItemStack(this, force);
+            array[ii.getSlot()] = ii.getItemStack(this, forceUpdate);
         }
 
         this.inventory.setContents(array);
@@ -150,6 +170,8 @@ public class InventoryPageImpl implements InventoryPage {
         //long end = System.nanoTime();
 
         //MenuInv.getInstance().getLogger().info("test " + (end - start));
+
+        this.changes = false;
     }
 
     @Override
@@ -162,10 +184,18 @@ public class InventoryPageImpl implements InventoryPage {
         Bukkit.getScheduler().runTask(MenuInv.getInstance(), this::performReopen);
     }
 
+    //Пересоздание страницы
     private void performReopen() {
-        this.inventory = this.type.createInventory(new MenuInvHolder(this), this.creationHandler.createTitle(this.session));
+        //Сначала создаем новый экземпляр баккитовского инвентаря
+        this.inventory = this.type.createInventory(new MenuInvHolder(this), this.creationHandler.createTitle(this));
+        //Очищаем изменения скроллов страницы
+        for (PagedItems pi : this.listedIcons.values()) {
+            pi.resetChanges();
+        }
+        //Заполняем инвентарь
+        performUpdate(false, false);
+        //Открываем этот инвентарь тому игроку
         this.player.openInventory(this.inventory);
-        update(true);
     }
 
     @Override

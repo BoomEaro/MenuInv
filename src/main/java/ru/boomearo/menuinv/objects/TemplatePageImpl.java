@@ -185,7 +185,7 @@ public class TemplatePageImpl implements TemplatePage {
                 public void onClick(InventoryPage page, Player player, ClickType clickType) {
                     boolean change = page.getListedIconsItems(ScrollIconHandlerFactory.this.pagedItems).scrollPage(ScrollIconHandlerFactory.this.type);
                     if (change) {
-                        page.update(true);
+                        page.setChanges();
                         player.playSound(player.getLocation(), Sound.BLOCK_DISPENSER_FAIL, 1, 1);
                     }
                 }

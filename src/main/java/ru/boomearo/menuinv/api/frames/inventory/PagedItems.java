@@ -18,7 +18,9 @@ public class PagedItems extends FramedIcons {
 
     private int page = 1;
 
-    private int maxPage;
+    private int maxPage = 1;
+
+    private boolean changes = false;
 
     public PagedItems(String name, int x, int z, int width, int height, FramedIconsHandler handler) {
         super(name, x, z, width, height, handler);
@@ -34,8 +36,11 @@ public class PagedItems extends FramedIcons {
     /**
      * Устанавливает страницу
      * @param page Номер страницы
+     * @return true если удалось прокрутить страницу
      */
-    public void setCurrentPage(int page) {
+    public boolean setCurrentPage(int page) {
+        int oldPage = this.page;
+
         int nextPage = page;
 
         if (nextPage > this.maxPage) {
@@ -46,6 +51,13 @@ public class PagedItems extends FramedIcons {
         }
 
         this.page = nextPage;
+
+        boolean change = (this.page != oldPage);
+        if (change) {
+            this.changes = true;
+        }
+
+        return change;
     }
 
     /**
@@ -55,24 +67,45 @@ public class PagedItems extends FramedIcons {
         return this.maxPage;
     }
 
+    private void setMaxPage(int maxPage) {
+        int oldMaxPage = this.maxPage;
+
+        int newMaxPage = maxPage;
+        if (newMaxPage <= 0) {
+            newMaxPage = 1;
+        }
+
+        this.maxPage = newMaxPage;
+
+        if (this.maxPage != oldMaxPage) {
+            this.changes = true;
+        }
+    }
+
     /**
      * Прокручивает страницу вперед на 1 номер
      * @return true если удалось прокрутить страницу
      */
     public boolean nextPage() {
+        int oldPage = this.page;
+
         int newPage = this.page + 1;
 
-        int next = newPage;
-        if (next > this.maxPage) {
-            next = this.maxPage;
+        if (newPage > this.maxPage) {
+            newPage = this.maxPage;
         }
-        if (next <= 0) {
-            next = 1;
+        if (newPage <= 0) {
+            newPage = 1;
         }
 
-        this.page = next;
+        this.page = newPage;
 
-        return this.page == newPage;
+        boolean change = (this.page != oldPage);
+        if (change) {
+            this.changes = true;
+        }
+
+        return change;
     }
 
     /**
@@ -80,15 +113,21 @@ public class PagedItems extends FramedIcons {
      * @return true если удалось прокрутить страницу
      */
     public boolean previouslyPage() {
+        int oldPage = this.page;
+
         int newPage = this.page - 1;
 
-        int back = newPage;
-        if (back <= 0) {
-            back = 1;
+        if (newPage <= 0) {
+            newPage = 1;
         }
-        this.page = back;
+        this.page = newPage;
 
-        return this.page == newPage;
+        boolean change = (this.page != oldPage);
+        if (change) {
+            this.changes = true;
+        }
+
+        return change;
     }
 
     /**
@@ -134,21 +173,13 @@ public class PagedItems extends FramedIcons {
 
             ItemIcon[] activeIcons = page.getUnsafeActiveIcons();
 
-            int currentPage = this.page;
-
             int pageLimit = (getWidth() * getHeight());
 
-            this.maxPage = maxSize / pageLimit + (maxSize % pageLimit > 0 ? 1 : 0);
+            setMaxPage(maxSize / pageLimit + (maxSize % pageLimit > 0 ? 1 : 0));
 
-            if (currentPage > this.maxPage) {
-                currentPage = this.maxPage;
-            }
-            if (currentPage <= 0) {
-                currentPage = 1;
-            }
-            this.page = currentPage;
+            setCurrentPage(this.page);
 
-            int offSet = (currentPage - 1) * pageLimit;
+            int offSet = (this.page - 1) * pageLimit;
             if (offSet > maxSize) {
                 offSet = maxSize;
             }
@@ -172,6 +203,14 @@ public class PagedItems extends FramedIcons {
                 }
             }
         }
+    }
+
+    public boolean hasChanges() {
+        return this.changes;
+    }
+
+    public void resetChanges() {
+        this.changes = false;
     }
 
     public static enum ScrollType {

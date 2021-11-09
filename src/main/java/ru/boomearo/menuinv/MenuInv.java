@@ -48,16 +48,6 @@ public final class MenuInv extends JavaPlugin {
             e.printStackTrace();
         }
 
-        if (this.getConfig().getBoolean("debug")) {
-            try {
-                TestMenu.setupTest();
-                this.getLogger().warning("Активирован режим дебага!");
-            }
-            catch (MenuInvException e) {
-                e.printStackTrace();
-            }
-        }
-
         this.getServer().getPluginManager().registerEvents(new InventoryListener(), this);
 
         this.updater = new MenuUpdater();
@@ -207,11 +197,23 @@ public final class MenuInv extends JavaPlugin {
         PluginTemplatePages pages = menuInv.registerPages(menuInv);
 
         initConfirmMenu(pages);
+
+        if (menuInv.getConfig().getBoolean("debug")) {
+            menuInv.getLogger().warning("Активирован режим дебага!");
+
+            try {
+                TestMenu.setupTest(pages);
+            }
+            catch (MenuInvException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     //Страница подтверждения, для использования другими плагинами, чтобы не копировать код много раз
     private static void initConfirmMenu(PluginTemplatePages pages) throws MenuInvException {
-        TemplatePage page = pages.createTemplatePage("confirm", InvType.HOPPER, (session) -> {
+        TemplatePage page = pages.createTemplatePage("confirm", InvType.HOPPER, (inventoryPage) -> {
+            InventorySession session = inventoryPage.getSession();
             if (session == null) {
                 return null;
             }

@@ -35,7 +35,14 @@ public interface InventoryPage {
     public InventorySession getSession();
 
     /**
+     * Устанавливает флаг, обозначающий, что этот инвентарь изменен и его надо обновить.
+     * Обновление произойдет обычным таймером на следующий тик.
+     */
+    public void setChanges();
+
+    /**
      * Обновляет внутренние элементы инвентаря.
+     * Не рекомендуется использовать во время нажатия на кнопки.
      */
     public default void update() {
         update(false);
@@ -43,6 +50,7 @@ public interface InventoryPage {
 
     /**
      * Обновляет внутренние элементы инвентаря.
+     * Не рекомендуется использовать во время нажатия на кнопки.
      * @param force Игнорировать ли задержку обновления всех элементов
      */
     public void update(boolean force);

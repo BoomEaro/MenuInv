@@ -38,24 +38,40 @@ public class TestMenu {
         allMaterials = tmp;
     }
 
-    public static void setupTest() throws MenuInvException {
-        setupMenu();
+    public static void setupTest(PluginTemplatePages pages) throws MenuInvException {
+        setupMenu(pages);
         registerEvents();
     }
 
-    public static void setupMenu() throws MenuInvException {
-        MenuInv inv = MenuInv.getInstance();
-        PluginTemplatePages pages = inv.registerPages(inv);
-
+    public static void setupMenu(PluginTemplatePages pages) throws MenuInvException {
         {
-            TemplatePage page = pages.createTemplatePage("test", InvType.CHEST_9X6, (session) -> "Привет1");
+            TemplatePage page = pages.createTemplatePage("test", InvType.CHEST_9X6, new InventoryCreationHandler() {
+
+                @Override
+                public String createTitle(InventoryPage inventoryPage) {
+                    PagedItems piTest = inventoryPage.getListedIconsItems("test");
+                    PagedItems piTest2 = inventoryPage.getListedIconsItems("test2");
+
+                    return "Test: " + piTest.getCurrentPage() + "/" + piTest.getMaxPage() + " ||| " + piTest2.getCurrentPage() + "/" + piTest2.getMaxPage();
+                }
+
+                @Override
+                public boolean reopenCondition(InventoryPage page, boolean forceUpdate) {
+                    PagedItems piTest = page.getListedIconsItems("test");
+                    PagedItems piTest2 = page.getListedIconsItems("test2");
+
+                    MenuInv.getInstance().getLogger().info("Test " + piTest.hasChanges() + " " + piTest2.hasChanges());
+
+                    return piTest.hasChanges() || piTest2.hasChanges();
+                }
+            });
 
             page.addItem(1, () -> new IconHandler() {
 
                 @Override
                 public void onClick(InventoryPage page, Player player, ClickType type) {
                     try {
-                        inv.openMenu(new PageData(inv, "test2"), player, page.getSession());
+                        MenuInv.getInstance().openMenu(new PageData(MenuInv.getInstance(), "test2"), player, page.getSession());
                     }
                     catch (MenuInvException e) {
                         e.printStackTrace();
@@ -82,7 +98,7 @@ public class TestMenu {
 
                     items.remove(items.size() - 1);
 
-                    page.update(true);
+                    page.setChanges();
                 }
 
                 @Override
@@ -99,7 +115,7 @@ public class TestMenu {
 
                     ts.getItems().add(new ItemStack(Material.DIAMOND, 1));
 
-                    page.update(true);
+                    page.setChanges();
                 }
 
                 @Override
@@ -108,27 +124,35 @@ public class TestMenu {
                 }
             });
 
-            page.addPagedItems("test", 0, 2, 3, 3, () -> (pageInv, player) -> {
-                TestSession ts = (TestSession) pageInv.getSession();
+            page.addPagedItems("test", 0, 2, 3, 3, () -> new FramedIconsHandler() {
 
-                List<IconHandler> tmp = new ArrayList<>();
-                for (int i = 1; i <= new Random().nextInt(5000); i++) {
-                    int t = i;
-                    tmp.add(new IconHandler() {
+                @Override
+                public List<IconHandler> onUpdate(InventoryPage consume, Player player) {
+                    List<IconHandler> tmp = new ArrayList<>();
+                    for (int i = 1; i <= new Random().nextInt(5000); i++) {
+                        int t = i;
+                        tmp.add(new IconHandler() {
 
-                        @Override
-                        public void onClick(InventoryPage page, Player player, ClickType type) {
-                            player.sendMessage("Вот так вот: " + t);
-                        }
+                            @Override
+                            public void onClick(InventoryPage page, Player player, ClickType type) {
+                                player.sendMessage("Вот так вот: " + t);
+                            }
 
-                        @Override
-                        public ItemStack onUpdate(InventoryPage consume, Player player) {
-                            return new ItemStack(Material.DIAMOND, t);
-                        }
+                            @Override
+                            public ItemStack onUpdate(InventoryPage consume, Player player) {
+                                return new ItemStack(Material.DIAMOND, t);
+                            }
 
-                    });
+                        });
+                    }
+                    return tmp;
                 }
-                return tmp;
+
+                @Override
+                public long getUpdateTime() {
+                    return 10;
+                }
+
             });
 
             page.addPagedItems("test2", 6, 2, 3, 3, () -> (pageInv, player) -> {
@@ -178,14 +202,14 @@ public class TestMenu {
             });
         }
         {
-            TemplatePage page = pages.createTemplatePage("test2", InvType.WORKBENCH, (session) -> "Привет2");
+            TemplatePage page = pages.createTemplatePage("test2", InvType.WORKBENCH, (inventoryPage) -> "Привет2");
 
             page.addItem(9, () -> new IconHandler() {
 
                 @Override
                 public void onClick(InventoryPage page, Player player, ClickType type) {
                     try {
-                        inv.openMenu(new PageData(inv, "test"), player, page.getSession());
+                        MenuInv.getInstance().openMenu(new PageData(MenuInv.getInstance(), "test"), player, page.getSession());
                     }
                     catch (MenuInvException e) {
                         e.printStackTrace();
