@@ -60,8 +60,6 @@ public class TestMenu {
                     PagedItems piTest = page.getListedIconsItems("test");
                     PagedItems piTest2 = page.getListedIconsItems("test2");
 
-                    MenuInv.getInstance().getLogger().info("Test " + piTest.hasChanges() + " " + piTest2.hasChanges());
-
                     return piTest.hasChanges() || piTest2.hasChanges();
                 }
             });
@@ -98,7 +96,7 @@ public class TestMenu {
 
                     items.remove(items.size() - 1);
 
-                    page.setChanges();
+                    page.setNeedUpdate();
                 }
 
                 @Override
@@ -115,7 +113,7 @@ public class TestMenu {
 
                     ts.getItems().add(new ItemStack(Material.DIAMOND, 1));
 
-                    page.setChanges();
+                    page.setNeedUpdate();
                 }
 
                 @Override
@@ -150,7 +148,7 @@ public class TestMenu {
 
                 @Override
                 public long getUpdateTime() {
-                    return 10;
+                    return 1500;
                 }
 
             });

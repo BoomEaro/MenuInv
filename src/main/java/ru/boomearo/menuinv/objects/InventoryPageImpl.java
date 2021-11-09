@@ -93,7 +93,7 @@ public class InventoryPageImpl implements InventoryPage {
     }
 
     @Override
-    public void setChanges() {
+    public void setNeedUpdate() {
         this.changes = true;
     }
 
@@ -185,6 +185,7 @@ public class InventoryPageImpl implements InventoryPage {
     }
 
     //Пересоздание страницы
+    //TODO Работает странно. А именно, если во время открытия инвентаря игрок его закроет, то у игрока откроется фантомный инвентарь.
     private void performReopen() {
         //Сначала создаем новый экземпляр баккитовского инвентаря
         this.inventory = this.type.createInventory(new MenuInvHolder(this), this.creationHandler.createTitle(this));
