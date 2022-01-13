@@ -1,6 +1,7 @@
 package ru.boomearo.menuinv;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.InventoryHolder;
@@ -188,6 +189,7 @@ public final class MenuInv extends JavaPlugin {
             }
             catch (Exception e) {
                 e.printStackTrace();
+                player.sendMessage(ChatColor.RED + "Критическая ошибка при открытии меню '" + pageData.getPage() + "'. Сообщите Администрации!");
             }
         });
     }
