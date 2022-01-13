@@ -187,7 +187,7 @@ public final class MenuInv extends JavaPlugin {
 
                 player.openInventory(newPage.getInventory());
             }
-            catch (Exception e) {
+            catch (Throwable e) {
                 e.printStackTrace();
                 player.sendMessage(ChatColor.RED + "Критическая ошибка при открытии меню '" + pageData.getPage() + "'. Сообщите Администрации!");
             }
