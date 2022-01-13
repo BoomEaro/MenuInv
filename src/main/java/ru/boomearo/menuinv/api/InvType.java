@@ -60,6 +60,9 @@ public enum InvType {
     }
 
     public Inventory createInventory(InventoryHolder holder, String title) {
+        if (title == null) {
+            title = " ";
+        }
         if (this.type == InventoryType.CHEST) {
             return Bukkit.createInventory(holder, getSize(), title);
         }
