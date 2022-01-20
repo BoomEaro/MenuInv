@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * Представляет абстрактный обработчик предмета
  */
-public abstract class IconHandler implements Updatable<ItemStack, InventoryPage> {
+public abstract class IconHandler implements Updatable<ItemStack, InventoryPage>, Comparable<IconHandler> {
 
     private static final Map<String, Long> clickCd = new HashMap<>();
 
@@ -61,6 +61,11 @@ public abstract class IconHandler implements Updatable<ItemStack, InventoryPage>
 
         return false;
 
+    }
+
+    @Override
+    public int compareTo(IconHandler other) {
+        return 1;
     }
 
 }

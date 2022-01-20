@@ -28,6 +28,18 @@ public interface TemplatePage {
     public void addPagedItems(String name, int x, int z, int width, int height, FramedIconsHandlerFactory factory) throws MenuInvException;
 
     /**
+     * Добавляет рамку предметов, которая может быть прокручена вперед/назад и имеет страницы для просмотра
+     * @param name Название рамки предметов
+     * @param x Горизонтальная позиция рамки в инвентаре
+     * @param z Вертикальная позиция рамки в инвентаре
+     * @param width Ширина рамки
+     * @param height Высота рамки
+     * @param factory Фабрика обработчика рамки предметов
+     * @param permanentCached Запомнить ли содержимое рамки навсегда (один раз получить список предметов и больше никогда не обновлять)
+     */
+    public void addPagedItems(String name, int x, int z, int width, int height, FramedIconsHandlerFactory factory, boolean permanentCached) throws MenuInvException;
+
+    /**
      * Добавляет предмет, который имеет возможность прокручивать страницы в указанной предметной рамки.
      * @param slot Позиция предмета
      * @param pagedItems Название рамки, которая будет использоваться для прокручивания

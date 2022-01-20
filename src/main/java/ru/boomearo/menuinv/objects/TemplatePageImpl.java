@@ -62,7 +62,7 @@ public class TemplatePageImpl implements TemplatePage {
         }
         Map<String, PagedItems> pagedIconsActive = new HashMap<>();
         for (FramedIconsTemplate tli : this.pagedItems.values()) {
-            pagedIconsActive.put(tli.getName(), new PagedItems(tli.getName(), tli.getFirstX(), tli.getFirstZ(), tli.getWidth(), tli.getHeight(), tli.getFactory().create()));
+            pagedIconsActive.put(tli.getName(), new PagedItems(tli.getName(), tli.getFirstX(), tli.getFirstZ(), tli.getWidth(), tli.getHeight(), tli.getFactory().create(), tli.isPermanentCached()));
         }
 
         return new InventoryPageImpl(this.name, this.type, itemIconsActive, pagedIconsActive, this.creationHandler, this.backbround, player, session, this);
@@ -84,16 +84,21 @@ public class TemplatePageImpl implements TemplatePage {
 
     @Override
     public void addPagedItems(String name, int x, int z, int width, int height, FramedIconsHandlerFactory factory) throws MenuInvException {
+        addPagedItems(name, x, z, width, height, factory, false);
+    }
+
+    @Override
+    public void addPagedItems(String name, int x, int z, int width, int height, FramedIconsHandlerFactory factory, boolean permanentCached) throws MenuInvException {
         if (name == null || factory == null) {
             throw new MenuInvException("Указанные аргументы являются нулевыми!");
         }
 
         FramedIconsTemplate tmp = this.pagedItems.get(name);
         if (tmp != null) {
-            throw new MenuInvException("Список кнопок '" + name + "' уже добавлена!");
+            throw new MenuInvException("Список кнопок '" + name + "' уже добавлен!");
         }
 
-        FramedIconsTemplate tli = new FramedIconsTemplate(name, x, z, width, height, factory);
+        FramedIconsTemplate tli = new FramedIconsTemplate(name, x, z, width, height, factory, permanentCached);
 
         checkBorder(tli);
 

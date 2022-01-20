@@ -7,6 +7,7 @@ import ru.boomearo.menuinv.objects.InventoryPageImpl;
 import ru.boomearo.menuinv.objects.ItemIcon;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -22,8 +23,10 @@ public class PagedItems extends FramedIcons {
 
     private boolean changes = false;
 
-    public PagedItems(String name, int x, int z, int width, int height, FramedIconsHandler handler) {
-        super(name, x, z, width, height, handler);
+    private List<IconHandler> cachedHandler = null;
+
+    public PagedItems(String name, int x, int z, int width, int height, FramedIconsHandler handler, boolean permanentCached) {
+        super(name, x, z, width, height, handler, permanentCached);
     }
 
     /**
@@ -145,6 +148,34 @@ public class PagedItems extends FramedIcons {
         return false;
     }
 
+    private List<IconHandler> getHandlers(InventoryPageImpl page) {
+        List<IconHandler> handlers = null;
+        try {
+            handlers = getHandler().onUpdate(page, page.getPlayer());
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (handlers == null) {
+            handlers = new ArrayList<>();
+        }
+
+        return handlers;
+    }
+
+    private List<IconHandler> getCachedHandler(InventoryPageImpl page) {
+        if (isPermanentCached()) {
+            if (this.cachedHandler != null) {
+                return this.cachedHandler;
+            }
+
+            this.cachedHandler = getHandlers(page);
+            return this.cachedHandler;
+        }
+
+        return getHandlers(page);
+    }
+
     /**
      * Обновляет актуальное состояние страницы
      * @param page Страница инвентаря
@@ -156,16 +187,10 @@ public class PagedItems extends FramedIcons {
         if (((System.currentTimeMillis() - this.updateHandlerCooldown) > handler.getUpdateTime()) || force) {
             this.updateHandlerCooldown = System.currentTimeMillis();
 
-            List<IconHandler> handlers = null;
-            try {
-                handlers = getHandler().onUpdate(page, page.getPlayer());
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
-            if (handlers == null) {
-                handlers = new ArrayList<>();
-            }
+            List<IconHandler> handlers = getCachedHandler(page);
+
+            //TODO не будет ли нагружать..
+            Collections.sort(handlers);
 
             int maxSize = handlers.size();
 
