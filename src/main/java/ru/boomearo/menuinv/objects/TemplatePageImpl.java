@@ -30,7 +30,7 @@ public class TemplatePageImpl implements TemplatePage {
 
     private final Map<Integer, ItemIconTemplate> itemIcons = new HashMap<>();
     private final Map<String, FramedIconsTemplate> pagedItems = new HashMap<>();
-    private IconHandlerFactory backbround = null;
+    private IconHandlerFactory background = null;
 
     public TemplatePageImpl(String name, InvType type, InventoryCreationHandler creationHandler, PluginTemplatePagesImpl pluginTemplatePages) {
         this.name = name;
@@ -65,7 +65,7 @@ public class TemplatePageImpl implements TemplatePage {
             pagedIconsActive.put(tli.getName(), new PagedItems(tli.getName(), tli.getFirstX(), tli.getFirstZ(), tli.getWidth(), tli.getHeight(), tli.getFactory().create(), tli.isPermanentCached()));
         }
 
-        return new InventoryPageImpl(this.name, this.type, itemIconsActive, pagedIconsActive, this.creationHandler, this.backbround, player, session, this);
+        return new InventoryPageImpl(this.name, this.type, itemIconsActive, pagedIconsActive, this.creationHandler, this.background, player, session, this);
     }
 
     @Override
@@ -130,11 +130,11 @@ public class TemplatePageImpl implements TemplatePage {
             throw new MenuInvException("factory является нулевым!");
         }
 
-        if (this.backbround != null) {
+        if (this.background != null) {
             throw new MenuInvException("Фон уже установлен!");
         }
 
-        this.backbround = factory;
+        this.background = factory;
     }
 
     private void addItem(ItemIconTemplate icon) throws MenuInvException {
