@@ -13,7 +13,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import ru.boomearo.menuinv.MenuInv;
 import ru.boomearo.menuinv.api.*;
-import ru.boomearo.menuinv.api.frames.iteration.DefaultIterationHandler;
 import ru.boomearo.menuinv.api.frames.iteration.InverseIterationHandler;
 import ru.boomearo.menuinv.api.scrolls.DefaultScrollHandlerFactory;
 import ru.boomearo.menuinv.api.session.InventorySession;

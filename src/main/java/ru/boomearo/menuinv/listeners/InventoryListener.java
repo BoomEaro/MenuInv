@@ -50,7 +50,7 @@ public class InventoryListener implements Listener {
         }
 
         InventoryHolder holder = topInventory.getHolder();
-        if (!(holder instanceof MenuInvHolder)) {
+        if (!(holder instanceof MenuInvHolder menuHolder)) {
             return;
         }
 
@@ -67,8 +67,6 @@ public class InventoryListener implements Listener {
         if (e.getView().getBottomInventory() == clickedInventory) {
             return;
         }
-
-        MenuInvHolder menuHolder = (MenuInvHolder) holder;
 
         InventoryPageImpl page = menuHolder.getPage();
 
