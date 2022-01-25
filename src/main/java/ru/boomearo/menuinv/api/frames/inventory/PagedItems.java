@@ -39,6 +39,7 @@ public class PagedItems extends FramedIcons {
 
     /**
      * Устанавливает страницу
+     *
      * @param page Номер страницы
      * @return true если удалось прокрутить страницу
      */
@@ -88,6 +89,7 @@ public class PagedItems extends FramedIcons {
 
     /**
      * Прокручивает страницу вперед на 1 номер
+     *
      * @return true если удалось прокрутить страницу
      */
     public boolean nextPage() {
@@ -114,6 +116,7 @@ public class PagedItems extends FramedIcons {
 
     /**
      * Прокручивает страницу назад на 1 номер
+     *
      * @return true если удалось прокрутить страницу
      */
     public boolean previouslyPage() {
@@ -136,6 +139,7 @@ public class PagedItems extends FramedIcons {
 
     /**
      * Прокручивает страницу на 1 номер
+     *
      * @param type Тип прокрутки
      * @return true если удалось прокрутить страницу
      */
@@ -179,7 +183,8 @@ public class PagedItems extends FramedIcons {
 
     /**
      * Обновляет актуальное состояние страницы
-     * @param page Страница инвентаря
+     *
+     * @param page  Страница инвентаря
      * @param force Игнорировать ли задержку обновления
      */
     public void updateActiveIcons(InventoryPageImpl page, boolean force) {

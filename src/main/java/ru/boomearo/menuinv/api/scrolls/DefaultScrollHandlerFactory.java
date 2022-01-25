@@ -27,7 +27,7 @@ public class DefaultScrollHandlerFactory implements ScrollHandlerFactory {
             public ItemStack onVisible(int currentPage, int maxPage) {
                 int nextPage = type.getNextPage(currentPage);
 
-                int amount = nextPage ;
+                int amount = nextPage;
                 if (amount <= 0) {
                     amount = 1;
                 }

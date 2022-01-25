@@ -39,7 +39,7 @@ public class PluginTemplatePagesImpl implements PluginTemplatePages {
     }
 
     @Override
-    public TemplatePage createTemplatePage(String name,  InvType type, InventoryCreationHandler titleHandler) throws MenuInvException {
+    public TemplatePage createTemplatePage(String name, InvType type, InventoryCreationHandler titleHandler) throws MenuInvException {
         if (name == null || titleHandler == null || type == null) {
             throw new MenuInvException("Указанные аргументы являются нулевыми!");
         }
@@ -49,7 +49,7 @@ public class PluginTemplatePagesImpl implements PluginTemplatePages {
             throw new MenuInvException("Страница '" + name + "' уже создана!");
         }
 
-        TemplatePageImpl newPage = new TemplatePageImpl(name, type, titleHandler,this);
+        TemplatePageImpl newPage = new TemplatePageImpl(name, type, titleHandler, this);
 
         this.pages.put(name, newPage);
 

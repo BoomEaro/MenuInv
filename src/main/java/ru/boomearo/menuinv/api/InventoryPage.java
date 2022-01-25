@@ -51,6 +51,7 @@ public interface InventoryPage {
     /**
      * Обновляет внутренние элементы инвентаря.
      * Не рекомендуется использовать во время нажатия на кнопки.
+     *
      * @param force Игнорировать ли задержку обновления всех элементов
      */
     public void update(boolean force);
@@ -66,6 +67,7 @@ public interface InventoryPage {
     /**
      * Открывает новый экземпляр баккитовского Inventory.
      * На данный момент используется для обновления тайтла.
+     *
      * @param force Открыть ли новый инвентарь срочно. (прямо во время текущего тика, а не на следующем)
      */
     public void reopen(boolean force);
@@ -79,6 +81,7 @@ public interface InventoryPage {
 
     /**
      * Закрывает этот инвентарь.
+     *
      * @param force Закрыть ли инвентарь срочно. (прямо во время текущего тика, а не на следующем)
      */
     public void close(boolean force);

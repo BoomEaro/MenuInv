@@ -83,6 +83,7 @@ public final class MenuInv extends JavaPlugin {
 
     /**
      * Регистрирует плагин для создания шаблона страниц
+     *
      * @param plugin Плагин, который регистрирует страницы
      * @return Шаблон страниц плагина
      */
@@ -108,6 +109,7 @@ public final class MenuInv extends JavaPlugin {
     /**
      * Отменяет регистрацию плагина, удаляя все страницы которые были им добавлены.
      * При удалении страниц, игроки у которых эти страницы остались открыты, будут принудительно закрыты.
+     *
      * @param plugin Плагин, который зарегистрировал страницы
      */
     public void unregisterPages(JavaPlugin plugin) throws MenuInvException {
@@ -142,8 +144,9 @@ public final class MenuInv extends JavaPlugin {
 
     /**
      * Открывает меню со страницей плагина
+     *
      * @param pageData Страница, которая была зарегистрирована плагином
-     * @param player Игрок, которому надо открыть страницу
+     * @param player   Игрок, которому надо открыть страницу
      */
     public void openMenu(PageData pageData, Player player) throws MenuInvException {
         openMenu(pageData, player, null);
@@ -151,9 +154,10 @@ public final class MenuInv extends JavaPlugin {
 
     /**
      * Открывает меню со страницей плагина
+     *
      * @param pageData Страница, которая была зарегистрирована плагином
-     * @param player Игрок, которому надо открыть страницу
-     * @param session Сессия, используемся для хранения внутренних параметров между страницами
+     * @param player   Игрок, которому надо открыть страницу
+     * @param session  Сессия, используемся для хранения внутренних параметров между страницами
      */
     public void openMenu(PageData pageData, Player player, InventorySession session) throws MenuInvException {
         if (pageData == null || player == null) {

@@ -42,7 +42,7 @@ public class InverseIterationHandler implements FrameIterationHandler {
 
     @Override
     public int manipulateZ(int z) {
-        return z- 1;
+        return z - 1;
     }
 
     @Override

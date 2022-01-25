@@ -16,9 +16,10 @@ public abstract class IconHandler implements Updatable<ItemStack, InventoryPage>
 
     /**
      * Обрабатывает нажатия на предмет
-     * @param page Страница инвентаря
+     *
+     * @param page   Страница инвентаря
      * @param player Игрок нажавший на предмет
-     * @param click Тип клика
+     * @param click  Тип клика
      */
     public abstract void onClick(InventoryPage page, Player player, ClickType click);
 
@@ -31,9 +32,10 @@ public abstract class IconHandler implements Updatable<ItemStack, InventoryPage>
 
     /**
      * Обрабатывает нажатие на предмет, учитывая задержку и реализацию текущего класса
-     * @param page Страница инвентаря
+     *
+     * @param page   Страница инвентаря
      * @param player Игрок нажавший на предмет
-     * @param click Тип клика
+     * @param click  Тип клика
      */
     public void handleClick(InventoryPage page, Player player, ClickType click) {
         if (hasClicked(player.getName(), getClickTime())) {
