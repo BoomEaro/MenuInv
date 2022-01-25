@@ -218,7 +218,13 @@ public class PagedItems extends FramedIcons {
             for (int z = iterationHandler.startPositionZ(); iterationHandler.hasNextZ(z, getHeight()); z = iterationHandler.manipulateZ(z)) {
                 for (int x = iterationHandler.startPositionX(); iterationHandler.hasNextX(x, getWidth()); x = iterationHandler.manipulateX(x)) {
 
-                    int offset = getFirstZ() * type.getWidth() + getFirstX() + x + (z * type.getWidth());
+                    int offset;
+                    if (iterationHandler.isReverse()) {
+                        offset = getFirstZ() * type.getWidth() + getFirstX() + z + (x * type.getWidth());
+                    }
+                    else {
+                        offset = getFirstZ() * type.getWidth() + getFirstX() + x + (z * type.getWidth());
+                    }
 
                     if (i > (maxSize - 1)) {
                         activeIcons[offset] = null;

@@ -13,6 +13,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import ru.boomearo.menuinv.MenuInv;
 import ru.boomearo.menuinv.api.*;
+import ru.boomearo.menuinv.api.frames.iteration.DefaultIterationHandler;
 import ru.boomearo.menuinv.api.scrolls.DefaultScrollHandlerFactory;
 import ru.boomearo.menuinv.api.session.InventorySession;
 import ru.boomearo.menuinv.exceptions.MenuInvException;
@@ -133,7 +134,7 @@ public class TestMenu {
 
                             @Override
                             public void onClick(InventoryPage page, Player player, ClickType type) {
-                                player.sendMessage("Вот так вот: " + t);
+                                player.sendMessage("Вот так вот алмазы: " + t);
                             }
 
                             @Override
@@ -151,7 +152,7 @@ public class TestMenu {
                     return 1500;
                 }
 
-            });
+            }, new DefaultIterationHandler(true));
 
             page.addPagedItems("test2", 6, 2, 3, 3, () -> (pageInv, player) -> {
                 TestSession ts = (TestSession) pageInv.getSession();
@@ -163,7 +164,7 @@ public class TestMenu {
 
                         @Override
                         public void onClick(InventoryPage page, Player player, ClickType type) {
-                            player.sendMessage("Вот так вот: " + t);
+                            player.sendMessage("Вот так вот редстоун: " + t);
                         }
 
                         @Override

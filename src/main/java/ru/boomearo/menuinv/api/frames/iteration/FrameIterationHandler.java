@@ -11,4 +11,5 @@ public interface FrameIterationHandler {
     public int manipulateX(int x);
     public int manipulateZ(int z);
 
+    public boolean isReverse();
 }

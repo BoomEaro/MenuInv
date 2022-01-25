@@ -2,6 +2,16 @@ package ru.boomearo.menuinv.api.frames.iteration;
 
 public class DefaultIterationHandler implements FrameIterationHandler {
 
+    private final boolean reverse;
+
+    public DefaultIterationHandler(boolean reverse) {
+        this.reverse = reverse;
+    }
+
+    public DefaultIterationHandler() {
+        this.reverse = false;
+    }
+
     @Override
     public int startPositionX() {
         return 0;
@@ -32,4 +42,8 @@ public class DefaultIterationHandler implements FrameIterationHandler {
         return z + 1;
     }
 
+    @Override
+    public boolean isReverse() {
+        return this.reverse;
+    }
 }
