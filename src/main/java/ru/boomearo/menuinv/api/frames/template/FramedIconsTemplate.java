@@ -2,23 +2,30 @@ package ru.boomearo.menuinv.api.frames.template;
 
 import ru.boomearo.menuinv.api.FramedIconsHandlerFactory;
 import ru.boomearo.menuinv.api.frames.Frame;
+import ru.boomearo.menuinv.api.frames.iteration.FrameIterationHandler;
 
 /**
  * Представляет шаблон рамки, использующий фабрику рамочных предметов
  */
 public class FramedIconsTemplate extends Frame {
 
-    private final FramedIconsHandlerFactory factory;
+    private final FramedIconsHandlerFactory iconsFactory;
+    private final FrameIterationHandler iterationHandler;
     private final boolean permanentCached;
 
-    public FramedIconsTemplate(String name, int x, int z, int width, int height, FramedIconsHandlerFactory factory, boolean permanentCached) {
+    public FramedIconsTemplate(String name, int x, int z, int width, int height, FramedIconsHandlerFactory iconsFactory, FrameIterationHandler iterationHandler, boolean permanentCached) {
         super(name, x, z, width, height);
-        this.factory = factory;
+        this.iconsFactory = iconsFactory;
+        this.iterationHandler = iterationHandler;
         this.permanentCached = permanentCached;
     }
 
-    public FramedIconsHandlerFactory getFactory() {
-        return this.factory;
+    public FramedIconsHandlerFactory getIconsFactory() {
+        return this.iconsFactory;
+    }
+
+    public FrameIterationHandler getIterationHandler() {
+        return this.iterationHandler;
     }
 
     public boolean isPermanentCached() {

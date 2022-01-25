@@ -8,6 +8,8 @@ import org.bukkit.inventory.ItemStack;
 import ru.boomearo.menuinv.api.*;
 import ru.boomearo.menuinv.api.frames.Frame;
 import ru.boomearo.menuinv.api.frames.inventory.PagedItems;
+import ru.boomearo.menuinv.api.frames.iteration.DefaultIterationHandler;
+import ru.boomearo.menuinv.api.frames.iteration.FrameIterationHandler;
 import ru.boomearo.menuinv.api.frames.template.FramedIconsTemplate;
 import ru.boomearo.menuinv.api.scrolls.ScrollHandler;
 import ru.boomearo.menuinv.api.scrolls.ScrollHandlerFactory;
@@ -62,7 +64,7 @@ public class TemplatePageImpl implements TemplatePage {
         }
         Map<String, PagedItems> pagedIconsActive = new HashMap<>();
         for (FramedIconsTemplate tli : this.pagedItems.values()) {
-            pagedIconsActive.put(tli.getName(), new PagedItems(tli.getName(), tli.getFirstX(), tli.getFirstZ(), tli.getWidth(), tli.getHeight(), tli.getFactory().create(), tli.isPermanentCached()));
+            pagedIconsActive.put(tli.getName(), new PagedItems(tli.getName(), tli.getFirstX(), tli.getFirstZ(), tli.getWidth(), tli.getHeight(), tli.getIconsFactory().create(), tli.getIterationHandler(), tli.isPermanentCached()));
         }
 
         return new InventoryPageImpl(this.name, this.type, itemIconsActive, pagedIconsActive, this.creationHandler, this.background, player, session, this);
@@ -83,13 +85,23 @@ public class TemplatePageImpl implements TemplatePage {
     }
 
     @Override
-    public void addPagedItems(String name, int x, int z, int width, int height, FramedIconsHandlerFactory factory) throws MenuInvException {
-        addPagedItems(name, x, z, width, height, factory, false);
+    public void addPagedItems(String name, int x, int z, int width, int height, FramedIconsHandlerFactory iconFactory) throws MenuInvException {
+        addPagedItems(name, x, z, width, height, iconFactory, false);
     }
 
     @Override
-    public void addPagedItems(String name, int x, int z, int width, int height, FramedIconsHandlerFactory factory, boolean permanentCached) throws MenuInvException {
-        if (name == null || factory == null) {
+    public void addPagedItems(String name, int x, int z, int width, int height, FramedIconsHandlerFactory iconFactory, boolean permanentCached) throws MenuInvException {
+        addPagedItems(name, x, z, width, height, iconFactory, new DefaultIterationHandler(), permanentCached);
+    }
+
+    @Override
+    public void addPagedItems(String name, int x, int z, int width, int height, FramedIconsHandlerFactory iconFactory, FrameIterationHandler iterationHandler) throws MenuInvException {
+        addPagedItems(name, x, z, width, height, iconFactory, iterationHandler, false);
+    }
+
+    @Override
+    public void addPagedItems(String name, int x, int z, int width, int height, FramedIconsHandlerFactory iconFactory, FrameIterationHandler iterationHandler, boolean permanentCached) throws MenuInvException {
+        if (name == null || iconFactory == null || iterationHandler == null) {
             throw new MenuInvException("Указанные аргументы являются нулевыми!");
         }
 
@@ -98,7 +110,7 @@ public class TemplatePageImpl implements TemplatePage {
             throw new MenuInvException("Список кнопок '" + name + "' уже добавлен!");
         }
 
-        FramedIconsTemplate tli = new FramedIconsTemplate(name, x, z, width, height, factory, permanentCached);
+        FramedIconsTemplate tli = new FramedIconsTemplate(name, x, z, width, height, iconFactory, iterationHandler, permanentCached);
 
         checkBorder(tli);
 

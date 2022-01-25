@@ -1,8 +1,10 @@
 package ru.boomearo.menuinv.api.frames.inventory;
 
+import ru.boomearo.menuinv.MenuInv;
 import ru.boomearo.menuinv.api.IconHandler;
 import ru.boomearo.menuinv.api.InvType;
 import ru.boomearo.menuinv.api.FramedIconsHandler;
+import ru.boomearo.menuinv.api.frames.iteration.FrameIterationHandler;
 import ru.boomearo.menuinv.objects.InventoryPageImpl;
 import ru.boomearo.menuinv.objects.ItemIcon;
 
@@ -25,8 +27,8 @@ public class PagedItems extends FramedIcons {
 
     private List<IconHandler> cachedHandler = null;
 
-    public PagedItems(String name, int x, int z, int width, int height, FramedIconsHandler handler, boolean permanentCached) {
-        super(name, x, z, width, height, handler, permanentCached);
+    public PagedItems(String name, int x, int z, int width, int height, FramedIconsHandler iconsHandler, FrameIterationHandler iterationHandler, boolean permanentCached) {
+        super(name, x, z, width, height, iconsHandler, iterationHandler, permanentCached);
     }
 
     /**
@@ -151,7 +153,7 @@ public class PagedItems extends FramedIcons {
     private List<IconHandler> getHandlers(InventoryPageImpl page) {
         List<IconHandler> handlers = null;
         try {
-            handlers = getHandler().onUpdate(page, page.getPlayer());
+            handlers = getIconsHandler().onUpdate(page, page.getPlayer());
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -182,7 +184,7 @@ public class PagedItems extends FramedIcons {
      * @param force Игнорировать ли задержку обновления
      */
     public void updateActiveIcons(InventoryPageImpl page, boolean force) {
-        FramedIconsHandler handler = getHandler();
+        FramedIconsHandler handler = getIconsHandler();
 
         if (((System.currentTimeMillis() - this.updateHandlerCooldown) > handler.getUpdateTime()) || force) {
             this.updateHandlerCooldown = System.currentTimeMillis();
@@ -211,11 +213,12 @@ public class PagedItems extends FramedIcons {
 
             int i = offSet;
 
-            for (int z = 0; z < getHeight(); z++) {
-                for (int x = 0; x < getWidth(); x++) {
+            FrameIterationHandler iterationHandler = getIterationHandler();
+
+            for (int z = iterationHandler.startPositionZ(); iterationHandler.hasNextZ(z, getHeight()); z = iterationHandler.manipulateZ(z)) {
+                for (int x = iterationHandler.startPositionX(); iterationHandler.hasNextX(x, getWidth()); x = iterationHandler.manipulateX(x)) {
 
                     int offset = getFirstZ() * type.getWidth() + getFirstX() + x + (z * type.getWidth());
-
 
                     if (i > (maxSize - 1)) {
                         activeIcons[offset] = null;
