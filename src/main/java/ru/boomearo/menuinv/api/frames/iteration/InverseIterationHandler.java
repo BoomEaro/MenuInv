@@ -1,5 +1,8 @@
 package ru.boomearo.menuinv.api.frames.iteration;
 
+/**
+ * Реализация шаблона порядка итерации, где все элементы начинаются справа-снизу относительно рамки.
+ */
 public class InverseIterationHandler implements FrameIterationHandler {
 
     private final boolean reverse;
