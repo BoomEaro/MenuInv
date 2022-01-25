@@ -206,31 +206,31 @@ public class PagedItems extends FramedIcons {
 
             setCurrentPage(this.page);
 
-            int offSet = (this.page - 1) * pageLimit;
-            if (offSet > maxSize) {
-                offSet = maxSize;
+            int pageOffset = (this.page - 1) * pageLimit;
+            if (pageOffset > maxSize) {
+                pageOffset = maxSize;
             }
 
-            int i = offSet;
+            int i = pageOffset;
 
             FrameIterationHandler iterationHandler = getIterationHandler();
 
-            for (int z = iterationHandler.startPositionZ(); iterationHandler.hasNextZ(z, getHeight()); z = iterationHandler.manipulateZ(z)) {
-                for (int x = iterationHandler.startPositionX(); iterationHandler.hasNextX(x, getWidth()); x = iterationHandler.manipulateX(x)) {
+            for (int z = iterationHandler.startPositionZ(getHeight()); iterationHandler.hasNextZ(z, getHeight()); z = iterationHandler.manipulateZ(z)) {
+                for (int x = iterationHandler.startPositionX(getWidth()); iterationHandler.hasNextX(x, getWidth()); x = iterationHandler.manipulateX(x)) {
 
-                    int offset;
+                    int slotOffset;
                     if (iterationHandler.isReverse()) {
-                        offset = getFirstZ() * type.getWidth() + getFirstX() + z + (x * type.getWidth());
+                        slotOffset = getFirstZ() * type.getWidth() + getFirstX() + z + (x * type.getWidth());
                     }
                     else {
-                        offset = getFirstZ() * type.getWidth() + getFirstX() + x + (z * type.getWidth());
+                        slotOffset = getFirstZ() * type.getWidth() + getFirstX() + x + (z * type.getWidth());
                     }
 
                     if (i > (maxSize - 1)) {
-                        activeIcons[offset] = null;
+                        activeIcons[slotOffset] = null;
                     }
                     else {
-                        activeIcons[offset] = new ItemIcon(offset, handlers.get(i));
+                        activeIcons[slotOffset] = new ItemIcon(slotOffset, handlers.get(i));
                     }
 
                     i++;

@@ -14,6 +14,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import ru.boomearo.menuinv.MenuInv;
 import ru.boomearo.menuinv.api.*;
 import ru.boomearo.menuinv.api.frames.iteration.DefaultIterationHandler;
+import ru.boomearo.menuinv.api.frames.iteration.InverseIterationHandler;
 import ru.boomearo.menuinv.api.scrolls.DefaultScrollHandlerFactory;
 import ru.boomearo.menuinv.api.session.InventorySession;
 import ru.boomearo.menuinv.exceptions.MenuInvException;
@@ -152,7 +153,7 @@ public class TestMenu {
                     return 1500;
                 }
 
-            }, new DefaultIterationHandler(true));
+            }, new InverseIterationHandler());
 
             page.addPagedItems("test2", 6, 2, 3, 3, () -> (pageInv, player) -> {
                 TestSession ts = (TestSession) pageInv.getSession();
