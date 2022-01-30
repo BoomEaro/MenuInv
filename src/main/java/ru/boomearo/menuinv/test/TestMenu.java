@@ -58,10 +58,11 @@ public class TestMenu {
 
                 @Override
                 public boolean reopenCondition(InventoryPage page, boolean forceUpdate) {
-                    PagedItems piTest = page.getListedIconsItems("test");
-                    PagedItems piTest2 = page.getListedIconsItems("test2");
+                    return false;
+                    //PagedItems piTest = page.getListedIconsItems("test");
+                    //PagedItems piTest2 = page.getListedIconsItems("test2");
 
-                    return piTest.hasChanges() || piTest2.hasChanges();
+                    //return piTest.hasChanges() || piTest2.hasChanges();
                 }
             });
 
@@ -79,7 +80,7 @@ public class TestMenu {
 
                 @Override
                 public ItemStack onUpdate(InventoryPage consume, Player player) {
-                    return new ItemStack(Material.BEDROCK, 1);
+                    return new ItemStack(Material.STONE, 1);
                 }
             });
 
