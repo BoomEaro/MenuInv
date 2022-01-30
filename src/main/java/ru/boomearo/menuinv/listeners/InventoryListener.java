@@ -11,6 +11,8 @@ import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
+import org.bukkit.inventory.InventoryView;
+import ru.boomearo.menuinv.MenuInv;
 import ru.boomearo.menuinv.objects.InventoryPageImpl;
 import ru.boomearo.menuinv.objects.MenuInvHolder;
 
@@ -75,7 +77,9 @@ public class InventoryListener implements Listener {
             return;
         }
 
-        Inventory topInventory = e.getView().getTopInventory();
+        InventoryView view = e.getView();
+
+        Inventory topInventory = view.getTopInventory();
         if (topInventory == null) {
             return;
         }
@@ -84,9 +88,13 @@ public class InventoryListener implements Listener {
         }
 
         //Разрешаем игроку модифицировать инвентарь через драг ивент, однако до тех пор, пока в нем не окажется части менюшки.
-        for (Integer slot : e.getInventorySlots()) {
-            //Слоты начиная с 36, являются слотами меню
-            if (slot > 35) {
+        for (Integer slot : e.getRawSlots()) {
+            Inventory i = view.getInventory(slot);
+            if (i == null) {
+                continue;
+            }
+
+            if (i == topInventory) {
                 e.setCancelled(true);
                 e.setResult(Event.Result.DENY);
                 return;
