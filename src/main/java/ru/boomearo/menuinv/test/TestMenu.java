@@ -57,7 +57,7 @@ public class TestMenu {
 
     public static void setupMenu(PluginTemplatePages pages) throws MenuInvException {
         {
-            TemplatePage page = pages.createTemplatePage("test", InvType.CHEST_9X6, new InventoryCreationHandler() {
+            TemplatePage page = pages.createTemplatePage(MenuPage.TEST, InvType.CHEST_9X6, new InventoryCreationHandler() {
 
                 @Override
                 public String createTitle(InventoryPage inventoryPage) {
@@ -213,7 +213,7 @@ public class TestMenu {
             });
         }
         {
-            TemplatePage page = pages.createTemplatePage("test2", InvType.WORKBENCH, (inventoryPage) -> "Привет2");
+            TemplatePage page = pages.createTemplatePage(MenuPage.TEST2, InvType.WORKBENCH, (inventoryPage) -> "Привет2");
 
             page.addItem(9, () -> new IconHandler() {
 

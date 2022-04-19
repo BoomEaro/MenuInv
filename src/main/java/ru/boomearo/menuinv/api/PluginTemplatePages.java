@@ -32,4 +32,22 @@ public interface PluginTemplatePages {
      */
     public TemplatePage createTemplatePage(String name, InvType type, InventoryCreationHandler titleHandler) throws MenuInvException;
 
+    /**
+     * Создает новый шаблон страниц. По умолчанию тип инвентаря InvType.CHEST_9X6
+     *
+     * @param pluginPage   Тип страницы
+     * @param titleHandler Обработчик тайтла страницы
+     * @return Шаблон страницы
+     */
+    public TemplatePage createTemplatePage(PluginPage pluginPage, InventoryCreationHandler titleHandler) throws MenuInvException;
+
+    /**
+     * Создает новый шаблон страниц.
+     *
+     * @param pluginPage   Тип страницы
+     * @param titleHandler Обработчик тайтла страницы
+     * @param type         Тип инвентаря
+     * @return Шаблон страницы
+     */
+    public TemplatePage createTemplatePage(PluginPage pluginPage, InvType type, InventoryCreationHandler titleHandler) throws MenuInvException;
 }

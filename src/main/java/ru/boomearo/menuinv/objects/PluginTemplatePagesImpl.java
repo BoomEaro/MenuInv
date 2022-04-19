@@ -4,6 +4,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import ru.boomearo.menuinv.MenuInv;
 import ru.boomearo.menuinv.api.InventoryCreationHandler;
+import ru.boomearo.menuinv.api.PluginPage;
 import ru.boomearo.menuinv.api.PluginTemplatePages;
 import ru.boomearo.menuinv.api.TemplatePage;
 import ru.boomearo.menuinv.api.InvType;
@@ -57,4 +58,15 @@ public class PluginTemplatePagesImpl implements PluginTemplatePages {
 
         return newPage;
     }
+
+    @Override
+    public TemplatePage createTemplatePage(PluginPage pluginPage, InventoryCreationHandler titleHandler) throws MenuInvException {
+        return createTemplatePage(pluginPage.getPage(), titleHandler);
+    }
+
+    @Override
+    public TemplatePage createTemplatePage(PluginPage pluginPage, InvType type, InventoryCreationHandler titleHandler) throws MenuInvException {
+        return createTemplatePage(pluginPage.getPage(), type, titleHandler);
+    }
+
 }
