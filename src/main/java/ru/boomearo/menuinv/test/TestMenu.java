@@ -10,17 +10,27 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-
 import org.bukkit.plugin.java.JavaPlugin;
+
 import ru.boomearo.menuinv.MenuInv;
-import ru.boomearo.menuinv.api.*;
+import ru.boomearo.menuinv.api.FramedIconsHandler;
+import ru.boomearo.menuinv.api.IconHandler;
+import ru.boomearo.menuinv.api.InvType;
+import ru.boomearo.menuinv.api.InventoryCreationHandler;
+import ru.boomearo.menuinv.api.InventoryPage;
+import ru.boomearo.menuinv.api.PluginPage;
+import ru.boomearo.menuinv.api.PluginTemplatePages;
+import ru.boomearo.menuinv.api.TemplatePage;
 import ru.boomearo.menuinv.api.frames.iteration.InverseIterationHandler;
 import ru.boomearo.menuinv.api.scrolls.DefaultScrollHandlerFactory;
 import ru.boomearo.menuinv.api.session.InventorySession;
 import ru.boomearo.menuinv.exceptions.MenuInvException;
 import ru.boomearo.menuinv.api.frames.inventory.PagedItems;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**

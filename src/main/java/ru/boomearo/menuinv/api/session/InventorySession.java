@@ -1,6 +1,5 @@
 package ru.boomearo.menuinv.api.session;
 
-import ru.boomearo.menuinv.api.PageData;
 import ru.boomearo.menuinv.api.PluginPage;
 
 /**

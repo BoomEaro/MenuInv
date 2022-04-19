@@ -8,7 +8,12 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import ru.boomearo.menuinv.api.*;
+import ru.boomearo.menuinv.api.IconHandler;
+import ru.boomearo.menuinv.api.InvType;
+import ru.boomearo.menuinv.api.InventoryPage;
+import ru.boomearo.menuinv.api.PluginPage;
+import ru.boomearo.menuinv.api.PluginTemplatePages;
+import ru.boomearo.menuinv.api.TemplatePage;
 import ru.boomearo.menuinv.api.session.ConfirmData;
 import ru.boomearo.menuinv.api.session.InventorySession;
 import ru.boomearo.menuinv.exceptions.MenuInvException;

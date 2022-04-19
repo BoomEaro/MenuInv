@@ -5,7 +5,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 
-import ru.boomearo.menuinv.api.*;
+import ru.boomearo.menuinv.api.FramedIconsHandlerFactory;
+import ru.boomearo.menuinv.api.IconHandler;
+import ru.boomearo.menuinv.api.IconHandlerFactory;
+import ru.boomearo.menuinv.api.InvType;
+import ru.boomearo.menuinv.api.InventoryCreationHandler;
+import ru.boomearo.menuinv.api.InventoryPage;
+import ru.boomearo.menuinv.api.ItemIconTemplate;
+import ru.boomearo.menuinv.api.TemplatePage;
 import ru.boomearo.menuinv.api.frames.Frame;
 import ru.boomearo.menuinv.api.frames.inventory.PagedItems;
 import ru.boomearo.menuinv.api.frames.iteration.DefaultIterationHandler;
