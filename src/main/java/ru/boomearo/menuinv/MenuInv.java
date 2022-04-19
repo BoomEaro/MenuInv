@@ -177,13 +177,17 @@ public final class MenuInv extends JavaPlugin {
             throw new MenuInvException("Плагин '" + plugin.getName() + "' еще не зарегистрировал страницу '" + page + "'");
         }
 
+        if (session == null) {
+            session = new InventorySession();
+        }
+
+        InventorySession finalSession = session;
+
         Bukkit.getScheduler().runTask(this, () -> {
             try {
-                if (session != null) {
-                    session.setCurrentPage(pluginPage);
-                }
+                finalSession.setCurrentPage(pluginPage);
 
-                InventoryPageImpl newPage = templatePage.createNewInventoryPage(player, session);
+                InventoryPageImpl newPage = templatePage.createNewInventoryPage(player, finalSession);
 
                 newPage.update(true);
 
