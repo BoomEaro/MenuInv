@@ -145,27 +145,27 @@ public final class MenuInv extends JavaPlugin {
     /**
      * Открывает меню со страницей плагина
      *
-     * @param pageData Страница, которая была зарегистрирована плагином
+     * @param pluginPage Страница, которая была зарегистрирована плагином
      * @param player   Игрок, которому надо открыть страницу
      */
-    public void openMenu(PageData pageData, Player player) throws MenuInvException {
-        openMenu(pageData, player, null);
+    public void openMenu(PluginPage pluginPage, Player player) throws MenuInvException {
+        openMenu(pluginPage, player, null);
     }
 
     /**
      * Открывает меню со страницей плагина
      *
-     * @param pageData Страница, которая была зарегистрирована плагином
+     * @param pluginPage Страница, которая была зарегистрирована плагином
      * @param player   Игрок, которому надо открыть страницу
      * @param session  Сессия, используемся для хранения внутренних параметров между страницами
      */
-    public void openMenu(PageData pageData, Player player, InventorySession session) throws MenuInvException {
-        if (pageData == null || player == null) {
+    public void openMenu(PluginPage pluginPage, Player player, InventorySession session) throws MenuInvException {
+        if (pluginPage == null || player == null) {
             throw new MenuInvException("Указанные аргументы являются нулевыми!");
         }
 
-        JavaPlugin plugin = pageData.getPlugin();
-        String page = pageData.getPage();
+        JavaPlugin plugin = pluginPage.getPlugin();
+        String page = pluginPage.getPage();
 
         PluginTemplatePagesImpl pp = this.menu.get(plugin.getClass());
         if (pp == null) {
@@ -180,7 +180,7 @@ public final class MenuInv extends JavaPlugin {
         Bukkit.getScheduler().runTask(this, () -> {
             try {
                 if (session != null) {
-                    session.setCurrentPage(pageData);
+                    session.setCurrentPage(pluginPage);
                 }
 
                 InventoryPageImpl newPage = templatePage.createNewInventoryPage(player, session);
@@ -191,7 +191,7 @@ public final class MenuInv extends JavaPlugin {
             }
             catch (Throwable e) {
                 e.printStackTrace();
-                player.sendMessage(ChatColor.RED + "Критическая ошибка при открытии меню '" + pageData.getPage() + "'. Сообщите Администрации!");
+                player.sendMessage(ChatColor.RED + "Критическая ошибка при открытии меню '" + pluginPage.getPage() + "'. Сообщите Администрации!");
             }
         });
     }

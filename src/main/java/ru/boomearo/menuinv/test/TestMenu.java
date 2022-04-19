@@ -11,6 +11,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import org.bukkit.plugin.java.JavaPlugin;
 import ru.boomearo.menuinv.MenuInv;
 import ru.boomearo.menuinv.api.*;
 import ru.boomearo.menuinv.api.frames.iteration.InverseIterationHandler;
@@ -71,7 +72,7 @@ public class TestMenu {
                 @Override
                 public void onClick(InventoryPage page, Player player, ClickType type) {
                     try {
-                        MenuInv.getInstance().openMenu(new PageData(MenuInv.getInstance(), "test2"), player, page.getSession());
+                        MenuInv.getInstance().openMenu(MenuPage.TEST2, player, page.getSession());
                     }
                     catch (MenuInvException e) {
                         e.printStackTrace();
@@ -209,7 +210,7 @@ public class TestMenu {
                 @Override
                 public void onClick(InventoryPage page, Player player, ClickType type) {
                     try {
-                        MenuInv.getInstance().openMenu(new PageData(MenuInv.getInstance(), "test"), player, page.getSession());
+                        MenuInv.getInstance().openMenu(MenuPage.TEST, player, page.getSession());
                     }
                     catch (MenuInvException e) {
                         e.printStackTrace();
@@ -308,7 +309,7 @@ public class TestMenu {
                 e.setUseItemInHand(Event.Result.DENY);
 
                 try {
-                    MenuInv.getInstance().openMenu(new PageData(MenuInv.getInstance(), "test"), pl, new TestSession());
+                    MenuInv.getInstance().openMenu(MenuPage.TEST, pl, new TestSession());
                 }
                 catch (MenuInvException ex) {
                     ex.printStackTrace();
@@ -325,5 +326,29 @@ public class TestMenu {
             return this.items;
         }
 
+    }
+
+    private static enum MenuPage implements PluginPage {
+
+        TEST(MenuInv.getInstance(), "test"),
+        TEST2(MenuInv.getInstance(), "test2");
+
+        private final JavaPlugin javaPlugin;
+        private final String page;
+
+        MenuPage(JavaPlugin javaPlugin, String page) {
+            this.javaPlugin = javaPlugin;
+            this.page = page;
+        }
+
+        @Override
+        public JavaPlugin getPlugin() {
+            return this.javaPlugin;
+        }
+
+        @Override
+        public String getPage() {
+            return this.page;
+        }
     }
 }

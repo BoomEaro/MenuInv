@@ -1,6 +1,7 @@
 package ru.boomearo.menuinv.api.session;
 
 import ru.boomearo.menuinv.api.PageData;
+import ru.boomearo.menuinv.api.PluginPage;
 
 /**
  * Сессия инвентаря, используемая для хранения внутренней информацией.
@@ -8,21 +9,21 @@ import ru.boomearo.menuinv.api.PageData;
  */
 public class InventorySession {
 
-    private PageData currentPage = null;
-    private PageData lastPage = null;
+    private PluginPage currentPage = null;
+    private PluginPage lastPage = null;
     private boolean first = true;
 
     private ConfirmData confirmData = null;
 
-    public PageData getCurrentPage() {
+    public PluginPage getCurrentPage() {
         return this.currentPage;
     }
 
-    public PageData getLastPage() {
+    public PluginPage getLastPage() {
         return this.lastPage;
     }
 
-    public void setCurrentPage(PageData page) {
+    public void setCurrentPage(PluginPage page) {
         if (this.first) {
             this.currentPage = page;
             this.lastPage = page;
