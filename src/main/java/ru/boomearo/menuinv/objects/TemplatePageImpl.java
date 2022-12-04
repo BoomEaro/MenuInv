@@ -210,7 +210,7 @@ public class TemplatePageImpl implements TemplatePage {
                     boolean change = page.getListedIconsItems(ScrollIconHandlerFactory.this.pagedItems).scrollPage(ScrollIconHandlerFactory.this.type);
                     if (change) {
                         page.setNeedUpdate();
-                        player.playSound(player.getLocation(), Sound.BLOCK_DISPENSER_FAIL, 1, 1);
+                        player.playSound(player.getLocation(), Sound.CLICK, 1, 1);
                     }
                 }
 

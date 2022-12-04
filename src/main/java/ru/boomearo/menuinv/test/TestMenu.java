@@ -43,7 +43,7 @@ public class TestMenu {
     static {
         List<Material> tmp = new ArrayList<>();
         for (Material mat : Material.values()) {
-            if (mat.isItem()) {
+            if (!mat.isBlock()) {
                 tmp.add(mat);
             }
         }
@@ -202,7 +202,7 @@ public class TestMenu {
 
                 @Override
                 public ItemStack onUpdate(InventoryPage consume, Player player) {
-                    return new ItemStack(Material.BLACK_STAINED_GLASS_PANE, 1);
+                    return new ItemStack(Material.STAINED_GLASS_PANE, 1);
                 }
 
                 @Override
@@ -292,7 +292,7 @@ public class TestMenu {
 
                 @Override
                 public ItemStack onUpdate(InventoryPage consume, Player player) {
-                    return new ItemStack(Material.BLUE_STAINED_GLASS_PANE, 1);
+                    return new ItemStack(Material.STAINED_GLASS_PANE, 1);
                 }
 
                 @Override

@@ -86,19 +86,9 @@ public class InventoryListener implements Listener {
             return;
         }
 
-        //Разрешаем игроку модифицировать инвентарь через драг ивент, однако до тех пор, пока в нем не окажется части менюшки.
-        for (Integer slot : e.getRawSlots()) {
-            Inventory i = view.getInventory(slot);
-            if (i == null) {
-                continue;
-            }
-
-            if (i == topInventory) {
-                e.setCancelled(true);
-                e.setResult(Event.Result.DENY);
-                return;
-            }
-        }
+        // Всегда запрещаем модифицировать инвентарь
+        e.setCancelled(true);
+        e.setResult(Event.Result.DENY);
     }
 
 }
