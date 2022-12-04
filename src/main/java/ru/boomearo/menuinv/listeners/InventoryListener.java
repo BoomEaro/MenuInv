@@ -32,9 +32,11 @@ public class InventoryListener implements Listener {
         }
 
         InventoryHolder holder = topInventory.getHolder();
-        if (!(holder instanceof MenuInvHolder menuHolder)) {
+        if (!(holder instanceof MenuInvHolder)) {
             return;
         }
+
+        MenuInvHolder menuHolder = (MenuInvHolder) holder;
 
         //Здесь очевидно если нажать на пустоту, то будет нулл, и игрок попытается выбросить вещь. Не даем это сделать.
         Inventory clickedInventory = e.getClickedInventory();

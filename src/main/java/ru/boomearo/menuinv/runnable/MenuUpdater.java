@@ -26,7 +26,9 @@ public class MenuUpdater extends BukkitRunnable {
 
             InventoryHolder holder = inv.getHolder();
 
-            if (holder instanceof MenuInvHolder mih) {
+            if (holder instanceof MenuInvHolder) {
+                MenuInvHolder mih = (MenuInvHolder) holder;
+
                 mih.getPage().update();
             }
         }
