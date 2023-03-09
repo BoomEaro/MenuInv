@@ -1,5 +1,6 @@
 package ru.boomearo.menuinv.listeners;
 
+import com.google.common.base.Preconditions;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
@@ -17,6 +18,8 @@ import ru.boomearo.menuinv.objects.MenuInvHolder;
 
 public class InventoryListener implements Listener {
 
+    private static final int OUTSIDE = -999;
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onInventoryClickEvent(InventoryClickEvent e) {
         if (e.isCancelled()) {
@@ -32,9 +35,11 @@ public class InventoryListener implements Listener {
         }
 
         InventoryHolder holder = topInventory.getHolder();
-        if (!(holder instanceof MenuInvHolder menuHolder)) {
+        if (!(holder instanceof MenuInvHolder)) {
             return;
         }
+
+        MenuInvHolder menuHolder = (MenuInvHolder) holder;
 
         //Здесь очевидно если нажать на пустоту, то будет нулл, и игрок попытается выбросить вещь. Не даем это сделать.
         Inventory clickedInventory = e.getClickedInventory();
@@ -88,7 +93,7 @@ public class InventoryListener implements Listener {
 
         //Разрешаем игроку модифицировать инвентарь через драг ивент, однако до тех пор, пока в нем не окажется части менюшки.
         for (Integer slot : e.getRawSlots()) {
-            Inventory i = view.getInventory(slot);
+            Inventory i = getInventory(view, slot);
             if (i == null) {
                 continue;
             }
@@ -98,6 +103,24 @@ public class InventoryListener implements Listener {
                 e.setResult(Event.Result.DENY);
                 return;
             }
+        }
+    }
+
+    // Copied from newer version to backend compatability
+    private static Inventory getInventory(InventoryView view, int rawSlot) {
+        // Slot may be -1 if not properly detected due to client bug
+        // e.g. dropping an item into part of the enchantment list section of an enchanting table
+        if (rawSlot == OUTSIDE || rawSlot == -1) {
+            return null;
+        }
+        Preconditions.checkArgument(rawSlot >= 0, "Negative, non outside slot %s", rawSlot);
+        Preconditions.checkArgument(rawSlot < view.countSlots(), "Slot %s greater than inventory slot count", rawSlot);
+
+        if (rawSlot < view.getTopInventory().getSize()) {
+            return view.getTopInventory();
+        }
+        else {
+            return view.getBottomInventory();
         }
     }
 

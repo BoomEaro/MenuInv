@@ -12,15 +12,15 @@ public enum InvType {
 
     ANVIL(InventoryType.ANVIL, 3, 1),
     BEACON(InventoryType.BEACON, 1, 1),
-    BLAST_FURNACE(InventoryType.BLAST_FURNACE, 3, 1),
+    BLAST_FURNACE(findInventoryType("BLAST_FURNACE"), 3, 1),
     FURNACE(InventoryType.FURNACE, 3, 1),
     BREWING(InventoryType.BREWING, 5, 1),
-    CARTOGRAPHY(InventoryType.CARTOGRAPHY, 3, 1),
+    CARTOGRAPHY(findInventoryType("CARTOGRAPHY"), 3, 1),
     ENCHANTING(InventoryType.ENCHANTING, 5, 1),
-    LOOM(InventoryType.LOOM, 4, 1),
-    SMITHING(InventoryType.SMITHING, 3, 1),
-    SMOKER(InventoryType.SMOKER, 3, 1),
-    STONECUTTER(InventoryType.STONECUTTER, 2, 1),
+    LOOM(findInventoryType("LOOM"), 4, 1),
+    SMITHING(findInventoryType("SMITHING"), 3, 1),
+    SMOKER(findInventoryType("SMOKER"), 3, 1),
+    STONECUTTER(findInventoryType("STONECUTTER"), 2, 1),
     //Причина, по которой именно 10 в том, что иначе не получится засунуть предмет в результат..
     //Жертвуя высотой, хоть как то можно решить эту проблему.
     WORKBENCH(InventoryType.WORKBENCH, 10, 1),
@@ -68,5 +68,17 @@ public enum InvType {
         }
 
         return Bukkit.createInventory(holder, this.type, title);
+    }
+
+    private static InventoryType findInventoryType(String name) {
+        InventoryType type;
+        try {
+            type = InventoryType.valueOf(name.toUpperCase());
+        }
+        catch (Exception e) {
+            type = InventoryType.CHEST;
+        }
+
+        return type;
     }
 }

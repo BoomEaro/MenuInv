@@ -66,8 +66,8 @@ public final class MenuInv extends JavaPlugin {
         //Закрываем всем инвентари этого меню, вне зависимости от всего
         for (Player player : Bukkit.getOnlinePlayers()) {
             InventoryHolder holder = player.getOpenInventory().getTopInventory().getHolder();
-            if (holder instanceof MenuInvHolder mih) {
-
+            if (holder instanceof MenuInvHolder) {
+                MenuInvHolder mih = (MenuInvHolder) holder;
                 InventoryPageImpl page = mih.getPage();
 
                 //TODO Я не знаю, плохо ли принудительно закрывать инвентарь.. Возможно смогут стырить в какой то момент вещь
@@ -131,7 +131,8 @@ public final class MenuInv extends JavaPlugin {
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             InventoryHolder holder = player.getOpenInventory().getTopInventory().getHolder();
-            if (holder instanceof MenuInvHolder mih) {
+            if (holder instanceof MenuInvHolder) {
+                MenuInvHolder mih = (MenuInvHolder) holder;
 
                 InventoryPageImpl page = mih.getPage();
 

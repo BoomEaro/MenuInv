@@ -43,7 +43,7 @@ public class TestMenu {
     static {
         List<Material> tmp = new ArrayList<>();
         for (Material mat : Material.values()) {
-            if (mat.isItem()) {
+            if (!mat.isBlock()) {
                 tmp.add(mat);
             }
         }
@@ -167,8 +167,6 @@ public class TestMenu {
             }, new InverseIterationHandler());
 
             page.addPagedItems("test2", 6, 2, 3, 3, () -> (pageInv, player) -> {
-                TestSession ts = (TestSession) pageInv.getSession();
-
                 List<IconHandler> tmp = new ArrayList<>();
                 for (int i = 1; i <= new Random().nextInt(20); i++) {
                     int t = i;
@@ -202,7 +200,7 @@ public class TestMenu {
 
                 @Override
                 public ItemStack onUpdate(InventoryPage consume, Player player) {
-                    return new ItemStack(Material.BLACK_STAINED_GLASS_PANE, 1);
+                    return new ItemStack(Material.COMPASS, 1);
                 }
 
                 @Override
@@ -292,7 +290,7 @@ public class TestMenu {
 
                 @Override
                 public ItemStack onUpdate(InventoryPage consume, Player player) {
-                    return new ItemStack(Material.BLUE_STAINED_GLASS_PANE, 1);
+                    return new ItemStack(Material.COMPASS, 1);
                 }
 
                 @Override

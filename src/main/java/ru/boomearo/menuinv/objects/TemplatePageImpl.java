@@ -193,6 +193,8 @@ public class TemplatePageImpl implements TemplatePage {
         private final PagedItems.ScrollType type;
         private final ScrollHandlerFactory scrollHandlerFactory;
 
+        private static final Sound DISPENSE_SOUND = findCorrectSound();
+
         public ScrollIconHandlerFactory(String pagedItems, PagedItems.ScrollType type, ScrollHandlerFactory scrollHandlerFactory) {
             this.pagedItems = pagedItems;
             this.type = type;
@@ -210,7 +212,7 @@ public class TemplatePageImpl implements TemplatePage {
                     boolean change = page.getListedIconsItems(ScrollIconHandlerFactory.this.pagedItems).scrollPage(ScrollIconHandlerFactory.this.type);
                     if (change) {
                         page.setNeedUpdate();
-                        player.playSound(player.getLocation(), Sound.BLOCK_DISPENSER_FAIL, 1, 1);
+                        player.playSound(player.getLocation(), DISPENSE_SOUND, 1, 1);
                     }
                 }
 
@@ -238,6 +240,17 @@ public class TemplatePageImpl implements TemplatePage {
                 }
 
             };
+        }
+
+        private static Sound findCorrectSound() {
+            Sound sound;
+            try {
+                sound = Sound.valueOf("BLOCK_DISPENSER_FAIL");
+            }
+            catch (Exception e) {
+                sound = Sound.CLICK;
+            }
+            return sound;
         }
     }
 
