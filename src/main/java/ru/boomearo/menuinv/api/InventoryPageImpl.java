@@ -1,4 +1,4 @@
-package ru.boomearo.menuinv.objects;
+package ru.boomearo.menuinv.api;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -8,10 +8,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import ru.boomearo.menuinv.MenuInv;
-import ru.boomearo.menuinv.api.IconHandlerFactory;
-import ru.boomearo.menuinv.api.InvType;
-import ru.boomearo.menuinv.api.InventoryCreationHandler;
-import ru.boomearo.menuinv.api.InventoryPage;
 import ru.boomearo.menuinv.api.session.InventorySession;
 import ru.boomearo.menuinv.api.frames.inventory.PagedItems;
 
@@ -24,7 +20,8 @@ public class InventoryPageImpl implements InventoryPage {
 
     private final String name;
     private final InvType type;
-    private final InventoryCreationHandler creationHandler;
+    private final InventoryCreationHandler inventoryCreationHandler;
+    private final InventoryReopenHandler inventoryReopenHandler;
 
     private final Map<String, PagedItems> listedIcons;
 
@@ -41,18 +38,27 @@ public class InventoryPageImpl implements InventoryPage {
 
     private boolean changes = false;
 
-    public InventoryPageImpl(String name, InvType type, Map<Integer, ItemIcon> iconsPosition, Map<String, PagedItems> listedIcons, InventoryCreationHandler creationHandler,
-                             IconHandlerFactory background, Player player, InventorySession session, TemplatePageImpl templatePage) {
+    public InventoryPageImpl(String name,
+                             InvType type,
+                             Map<Integer, ItemIcon> iconsPosition,
+                             Map<String, PagedItems> listedIcons,
+                             InventoryCreationHandler inventoryCreationHandler,
+                             InventoryReopenHandler inventoryReopenHandler,
+                             IconHandlerFactory background,
+                             Player player,
+                             InventorySession session,
+                             TemplatePageImpl templatePage) {
         this.name = name;
         this.type = type;
         this.listedIcons = listedIcons;
-        this.creationHandler = creationHandler;
+        this.inventoryCreationHandler = inventoryCreationHandler;
+        this.inventoryReopenHandler = inventoryReopenHandler;
         this.player = player;
         this.session = session;
         this.templatePage = templatePage;
 
         //Создаем новый инвентарь баккита и добавляет в него свой холдер для идентификации инвентари
-        this.inventory = this.type.createInventory(new MenuInvHolder(this), this.creationHandler.createTitle(this));
+        this.inventory = this.type.createInventory(new MenuInvHolder(this), this.inventoryCreationHandler.createTitle(this));
 
         //Создаем массив активных предметов размеров в текущий инвентарь
         this.activeIcons = new ItemIcon[this.type.getSize()];
@@ -135,7 +141,7 @@ public class InventoryPageImpl implements InventoryPage {
         boolean forceUpdate = this.changes || force;
 
         if (reopenIfNeed) {
-            if (this.creationHandler.reopenCondition(this, forceUpdate)) {
+            if (this.inventoryReopenHandler.reopenCondition(this, forceUpdate)) {
                 reopen(true);
                 return;
             }
@@ -188,7 +194,7 @@ public class InventoryPageImpl implements InventoryPage {
     //TODO Работает странно. А именно, если во время открытия инвентаря игрок его закроет, то у игрока откроется фантомный инвентарь.
     private void performReopen() {
         //Сначала создаем новый экземпляр баккитовского инвентаря
-        this.inventory = this.type.createInventory(new MenuInvHolder(this), this.creationHandler.createTitle(this));
+        this.inventory = this.type.createInventory(new MenuInvHolder(this), this.inventoryCreationHandler.createTitle(this));
         //Очищаем изменения скроллов страницы
         for (PagedItems pi : this.listedIcons.values()) {
             pi.resetChanges();

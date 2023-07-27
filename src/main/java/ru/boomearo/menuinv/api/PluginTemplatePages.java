@@ -1,7 +1,6 @@
 package ru.boomearo.menuinv.api;
 
 import org.bukkit.plugin.java.JavaPlugin;
-import ru.boomearo.menuinv.exceptions.MenuInvException;
 
 /**
  * Представляет шаблон всех страниц плагина
@@ -11,7 +10,7 @@ public interface PluginTemplatePages {
     /**
      * @return Плагин, который зарегистрировал эти страницы
      */
-    public JavaPlugin getPlugin();
+    JavaPlugin getPlugin();
 
     /**
      * Создает новый шаблон страниц. По умолчанию тип инвентаря InvType.CHEST_9X6
@@ -20,7 +19,7 @@ public interface PluginTemplatePages {
      * @param titleHandler Обработчик тайтла страницы
      * @return Шаблон страницы
      */
-    public TemplatePage createTemplatePage(String name, InventoryCreationHandler titleHandler) throws MenuInvException;
+    TemplatePage createTemplatePage(String name);
 
     /**
      * Создает новый шаблон страниц.
@@ -30,7 +29,7 @@ public interface PluginTemplatePages {
      * @param type         Тип инвентаря
      * @return Шаблон страницы
      */
-    public TemplatePage createTemplatePage(String name, InvType type, InventoryCreationHandler titleHandler) throws MenuInvException;
+    TemplatePage createTemplatePage(String name, InvType typer);
 
     /**
      * Создает новый шаблон страниц. По умолчанию тип инвентаря InvType.CHEST_9X6
@@ -39,7 +38,7 @@ public interface PluginTemplatePages {
      * @param titleHandler Обработчик тайтла страницы
      * @return Шаблон страницы
      */
-    public TemplatePage createTemplatePage(PluginPage pluginPage, InventoryCreationHandler titleHandler) throws MenuInvException;
+    TemplatePage createTemplatePage(PluginPage pluginPage);
 
     /**
      * Создает новый шаблон страниц.
@@ -49,5 +48,5 @@ public interface PluginTemplatePages {
      * @param type         Тип инвентаря
      * @return Шаблон страницы
      */
-    public TemplatePage createTemplatePage(PluginPage pluginPage, InvType type, InventoryCreationHandler titleHandler) throws MenuInvException;
+    TemplatePage createTemplatePage(PluginPage pluginPage, InvType type);
 }

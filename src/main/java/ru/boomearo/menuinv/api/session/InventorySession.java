@@ -2,45 +2,16 @@ package ru.boomearo.menuinv.api.session;
 
 import ru.boomearo.menuinv.api.PluginPage;
 
-/**
- * Сессия инвентаря, используемая для хранения внутренней информацией.
- * Может быть расширена путем наследования для расширения функциональности меню.
- */
-public class InventorySession {
+public interface InventorySession {
 
-    private PluginPage currentPage = null;
-    private PluginPage lastPage = null;
-    private boolean first = true;
+    PluginPage getCurrentPage();
 
-    private ConfirmData confirmData = null;
+    PluginPage getLastPage();
 
-    public PluginPage getCurrentPage() {
-        return this.currentPage;
-    }
+    void setCurrentPage(PluginPage page);
 
-    public PluginPage getLastPage() {
-        return this.lastPage;
-    }
+    ConfirmData getConfirmData();
 
-    public void setCurrentPage(PluginPage page) {
-        if (this.first) {
-            this.currentPage = page;
-            this.lastPage = page;
+    void setConfirmData(ConfirmData confirmData);
 
-            this.first = false;
-            return;
-        }
-
-        this.lastPage = this.currentPage;
-
-        this.currentPage = page;
-    }
-
-    public ConfirmData getConfirmData() {
-        return this.confirmData;
-    }
-
-    public void setConfirmData(ConfirmData confirmData) {
-        this.confirmData = confirmData;
-    }
 }

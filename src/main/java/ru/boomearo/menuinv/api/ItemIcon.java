@@ -1,8 +1,6 @@
-package ru.boomearo.menuinv.objects;
+package ru.boomearo.menuinv.api;
 
 import org.bukkit.inventory.ItemStack;
-import ru.boomearo.menuinv.api.IconHandler;
-import ru.boomearo.menuinv.api.SlotElement;
 
 /**
  * Представляет активный предмет с позицией, активно используемый для обработки инвентаря

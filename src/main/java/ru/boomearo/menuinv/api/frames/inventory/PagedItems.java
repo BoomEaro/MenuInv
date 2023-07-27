@@ -4,8 +4,8 @@ import ru.boomearo.menuinv.api.IconHandler;
 import ru.boomearo.menuinv.api.InvType;
 import ru.boomearo.menuinv.api.FramedIconsHandler;
 import ru.boomearo.menuinv.api.frames.iteration.FrameIterationHandler;
-import ru.boomearo.menuinv.objects.InventoryPageImpl;
-import ru.boomearo.menuinv.objects.ItemIcon;
+import ru.boomearo.menuinv.api.InventoryPageImpl;
+import ru.boomearo.menuinv.api.ItemIcon;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -1,4 +1,4 @@
-package ru.boomearo.menuinv.objects;
+package ru.boomearo.menuinv.api;
 
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;

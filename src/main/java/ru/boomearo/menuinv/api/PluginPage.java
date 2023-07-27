@@ -8,7 +8,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public interface PluginPage {
 
-    public JavaPlugin getPlugin();
+    JavaPlugin getPlugin();
 
-    public String getPage();
+    String getPage();
 }

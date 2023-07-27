@@ -13,8 +13,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
 import org.bukkit.inventory.InventoryView;
-import ru.boomearo.menuinv.objects.InventoryPageImpl;
-import ru.boomearo.menuinv.objects.MenuInvHolder;
+import ru.boomearo.menuinv.api.InventoryPageImpl;
+import ru.boomearo.menuinv.api.MenuInvHolder;
 
 public class InventoryListener implements Listener {
 
@@ -56,7 +56,6 @@ public class InventoryListener implements Listener {
             //TODO Не известно, все ли способы здесь учтены.
             if (action == InventoryAction.MOVE_TO_OTHER_INVENTORY || action == InventoryAction.COLLECT_TO_CURSOR) {
                 e.setCancelled(true);
-                e.setResult(Event.Result.DENY);
             }
 
             return;
@@ -100,7 +99,6 @@ public class InventoryListener implements Listener {
 
             if (i == topInventory) {
                 e.setCancelled(true);
-                e.setResult(Event.Result.DENY);
                 return;
             }
         }

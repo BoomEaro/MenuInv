@@ -7,7 +7,7 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import ru.boomearo.menuinv.MenuInv;
-import ru.boomearo.menuinv.objects.MenuInvHolder;
+import ru.boomearo.menuinv.api.MenuInvHolder;
 
 public class MenuUpdater extends BukkitRunnable {
 
@@ -32,6 +32,4 @@ public class MenuUpdater extends BukkitRunnable {
             }
         }
     }
-
-
 }
