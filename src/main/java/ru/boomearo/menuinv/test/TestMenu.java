@@ -42,14 +42,19 @@ public class TestMenu {
         allMaterials = tmp;
     }
 
-    public static void setupTest(PluginTemplatePages pages) {
-        setupMenu(pages);
-        registerEvents();
+    public static void setupTest(MenuInv menuInv) {
+        if (menuInv.getConfig().getBoolean("debug")) {
+            menuInv.getLogger().warning("Активирован режим дебага!");
+
+            setupMenu(menuInv);
+            menuInv.getServer().getPluginManager().registerEvents(new TestListener(), menuInv);
+        }
     }
 
-    public static void setupMenu(PluginTemplatePages pages) {
+    private static void setupMenu(MenuInv menuInv) {
         {
-            pages.createTemplatePage(MenuPage.TEST, InvType.CHEST_9X6)
+            Menu.registerPages(menuInv)
+                    .createTemplatePage(MenuPage.TEST, InvType.CHEST_9X6)
                     .setInventoryCreationHandler((inventoryPage) -> {
                         PagedItems piTest = inventoryPage.getListedIconsItems("test");
                         PagedItems piTest2 = inventoryPage.getListedIconsItems("test2");
@@ -185,7 +190,8 @@ public class TestMenu {
                     });
         }
         {
-            pages.createTemplatePage(MenuPage.TEST2, InvType.WORKBENCH)
+            Menu.registerPages(menuInv)
+                    .createTemplatePage(MenuPage.TEST2, InvType.WORKBENCH)
                     .setInventoryCreationHandler((inventoryPage) -> "Привет2")
                     .setItem(9, () -> new IconHandler() {
 
@@ -270,11 +276,7 @@ public class TestMenu {
         }
     }
 
-    public static void registerEvents() {
-        MenuInv.getInstance().getServer().getPluginManager().registerEvents(new TestListener(), MenuInv.getInstance());
-    }
-
-    public static class TestListener implements Listener {
+    private static class TestListener implements Listener {
 
         @EventHandler
         public void onPlayerInteractEvent(PlayerInteractEvent e) {

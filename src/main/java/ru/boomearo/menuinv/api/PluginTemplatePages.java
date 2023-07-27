@@ -15,25 +15,6 @@ public interface PluginTemplatePages {
     /**
      * Создает новый шаблон страниц. По умолчанию тип инвентаря InvType.CHEST_9X6
      *
-     * @param name         Название страницы
-     * @param titleHandler Обработчик тайтла страницы
-     * @return Шаблон страницы
-     */
-    TemplatePage createTemplatePage(String name);
-
-    /**
-     * Создает новый шаблон страниц.
-     *
-     * @param name         Название страницы
-     * @param titleHandler Обработчик тайтла страницы
-     * @param type         Тип инвентаря
-     * @return Шаблон страницы
-     */
-    TemplatePage createTemplatePage(String name, InvType typer);
-
-    /**
-     * Создает новый шаблон страниц. По умолчанию тип инвентаря InvType.CHEST_9X6
-     *
      * @param pluginPage   Тип страницы
      * @param titleHandler Обработчик тайтла страницы
      * @return Шаблон страницы
