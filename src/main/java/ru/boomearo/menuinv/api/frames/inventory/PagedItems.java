@@ -190,7 +190,7 @@ public class PagedItems extends FramedIcons {
     public void updateActiveIcons(InventoryPageImpl page, boolean force) {
         FramedIconsHandler handler = getIconsHandler();
 
-        if (((System.currentTimeMillis() - this.updateHandlerCooldown) > handler.getUpdateTime()) || force) {
+        if (((System.currentTimeMillis() - this.updateHandlerCooldown) > handler.getUpdateTime(page)) || force) {
             this.updateHandlerCooldown = System.currentTimeMillis();
 
             List<IconHandler> handlers = getCachedHandler(page);

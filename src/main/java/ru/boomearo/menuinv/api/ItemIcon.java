@@ -39,7 +39,7 @@ public class ItemIcon extends SlotElement {
             return newItem;
         }
 
-        if (this.handler.shouldUpdate() && (((System.currentTimeMillis() - this.updateHandlerCooldown) > this.handler.getUpdateTime()) || force)) {
+        if (this.handler.shouldUpdate(page) && (((System.currentTimeMillis() - this.updateHandlerCooldown) > this.handler.getUpdateTime(page)) || force)) {
             this.updateHandlerCooldown = System.currentTimeMillis();
 
             ItemStack newItem = getUpdatedItem(page);

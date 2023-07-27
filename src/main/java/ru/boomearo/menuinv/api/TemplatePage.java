@@ -29,7 +29,7 @@ public interface TemplatePage {
      * @param slot    Позиция предмета
      * @param factory Фабрика обработчика предмета
      */
-    TemplatePage setItem(int slot, IconHandlerFactory factory);
+    TemplatePage setItem(int slot, IconBuilder iconBuilder);
 
     /**
      * Добавляет рамку предметов, которая может быть прокручена вперед/назад и имеет страницы для просмотра
@@ -98,5 +98,5 @@ public interface TemplatePage {
      *
      * @param factory Фабрика обработчика предмета
      */
-    TemplatePage setBackground(IconHandlerFactory factory);
+    TemplatePage setBackground(IconBuilder iconBuilder);
 }

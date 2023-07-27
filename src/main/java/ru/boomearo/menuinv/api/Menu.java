@@ -3,9 +3,7 @@ package ru.boomearo.menuinv.api;
 import com.google.common.base.Preconditions;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import ru.boomearo.menuinv.MenuInv;
 import ru.boomearo.menuinv.api.session.ConfirmData;
@@ -37,80 +35,68 @@ public class Menu {
 
                     return data.getInventoryName(session);
                 })
-                .setItem(0, () -> new IconHandler() {
+                .setItem(0, new IconBuilder()
+                        .setIconClick((inventoryPage, player, clickType) -> {
+                            InventorySession session = inventoryPage.getSession();
 
-                    @Override
-                    public void onClick(InventoryPage inventoryPage, Player player, ClickType clickType) {
-                        InventorySession session = inventoryPage.getSession();
+                            if (session == null) {
+                                return;
+                            }
 
-                        if (session == null) {
-                            return;
-                        }
+                            ConfirmData confirm = session.getConfirmData();
 
-                        ConfirmData confirm = session.getConfirmData();
+                            if (confirm == null) {
+                                return;
+                            }
 
-                        if (confirm == null) {
-                            return;
-                        }
+                            confirm.executeCancel(inventoryPage);
+                        })
+                        .setIconUpdate((inventoryPage, player) -> {
+                            InventorySession session = inventoryPage.getSession();
 
-                        confirm.executeCancel(inventoryPage);
-                    }
+                            if (session == null) {
+                                return null;
+                            }
 
-                    @Override
-                    public ItemStack onUpdate(InventoryPage inventoryPage, Player player) {
-                        InventorySession session = inventoryPage.getSession();
+                            ConfirmData confirm = session.getConfirmData();
 
-                        if (session == null) {
-                            return null;
-                        }
+                            if (confirm == null) {
+                                return null;
+                            }
 
-                        ConfirmData confirm = session.getConfirmData();
+                            return confirm.getCancelItem(inventoryPage);
+                        }))
+                .setItem(4, new IconBuilder()
+                        .setIconClick((inventoryPage, player, clickType) -> {
+                            InventorySession session = inventoryPage.getSession();
 
-                        if (confirm == null) {
-                            return null;
-                        }
+                            if (session == null) {
+                                return;
+                            }
 
-                        return confirm.getCancelItem(inventoryPage);
-                    }
+                            ConfirmData confirm = session.getConfirmData();
 
-                })
-                .setItem(4, () -> new IconHandler() {
+                            if (confirm == null) {
+                                return;
+                            }
 
-                    @Override
-                    public void onClick(InventoryPage inventoryPage, Player player, ClickType clickType) {
-                        InventorySession session = inventoryPage.getSession();
+                            confirm.executeConfirm(inventoryPage);
+                        })
+                        .setIconUpdate((inventoryPage, player) -> {
+                            InventorySession session = inventoryPage.getSession();
 
-                        if (session == null) {
-                            return;
-                        }
+                            if (session == null) {
+                                return null;
+                            }
 
-                        ConfirmData confirm = session.getConfirmData();
+                            ConfirmData confirm = session.getConfirmData();
 
-                        if (confirm == null) {
-                            return;
-                        }
+                            if (confirm == null) {
+                                return null;
+                            }
 
-                        confirm.executeConfirm(inventoryPage);
-                    }
-
-                    @Override
-                    public ItemStack onUpdate(InventoryPage inventoryPage, Player player) {
-                        InventorySession session = inventoryPage.getSession();
-
-                        if (session == null) {
-                            return null;
-                        }
-
-                        ConfirmData confirm = session.getConfirmData();
-
-                        if (confirm == null) {
-                            return null;
-                        }
-
-                        return confirm.getConfirmItem(inventoryPage);
-                    }
-
-                });
+                            return confirm.getConfirmItem(inventoryPage);
+                        }));
     }
 
     /**

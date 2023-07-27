@@ -26,7 +26,7 @@ public abstract class IconHandler implements Updatable<ItemStack, InventoryPage>
     /**
      * @return Задержку между выполнением метода onClick. По умолчанию 250 мс
      */
-    public long getClickTime() {
+    public long getClickTime(InventoryPage page, Player player, ClickType click) {
         return 250;
     }
 
@@ -38,7 +38,7 @@ public abstract class IconHandler implements Updatable<ItemStack, InventoryPage>
      * @param click  Тип клика
      */
     public void handleClick(InventoryPage page, Player player, ClickType click) {
-        if (hasClicked(player.getName(), getClickTime())) {
+        if (hasClicked(player.getName(), getClickTime(page, player, click))) {
             clickCd.put(player.getName(), System.currentTimeMillis());
 
             try {

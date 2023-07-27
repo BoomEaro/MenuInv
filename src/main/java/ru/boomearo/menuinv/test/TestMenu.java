@@ -62,63 +62,39 @@ public class TestMenu {
 
                         return "Test: " + piTest.getCurrentPage() + "/" + piTest.getMaxPage() + " ||| " + piTest2.getCurrentPage() + "/" + piTest2.getMaxPage();
                     })
-                    .setInventoryReopenHandler((inventoryPage, force) -> {
+                    /*.setInventoryReopenHandler((inventoryPage, force) -> {
                         return false;
-                        //PagedItems piTest = page.getListedIconsItems("test");
-                        //PagedItems piTest2 = page.getListedIconsItems("test2");
+                        PagedItems piTest = page.getListedIconsItems("test");
+                        PagedItems piTest2 = page.getListedIconsItems("test2");
 
-                        //return piTest.hasChanges() || piTest2.hasChanges();
-                    })
-                    .setItem(1, () -> new IconHandler() {
+                        return piTest.hasChanges() || piTest2.hasChanges();
+                    })*/
+                    .setItem(1, new IconBuilder()
+                            .setIconClick((inventoryPage, player, type) -> Menu.open(MenuPage.TEST2, player, inventoryPage.getSession()))
+                            .setIconUpdate((consume, player) -> new ItemStack(Material.STONE, 1)))
+                    .setItem(3, new IconBuilder()
+                            .setIconClick((inventoryPage, player, type) -> {
+                                TestSession ts = (TestSession) inventoryPage.getSession();
 
-                        @Override
-                        public void onClick(InventoryPage page, Player player, ClickType type) {
-                            Menu.open(MenuPage.TEST2, player, page.getSession());
-                        }
+                                List<ItemStack> items = ts.getItems();
+                                if (items.isEmpty()) {
+                                    return;
+                                }
 
-                        @Override
-                        public ItemStack onUpdate(InventoryPage consume, Player player) {
-                            return new ItemStack(Material.STONE, 1);
-                        }
-                    })
-                    .setItem(3, () -> new IconHandler() {
+                                items.remove(items.size() - 1);
 
-                        @Override
-                        public void onClick(InventoryPage page, Player player, ClickType type) {
-                            TestSession ts = (TestSession) page.getSession();
+                                inventoryPage.setNeedUpdate();
+                            })
+                            .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.REDSTONE_ORE, 1)))
+                    .setItem(4, new IconBuilder()
+                            .setIconClick((inventoryPage, player, type) -> {
+                                TestSession ts = (TestSession) inventoryPage.getSession();
 
-                            List<ItemStack> items = ts.getItems();
-                            if (items.isEmpty()) {
-                                return;
-                            }
+                                ts.getItems().add(new ItemStack(Material.DIAMOND, 1));
 
-
-                            items.remove(items.size() - 1);
-
-                            page.setNeedUpdate();
-                        }
-
-                        @Override
-                        public ItemStack onUpdate(InventoryPage consume, Player player) {
-                            return new ItemStack(Material.REDSTONE_ORE, 1);
-                        }
-                    })
-                    .setItem(4, () -> new IconHandler() {
-
-                        @Override
-                        public void onClick(InventoryPage page, Player player, ClickType type) {
-                            TestSession ts = (TestSession) page.getSession();
-
-                            ts.getItems().add(new ItemStack(Material.DIAMOND, 1));
-
-                            page.setNeedUpdate();
-                        }
-
-                        @Override
-                        public ItemStack onUpdate(InventoryPage consume, Player player) {
-                            return new ItemStack(Material.EMERALD_BLOCK, 1);
-                        }
-                    })
+                                inventoryPage.setNeedUpdate();
+                            })
+                            .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.EMERALD_BLOCK, 1)))
                     .setPagedItems("test", 0, 2, 3, 3, () -> new FramedIconsHandler() {
 
                         @Override
@@ -144,7 +120,7 @@ public class TestMenu {
                         }
 
                         @Override
-                        public long getUpdateTime() {
+                        public long getUpdateTime(InventoryPage inventoryPage) {
                             return 1500;
                         }
 
@@ -171,110 +147,49 @@ public class TestMenu {
                     })
                     .setScrollItem(7, "test", PagedItems.ScrollType.PREVIOUSLY, new DefaultScrollHandlerFactory(PagedItems.ScrollType.PREVIOUSLY))
                     .setScrollItem(8, "test", PagedItems.ScrollType.NEXT, new DefaultScrollHandlerFactory(PagedItems.ScrollType.NEXT))
-                    .setBackground(() -> new IconHandler() {
-
-                        @Override
-                        public void onClick(InventoryPage page, Player player, ClickType click) {
-
-                        }
-
-                        @Override
-                        public ItemStack onUpdate(InventoryPage consume, Player player) {
-                            return new ItemStack(Material.COOKIE, 1);
-                        }
-
-                        @Override
-                        public boolean shouldUpdate() {
-                            return false;
-                        }
-
-                    });
+                    .setBackground(new IconBuilder()
+                            .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.COOKIE, 1))
+                            .setIconUpdateCondition((inventoryPage) -> false));
         }
         {
             Menu.registerPages(menuInv)
                     .createTemplatePage(MenuPage.TEST2)
                     .setMenuType(MenuType.WORKBENCH)
                     .setInventoryCreationHandler((inventoryPage) -> "Привет2")
-                    .setItem(9, () -> new IconHandler() {
-
-                        @Override
-                        public void onClick(InventoryPage page, Player player, ClickType type) {
-                            Menu.open(MenuPage.TEST, player, page.getSession());
-                        }
-
-                        @Override
-                        public ItemStack onUpdate(InventoryPage consume, Player player) {
-                            ItemStack item = new ItemStack(allMaterials.get(ThreadLocalRandom.current().nextInt(allMaterials.size())), 1);
-                            ItemMeta meta = item.getItemMeta();
-                            meta.setDisplayName("Привет тест!");
-                            meta.setLore(Arrays.asList("Time: " + System.currentTimeMillis()));
-                            item.setItemMeta(meta);
-                            return item;
-                        }
-
-                        @Override
-                        public long getUpdateTime() {
-                            return 0;
-                        }
-
-                    })
-                    .setItem(0, () -> new IconHandler() {
-
-                        @Override
-                        public void onClick(InventoryPage page, Player player, ClickType type) {
-
-                        }
-
-                        @Override
-                        public ItemStack onUpdate(InventoryPage consume, Player player) {
-                            ItemStack item = new ItemStack(allMaterials.get(ThreadLocalRandom.current().nextInt(allMaterials.size())), 1);
-                            ItemMeta meta = item.getItemMeta();
-                            meta.setDisplayName("Привет тест2!");
-                            meta.setLore(Arrays.asList("Time2: " + System.currentTimeMillis()));
-                            item.setItemMeta(meta);
-                            return item;
-                        }
-
-                        @Override
-                        public long getUpdateTime() {
-                            return 500;
-                        }
-                    })
-                    .setItem(1, () -> new IconHandler() {
-
-                        @Override
-                        public void onClick(InventoryPage page, Player player, ClickType type) {
-                            page.close();
-                        }
-
-                        @Override
-                        public ItemStack onUpdate(InventoryPage consume, Player player) {
-                            ItemStack item = new ItemStack(Material.BARRIER, 1);
-                            ItemMeta meta = item.getItemMeta();
-                            meta.setDisplayName("Закрыть");
-                            meta.setLore(Arrays.asList("Агагага22"));
-                            item.setItemMeta(meta);
-                            return item;
-                        }
-                    })
-                    .setBackground(() -> new IconHandler() {
-
-                        @Override
-                        public void onClick(InventoryPage page, Player player, ClickType click) {
-
-                        }
-
-                        @Override
-                        public ItemStack onUpdate(InventoryPage consume, Player player) {
-                            return new ItemStack(Material.COOKIE, 1);
-                        }
-
-                        @Override
-                        public boolean shouldUpdate() {
-                            return false;
-                        }
-
-                    });
+                    .setItem(9, new IconBuilder()
+                            .setIconClick((inventoryPage, player, click) -> Menu.open(MenuPage.TEST, player, inventoryPage.getSession()))
+                            .setIconUpdate((inventoryPage, player) -> {
+                                ItemStack item = new ItemStack(allMaterials.get(ThreadLocalRandom.current().nextInt(allMaterials.size())), 1);
+                                ItemMeta meta = item.getItemMeta();
+                                meta.setDisplayName("Привет тест!");
+                                meta.setLore(Arrays.asList("Time: " + System.currentTimeMillis()));
+                                item.setItemMeta(meta);
+                                return item;
+                            })
+                            .setIconUpdateDelay((inventortPage) -> 0))
+                    .setItem(0, new IconBuilder()
+                            .setIconUpdate((inventoryPage, player) -> {
+                                ItemStack item = new ItemStack(allMaterials.get(ThreadLocalRandom.current().nextInt(allMaterials.size())), 1);
+                                ItemMeta meta = item.getItemMeta();
+                                meta.setDisplayName("Привет тест2!");
+                                meta.setLore(Arrays.asList("Time2: " + System.currentTimeMillis()));
+                                item.setItemMeta(meta);
+                                return item;
+                            })
+                            .setIconUpdateDelay((inventoryPage) -> 500))
+                    .setItem(1, new IconBuilder()
+                            .setIconClick((inventoryPage, player, clickType) -> inventoryPage.close())
+                            .setIconUpdate((inventoryPage, player) -> {
+                                ItemStack item = new ItemStack(Material.BARRIER, 1);
+                                ItemMeta meta = item.getItemMeta();
+                                meta.setDisplayName("Закрыть");
+                                meta.setLore(Arrays.asList("Агагага22"));
+                                item.setItemMeta(meta);
+                                return item;
+                            }))
+                    .setBackground(new IconBuilder()
+                            .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.COOKIE, 1))
+                            .setIconUpdateCondition((inventoryPage) -> false));
         }
     }
 

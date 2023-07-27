@@ -84,15 +84,15 @@ public class TemplatePageImpl implements TemplatePage {
     }
 
     @Override
-    public TemplatePage setItem(int slot, IconHandlerFactory factory) {
-        Preconditions.checkArgument(factory != null, "factory is null!");
+    public TemplatePage setItem(int slot, IconBuilder iconBuilder) {
+        Preconditions.checkArgument(iconBuilder != null, "iconBuilder is null!");
 
         ItemIconTemplate tmp = this.itemIcons.get(slot);
         if (tmp != null) {
             throw new IllegalStateException("Button on slot '" + slot + "' already added!");
         }
 
-        addItem(new ItemIconTemplate(slot, factory));
+        addItem(new ItemIconTemplate(slot, iconBuilder.build()));
         return this;
     }
 
@@ -153,10 +153,10 @@ public class TemplatePageImpl implements TemplatePage {
     }
 
     @Override
-    public TemplatePage setBackground(IconHandlerFactory factory) {
-        Preconditions.checkArgument(factory != null, "factory is null!");
+    public TemplatePage setBackground(IconBuilder iconBuilder) {
+        Preconditions.checkArgument(iconBuilder != null, "iconBuilder is null!");
 
-        this.background = factory;
+        this.background = iconBuilder.build();
 
         return this;
     }
