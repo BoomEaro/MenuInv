@@ -26,7 +26,7 @@ public class TemplatePageImpl implements TemplatePage {
 
     private final String name;
     private MenuType menuType = MenuType.CHEST_9X6;
-    private InventoryCreationHandler inventoryCreationHandler = (inventoryPage) -> "Default page";
+    private InventoryTitleHandler inventoryTitleHandler = (inventoryPage) -> "Default page";
     private InventoryReopenHandler inventoryReopenHandler = (inventoryPage, force) -> false;
 
     private final PluginTemplatePagesImpl pluginTemplatePages;
@@ -59,25 +59,25 @@ public class TemplatePageImpl implements TemplatePage {
     }
 
     @Override
-    public InventoryCreationHandler getInventoryCreationHandler() {
-        return this.inventoryCreationHandler;
+    public InventoryTitleHandler getInventoryTitle() {
+        return this.inventoryTitleHandler;
     }
 
     @Override
-    public TemplatePage setInventoryCreationHandler(InventoryCreationHandler inventoryCreationHandler) {
-        Preconditions.checkArgument(inventoryCreationHandler != null, "inventoryCreationHandler is null!");
+    public TemplatePage setInventoryTitle(InventoryTitleHandler inventoryTitleHandler) {
+        Preconditions.checkArgument(inventoryTitleHandler != null, "inventoryCreationHandler is null!");
 
-        this.inventoryCreationHandler = inventoryCreationHandler;
+        this.inventoryTitleHandler = inventoryTitleHandler;
         return this;
     }
 
     @Override
-    public InventoryReopenHandler getInventoryReopenHandler() {
+    public InventoryReopenHandler getInventoryReopen() {
         return this.inventoryReopenHandler;
     }
 
     @Override
-    public TemplatePage setInventoryReopenHandler(InventoryReopenHandler inventoryReopenHandler) {
+    public TemplatePage setInventoryReopen(InventoryReopenHandler inventoryReopenHandler) {
         Preconditions.checkArgument(inventoryReopenHandler != null, "inventoryReopenHandler is null!");
 
         this.inventoryReopenHandler = inventoryReopenHandler;
@@ -207,7 +207,7 @@ public class TemplatePageImpl implements TemplatePage {
                 this.menuType,
                 itemIconsActive,
                 pagedIconsActive,
-                this.inventoryCreationHandler,
+                this.inventoryTitleHandler,
                 this.inventoryReopenHandler,
                 this.background,
                 player,

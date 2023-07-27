@@ -31,7 +31,7 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class TestMenu {
 
-    private static final List<Material> allMaterials;
+    private static final List<Material> MATERIALS;
 
     static {
         List<Material> tmp = new ArrayList<>();
@@ -40,7 +40,7 @@ public class TestMenu {
                 tmp.add(mat);
             }
         }
-        allMaterials = tmp;
+        MATERIALS = tmp;
     }
 
     public static void setupTest(MenuInv menuInv) {
@@ -57,19 +57,12 @@ public class TestMenu {
             Menu.registerPages(menuInv)
                     .createTemplatePage(MenuPage.TEST)
                     .setMenuType(MenuType.CHEST_9X6)
-                    .setInventoryCreationHandler((inventoryPage) -> {
+                    .setInventoryTitle((inventoryPage) -> {
                         PagedItems piTest = inventoryPage.getListedIconsItems("test");
                         PagedItems piTest2 = inventoryPage.getListedIconsItems("test2");
 
                         return "Test: " + piTest.getCurrentPage() + "/" + piTest.getMaxPage() + " ||| " + piTest2.getCurrentPage() + "/" + piTest2.getMaxPage();
                     })
-                    /*.setInventoryReopenHandler((inventoryPage, force) -> {
-                        return false;
-                        PagedItems piTest = page.getListedIconsItems("test");
-                        PagedItems piTest2 = page.getListedIconsItems("test2");
-
-                        return piTest.hasChanges() || piTest2.hasChanges();
-                    })*/
                     .setItem(1, new IconBuilder()
                             .setIconClick((inventoryPage, player, type) -> Menu.open(MenuPage.TEST2, player, inventoryPage.getSession()))
                             .setIconUpdate((consume, player) -> new ItemStack(Material.STONE, 1)))
@@ -126,9 +119,9 @@ public class TestMenu {
                             }))
 
                     .setScrollItem(7, "test", ScrollType.PREVIOUSLY, new ScrollIconBuilder()
-                            .setScrollVisibleUpdate((inventoryPage, player, scrollType, currentPage, maxPage) -> createScroll(scrollType, currentPage, maxPage)))
+                            .setScrollVisibleUpdate((inventoryPage, player, scrollType, currentPage, maxPage) -> createScrollItems(scrollType, currentPage, maxPage)))
                     .setScrollItem(8, "test", ScrollType.NEXT, new ScrollIconBuilder()
-                            .setScrollVisibleUpdate((inventoryPage, player, scrollType, currentPage, maxPage) -> createScroll(scrollType, currentPage, maxPage)))
+                            .setScrollVisibleUpdate((inventoryPage, player, scrollType, currentPage, maxPage) -> createScrollItems(scrollType, currentPage, maxPage)))
 
                     .setBackground(new IconBuilder()
                             .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.COOKIE, 1))
@@ -138,11 +131,11 @@ public class TestMenu {
             Menu.registerPages(menuInv)
                     .createTemplatePage(MenuPage.TEST2)
                     .setMenuType(MenuType.WORKBENCH)
-                    .setInventoryCreationHandler((inventoryPage) -> "Привет2")
+                    .setInventoryTitle((inventoryPage) -> "Привет2")
                     .setItem(9, new IconBuilder()
                             .setIconClick((inventoryPage, player, click) -> Menu.open(MenuPage.TEST, player, inventoryPage.getSession()))
                             .setIconUpdate((inventoryPage, player) -> {
-                                ItemStack item = new ItemStack(allMaterials.get(ThreadLocalRandom.current().nextInt(allMaterials.size())), 1);
+                                ItemStack item = new ItemStack(MATERIALS.get(ThreadLocalRandom.current().nextInt(MATERIALS.size())), 1);
                                 ItemMeta meta = item.getItemMeta();
                                 meta.setDisplayName("Привет тест!");
                                 meta.setLore(Arrays.asList("Time: " + System.currentTimeMillis()));
@@ -152,7 +145,7 @@ public class TestMenu {
                             .setIconUpdateDelay((inventortPage) -> 0))
                     .setItem(0, new IconBuilder()
                             .setIconUpdate((inventoryPage, player) -> {
-                                ItemStack item = new ItemStack(allMaterials.get(ThreadLocalRandom.current().nextInt(allMaterials.size())), 1);
+                                ItemStack item = new ItemStack(MATERIALS.get(ThreadLocalRandom.current().nextInt(MATERIALS.size())), 1);
                                 ItemMeta meta = item.getItemMeta();
                                 meta.setDisplayName("Привет тест2!");
                                 meta.setLore(Arrays.asList("Time2: " + System.currentTimeMillis()));
@@ -176,7 +169,7 @@ public class TestMenu {
         }
     }
 
-    private static ItemStack createScroll(ScrollType scrollType, int currentPage, int maxPage) {
+    private static ItemStack createScrollItems(ScrollType scrollType, int currentPage, int maxPage) {
         int nextPage = scrollType.getNextPage(currentPage);
 
         int amount = nextPage;

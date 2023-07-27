@@ -3,7 +3,7 @@ package ru.boomearo.menuinv.api;
 /**
  * Обработчик создания нового баккитовского инвентаря.
  */
-public interface InventoryCreationHandler {
+public interface InventoryTitleHandler {
 
     /**
      * Создает новый тайтл для инвентаря

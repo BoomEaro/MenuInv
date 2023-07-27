@@ -3,7 +3,6 @@ package ru.boomearo.menuinv.api;
 import ru.boomearo.menuinv.api.scrolls.ScrollIconBuilder;
 import ru.boomearo.menuinv.api.scrolls.ScrollType;
 import ru.boomearo.menuinv.api.frames.iteration.FrameIterationHandler;
-import ru.boomearo.menuinv.api.scrolls.ScrollHandlerFactory;
 
 /**
  * Представляет шаблон страницы меню
@@ -16,13 +15,13 @@ public interface TemplatePage {
 
     TemplatePage setMenuType(MenuType type);
 
-    InventoryCreationHandler getInventoryCreationHandler();
+    InventoryTitleHandler getInventoryTitle();
 
-    TemplatePage setInventoryCreationHandler(InventoryCreationHandler inventoryCreationHandler);
+    TemplatePage setInventoryTitle(InventoryTitleHandler inventoryTitleHandler);
 
-    InventoryReopenHandler getInventoryReopenHandler();
+    InventoryReopenHandler getInventoryReopen();
 
-    TemplatePage setInventoryReopenHandler(InventoryReopenHandler inventoryReopenHandler);
+    TemplatePage setInventoryReopen(InventoryReopenHandler inventoryReopenHandler);
 
     /**
      * Добавляет предмет в шаблонную страницу

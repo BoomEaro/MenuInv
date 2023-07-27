@@ -19,7 +19,7 @@ public class InventoryPageImpl implements InventoryPage {
 
     private final String name;
     private final MenuType menuType;
-    private final InventoryCreationHandler inventoryCreationHandler;
+    private final InventoryTitleHandler inventoryTitleHandler;
     private final InventoryReopenHandler inventoryReopenHandler;
 
     private final Map<String, PagedItems> listedIcons;
@@ -41,7 +41,7 @@ public class InventoryPageImpl implements InventoryPage {
                              MenuType menuType,
                              Map<Integer, ItemIcon> iconsPosition,
                              Map<String, PagedItems> listedIcons,
-                             InventoryCreationHandler inventoryCreationHandler,
+                             InventoryTitleHandler inventoryTitleHandler,
                              InventoryReopenHandler inventoryReopenHandler,
                              IconHandlerFactory background,
                              Player player,
@@ -50,14 +50,14 @@ public class InventoryPageImpl implements InventoryPage {
         this.name = name;
         this.menuType = menuType;
         this.listedIcons = listedIcons;
-        this.inventoryCreationHandler = inventoryCreationHandler;
+        this.inventoryTitleHandler = inventoryTitleHandler;
         this.inventoryReopenHandler = inventoryReopenHandler;
         this.player = player;
         this.session = session;
         this.templatePage = templatePage;
 
         //Создаем новый инвентарь баккита и добавляет в него свой холдер для идентификации инвентари
-        this.inventory = this.menuType.createInventory(new MenuInvHolder(this), this.inventoryCreationHandler.createTitle(this));
+        this.inventory = this.menuType.createInventory(new MenuInvHolder(this), this.inventoryTitleHandler.createTitle(this));
 
         //Создаем массив активных предметов размеров в текущий инвентарь
         this.activeIcons = new ItemIcon[this.menuType.getSize()];
@@ -193,7 +193,7 @@ public class InventoryPageImpl implements InventoryPage {
     //TODO Работает странно. А именно, если во время открытия инвентаря игрок его закроет, то у игрока откроется фантомный инвентарь.
     private void performReopen() {
         //Сначала создаем новый экземпляр баккитовского инвентаря
-        this.inventory = this.menuType.createInventory(new MenuInvHolder(this), this.inventoryCreationHandler.createTitle(this));
+        this.inventory = this.menuType.createInventory(new MenuInvHolder(this), this.inventoryTitleHandler.createTitle(this));
         //Очищаем изменения скроллов страницы
         for (PagedItems pi : this.listedIcons.values()) {
             pi.resetChanges();
