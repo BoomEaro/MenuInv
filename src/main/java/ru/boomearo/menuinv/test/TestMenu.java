@@ -6,16 +6,17 @@ import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import ru.boomearo.menuinv.MenuInv;
 import ru.boomearo.menuinv.api.*;
+import ru.boomearo.menuinv.api.scrolls.ScrollIconBuilder;
+import ru.boomearo.menuinv.api.scrolls.ScrollType;
 import ru.boomearo.menuinv.api.frames.iteration.InverseIterationHandler;
-import ru.boomearo.menuinv.api.scrolls.DefaultScrollHandlerFactory;
 import ru.boomearo.menuinv.api.session.InventorySessionImpl;
 import ru.boomearo.menuinv.api.frames.inventory.PagedItems;
 
@@ -95,58 +96,40 @@ public class TestMenu {
                                 inventoryPage.setNeedUpdate();
                             })
                             .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.EMERALD_BLOCK, 1)))
-                    .setPagedItems("test", 0, 2, 3, 3, () -> new FramedIconsHandler() {
-
-                        @Override
-                        public List<IconHandler> onUpdate(InventoryPage consume, Player player) {
-                            List<IconHandler> tmp = new ArrayList<>();
-                            for (int i = 1; i <= new Random().nextInt(5000); i++) {
-                                int t = i;
-                                tmp.add(new IconHandler() {
-
-                                    @Override
-                                    public void onClick(InventoryPage page, Player player, ClickType type) {
-                                        player.sendMessage("Вот так вот алмазы: " + t);
-                                    }
-
-                                    @Override
-                                    public ItemStack onUpdate(InventoryPage consume, Player player) {
-                                        return new ItemStack(Material.DIAMOND, t);
-                                    }
-
-                                });
-                            }
-                            return tmp;
-                        }
-
-                        @Override
-                        public long getUpdateTime(InventoryPage inventoryPage) {
-                            return 1500;
-                        }
-
-                    }, new InverseIterationHandler())
-                    .setPagedItems("test2", 6, 2, 3, 3, () -> (pageInv, player) -> {
-                        List<IconHandler> tmp = new ArrayList<>();
-                        for (int i = 1; i <= new Random().nextInt(20); i++) {
-                            int t = i;
-                            tmp.add(new IconHandler() {
-
-                                @Override
-                                public void onClick(InventoryPage page, Player player, ClickType type) {
-                                    player.sendMessage("Вот так вот редстоун: " + t);
+                    .setPagedItems("test", 0, 2, 3, 3, new PagedItemsBuilder()
+                                    .setPagedItemsUpdate((inventoryPage, player) -> {
+                                        List<IconHandler> tmp = new ArrayList<>();
+                                        for (int i = 1; i <= new Random().nextInt(5000); i++) {
+                                            int t = i;
+                                            tmp.add(new IconBuilder()
+                                                    .setIconClick((inventoryPage2, player2, type) -> player2.sendMessage("Вот так вот алмазы: " + t))
+                                                    .setIconUpdate((inventoryPage2, player2) -> new ItemStack(Material.DIAMOND, t))
+                                                    .build()
+                                                    .create());
+                                        }
+                                        return tmp;
+                                    })
+                                    .setIconUpdateDelay((inventoryPage) -> 250),
+                            new InverseIterationHandler())
+                    .setPagedItems("test2", 6, 2, 3, 3, new PagedItemsBuilder()
+                            .setPagedItemsUpdate((inventoryPage, player) -> {
+                                List<IconHandler> tmp = new ArrayList<>();
+                                for (int i = 1; i <= new Random().nextInt(20); i++) {
+                                    int t = i;
+                                    tmp.add(new IconBuilder()
+                                            .setIconClick((inventoryPage2, player2, clickType) -> player2.sendMessage("Вот так вот редстоун: " + t))
+                                            .setIconUpdate((inventoryPage2, player2) -> new ItemStack(Material.REDSTONE_ORE, t))
+                                            .build()
+                                            .create());
                                 }
+                                return tmp;
+                            }))
 
-                                @Override
-                                public ItemStack onUpdate(InventoryPage consume, Player player) {
-                                    return new ItemStack(Material.REDSTONE_ORE, t);
-                                }
+                    .setScrollItem(7, "test", ScrollType.PREVIOUSLY, new ScrollIconBuilder()
+                            .setScrollVisibleUpdate((inventoryPage, player, scrollType, currentPage, maxPage) -> createScroll(scrollType, currentPage, maxPage)))
+                    .setScrollItem(8, "test", ScrollType.NEXT, new ScrollIconBuilder()
+                            .setScrollVisibleUpdate((inventoryPage, player, scrollType, currentPage, maxPage) -> createScroll(scrollType, currentPage, maxPage)))
 
-                            });
-                        }
-                        return tmp;
-                    })
-                    .setScrollItem(7, "test", PagedItems.ScrollType.PREVIOUSLY, new DefaultScrollHandlerFactory(PagedItems.ScrollType.PREVIOUSLY))
-                    .setScrollItem(8, "test", PagedItems.ScrollType.NEXT, new DefaultScrollHandlerFactory(PagedItems.ScrollType.NEXT))
                     .setBackground(new IconBuilder()
                             .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.COOKIE, 1))
                             .setIconUpdateCondition((inventoryPage) -> false));
@@ -191,6 +174,24 @@ public class TestMenu {
                             .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.COOKIE, 1))
                             .setIconUpdateCondition((inventoryPage) -> false));
         }
+    }
+
+    private static ItemStack createScroll(ScrollType scrollType, int currentPage, int maxPage) {
+        int nextPage = scrollType.getNextPage(currentPage);
+
+        int amount = nextPage;
+        if (amount <= 0) {
+            amount = 1;
+        }
+        if (amount > 64) {
+            amount = 64;
+        }
+        ItemStack item = new ItemStack(Material.PAPER, amount);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName("§6" + scrollType.name() + " §7[§c" + nextPage + "§7/§c" + maxPage + "§7]");
+        meta.addItemFlags(ItemFlag.values());
+        item.setItemMeta(meta);
+        return item;
     }
 
     private static class TestListener implements Listener {

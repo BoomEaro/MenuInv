@@ -1,13 +1,14 @@
 package ru.boomearo.menuinv.api;
 
 import com.google.common.base.Preconditions;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 
 import ru.boomearo.menuinv.api.frames.Frame;
 import ru.boomearo.menuinv.api.frames.inventory.PagedItems;
+import ru.boomearo.menuinv.api.scrolls.ScrollIconBuilder;
+import ru.boomearo.menuinv.api.scrolls.ScrollType;
 import ru.boomearo.menuinv.api.frames.iteration.DefaultIterationHandler;
 import ru.boomearo.menuinv.api.frames.iteration.FrameIterationHandler;
 import ru.boomearo.menuinv.api.frames.template.FramedIconsTemplate;
@@ -97,24 +98,24 @@ public class TemplatePageImpl implements TemplatePage {
     }
 
     @Override
-    public TemplatePage setPagedItems(String name, int x, int z, int width, int height, FramedIconsHandlerFactory iconFactory) {
-        return setPagedItems(name, x, z, width, height, iconFactory, false);
+    public TemplatePage setPagedItems(String name, int x, int z, int width, int height, PagedItemsBuilder pagedItemsBuilder) {
+        return setPagedItems(name, x, z, width, height, pagedItemsBuilder, false);
     }
 
     @Override
-    public TemplatePage setPagedItems(String name, int x, int z, int width, int height, FramedIconsHandlerFactory iconFactory, boolean permanentCached) {
-        return setPagedItems(name, x, z, width, height, iconFactory, new DefaultIterationHandler(), permanentCached);
+    public TemplatePage setPagedItems(String name, int x, int z, int width, int height, PagedItemsBuilder pagedItemsBuilder, boolean permanentCached) {
+        return setPagedItems(name, x, z, width, height, pagedItemsBuilder, new DefaultIterationHandler(), permanentCached);
     }
 
     @Override
-    public TemplatePage setPagedItems(String name, int x, int z, int width, int height, FramedIconsHandlerFactory iconFactory, FrameIterationHandler iterationHandler) {
-        return setPagedItems(name, x, z, width, height, iconFactory, iterationHandler, false);
+    public TemplatePage setPagedItems(String name, int x, int z, int width, int height, PagedItemsBuilder pagedItemsBuilder, FrameIterationHandler iterationHandler) {
+        return setPagedItems(name, x, z, width, height, pagedItemsBuilder, iterationHandler, false);
     }
 
     @Override
-    public TemplatePage setPagedItems(String name, int x, int z, int width, int height, FramedIconsHandlerFactory iconFactory, FrameIterationHandler iterationHandler, boolean permanentCached) {
+    public TemplatePage setPagedItems(String name, int x, int z, int width, int height, PagedItemsBuilder pagedItemsBuilder, FrameIterationHandler iterationHandler, boolean permanentCached) {
         Preconditions.checkArgument(name != null, "name is null!");
-        Preconditions.checkArgument(iconFactory != null, "iconFactory is null!");
+        Preconditions.checkArgument(pagedItemsBuilder != null, "pagedItemsBuilder is null!");
         Preconditions.checkArgument(iterationHandler != null, "iterationHandler is null!");
 
         FramedIconsTemplate tmp = this.pagedItems.get(name);
@@ -122,7 +123,7 @@ public class TemplatePageImpl implements TemplatePage {
             throw new IllegalStateException("Paged items with name '" + name + "' already added!");
         }
 
-        FramedIconsTemplate tli = new FramedIconsTemplate(name, x, z, width, height, iconFactory, iterationHandler, permanentCached);
+        FramedIconsTemplate tli = new FramedIconsTemplate(name, x, z, width, height, pagedItemsBuilder.build(), iterationHandler, permanentCached);
 
         checkBorder(tli);
 
@@ -132,10 +133,9 @@ public class TemplatePageImpl implements TemplatePage {
     }
 
     @Override
-    public TemplatePage setScrollItem(int slot, String pagedItems, PagedItems.ScrollType type, ScrollHandlerFactory factory) {
+    public TemplatePage setScrollItem(int slot, String pagedItems, ScrollType type, ScrollIconBuilder scrollIconBuilder) {
         Preconditions.checkArgument(pagedItems != null, "pagedItems is null!");
-        Preconditions.checkArgument(type != null, "type is null!");
-        Preconditions.checkArgument(factory != null, "factory is null!");
+        Preconditions.checkArgument(scrollIconBuilder != null, "scrollIconBuilder is null!");
 
         ItemIconTemplate tmp = this.itemIcons.get(slot);
         if (tmp != null) {
@@ -147,7 +147,7 @@ public class TemplatePageImpl implements TemplatePage {
             throw new IllegalStateException("Paged items with name '" + pagedItems + "' is not found!");
         }
 
-        addItem(new ItemIconTemplate(slot, new ScrollIconHandlerFactory(pagedItems, type, factory)));
+        addItem(new ItemIconTemplate(slot, new ScrollIconHandlerFactory(pagedItems, type, scrollIconBuilder.build())));
 
         return this;
     }
@@ -218,12 +218,10 @@ public class TemplatePageImpl implements TemplatePage {
     private static class ScrollIconHandlerFactory implements IconHandlerFactory {
 
         private final String pagedItems;
-        private final PagedItems.ScrollType type;
+        private final ScrollType type;
         private final ScrollHandlerFactory scrollHandlerFactory;
 
-        private static final Sound DISPENSE_SOUND = findCorrectSound();
-
-        public ScrollIconHandlerFactory(String pagedItems, PagedItems.ScrollType type, ScrollHandlerFactory scrollHandlerFactory) {
+        public ScrollIconHandlerFactory(String pagedItems, ScrollType type, ScrollHandlerFactory scrollHandlerFactory) {
             this.pagedItems = pagedItems;
             this.type = type;
             this.scrollHandlerFactory = scrollHandlerFactory;
@@ -231,7 +229,7 @@ public class TemplatePageImpl implements TemplatePage {
 
         @Override
         public IconHandler create() {
-            ScrollHandler handler = this.scrollHandlerFactory.create();
+            ScrollHandler handler = this.scrollHandlerFactory.create(ScrollIconHandlerFactory.this.type);
 
             return new IconHandler() {
 
@@ -240,7 +238,7 @@ public class TemplatePageImpl implements TemplatePage {
                     boolean change = page.getListedIconsItems(ScrollIconHandlerFactory.this.pagedItems).scrollPage(ScrollIconHandlerFactory.this.type);
                     if (change) {
                         page.setNeedUpdate();
-                        player.playSound(player.getLocation(), DISPENSE_SOUND, 1, 1);
+                        handler.onClick(page, player, clickType);
                     }
                 }
 
@@ -248,17 +246,17 @@ public class TemplatePageImpl implements TemplatePage {
                 public ItemStack onUpdate(InventoryPage page, Player player) {
                     PagedItems lii = page.getListedIconsItems(ScrollIconHandlerFactory.this.pagedItems);
 
-                    if (ScrollIconHandlerFactory.this.type == PagedItems.ScrollType.NEXT) {
+                    if (ScrollIconHandlerFactory.this.type == ScrollType.NEXT) {
                         if (lii.getCurrentPage() >= lii.getMaxPage()) {
-                            return handler.onHide(lii.getCurrentPage(), lii.getMaxPage());
+                            return handler.onHide(page, player, ScrollIconHandlerFactory.this.type, lii.getCurrentPage(), lii.getMaxPage());
                         } else {
-                            return handler.onVisible(lii.getCurrentPage(), lii.getMaxPage());
+                            return handler.onVisible(page, player, ScrollIconHandlerFactory.this.type, lii.getCurrentPage(), lii.getMaxPage());
                         }
-                    } else if (ScrollIconHandlerFactory.this.type == PagedItems.ScrollType.PREVIOUSLY) {
+                    } else if (ScrollIconHandlerFactory.this.type == ScrollType.PREVIOUSLY) {
                         if (lii.getCurrentPage() <= 1) {
-                            return handler.onHide(lii.getCurrentPage(), lii.getMaxPage());
+                            return handler.onHide(page, player, ScrollIconHandlerFactory.this.type, lii.getCurrentPage(), lii.getMaxPage());
                         } else {
-                            return handler.onVisible(lii.getCurrentPage(), lii.getMaxPage());
+                            return handler.onVisible(page, player, ScrollIconHandlerFactory.this.type, lii.getCurrentPage(), lii.getMaxPage());
                         }
                     }
                     return null;
@@ -266,16 +264,5 @@ public class TemplatePageImpl implements TemplatePage {
 
             };
         }
-
-        private static Sound findCorrectSound() {
-            Sound sound;
-            try {
-                sound = Sound.valueOf("BLOCK_DISPENSER_FAIL");
-            } catch (Exception e) {
-                sound = Sound.CLICK;
-            }
-            return sound;
-        }
     }
-
 }

@@ -13,7 +13,14 @@ public class FramedIconsTemplate extends Frame {
     private final FrameIterationHandler iterationHandler;
     private final boolean permanentCached;
 
-    public FramedIconsTemplate(String name, int x, int z, int width, int height, FramedIconsHandlerFactory iconsFactory, FrameIterationHandler iterationHandler, boolean permanentCached) {
+    public FramedIconsTemplate(String name,
+                               int x,
+                               int z,
+                               int width,
+                               int height,
+                               FramedIconsHandlerFactory iconsFactory,
+                               FrameIterationHandler iterationHandler,
+                               boolean permanentCached) {
         super(name, x, z, width, height);
         this.iconsFactory = iconsFactory;
         this.iterationHandler = iterationHandler;

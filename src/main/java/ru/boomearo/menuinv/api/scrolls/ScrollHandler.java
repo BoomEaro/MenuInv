@@ -1,26 +1,16 @@
 package ru.boomearo.menuinv.api.scrolls;
 
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
+import ru.boomearo.menuinv.api.InventoryPage;
 
-/**
- * Представляет обработчик прокрутки страницы
- */
 public interface ScrollHandler {
 
-    /**
-     * Обрабатывается в ситуации, когда предмет должен быть отображен
-     *
-     * @param currentPage Текущая страница в рамки предметов
-     * @param maxPage     Максимальная страница в рамки предметов
-     */
-    ItemStack onVisible(int currentPage, int maxPage);
+    void onClick(InventoryPage inventoryPage, Player player, ClickType clickType);
 
-    /**
-     * Обрабатывается в ситуации, когда предмет должен быть скрыт
-     *
-     * @param currentPage Текущая страница в рамки предметов
-     * @param maxPage     Максимальная страница в рамки предметов
-     */
-    ItemStack onHide(int currentPage, int maxPage);
+    ItemStack onVisible(InventoryPage inventoryPage, Player player, ScrollType scrollType, int currentPage, int maxPage);
+
+    ItemStack onHide(InventoryPage inventoryPage, Player player, ScrollType scrollType, int currentPage, int maxPage);
 
 }

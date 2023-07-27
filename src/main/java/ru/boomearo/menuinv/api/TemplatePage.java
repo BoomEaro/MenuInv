@@ -1,6 +1,7 @@
 package ru.boomearo.menuinv.api;
 
-import ru.boomearo.menuinv.api.frames.inventory.PagedItems;
+import ru.boomearo.menuinv.api.scrolls.ScrollIconBuilder;
+import ru.boomearo.menuinv.api.scrolls.ScrollType;
 import ru.boomearo.menuinv.api.frames.iteration.FrameIterationHandler;
 import ru.boomearo.menuinv.api.scrolls.ScrollHandlerFactory;
 
@@ -41,7 +42,7 @@ public interface TemplatePage {
      * @param height  Высота рамки
      * @param factory Фабрика обработчика рамки предметов
      */
-    TemplatePage setPagedItems(String name, int x, int z, int width, int height, FramedIconsHandlerFactory factory);
+    TemplatePage setPagedItems(String name, int x, int z, int width, int height, PagedItemsBuilder pagedItemsBuilder);
 
     /**
      * Добавляет рамку предметов, которая может быть прокручена вперед/назад и имеет страницы для просмотра
@@ -54,7 +55,7 @@ public interface TemplatePage {
      * @param iconFactory     Фабрика обработчика рамки предметов
      * @param permanentCached Запомнить ли содержимое рамки навсегда (один раз получить список предметов и больше никогда не обновлять)
      */
-    TemplatePage setPagedItems(String name, int x, int z, int width, int height, FramedIconsHandlerFactory iconFactory, boolean permanentCached);
+    TemplatePage setPagedItems(String name, int x, int z, int width, int height, PagedItemsBuilder pagedItemsBuilder, boolean permanentCached);
 
     /**
      * Добавляет рамку предметов, которая может быть прокручена вперед/назад и имеет страницы для просмотра
@@ -67,7 +68,7 @@ public interface TemplatePage {
      * @param iconFactory      Фабрика обработчика рамки предметов
      * @param iterationHandler Обработчик позиции элементов
      */
-    TemplatePage setPagedItems(String name, int x, int z, int width, int height, FramedIconsHandlerFactory iconFactory, FrameIterationHandler iterationHandler);
+    TemplatePage setPagedItems(String name, int x, int z, int width, int height, PagedItemsBuilder pagedItemsBuilder, FrameIterationHandler iterationHandler);
 
     /**
      * Добавляет рамку предметов, которая может быть прокручена вперед/назад и имеет страницы для просмотра
@@ -81,7 +82,7 @@ public interface TemplatePage {
      * @param iterationHandler Обработчик позиции элементов
      * @param permanentCached  Запомнить ли содержимое рамки навсегда (один раз получить список предметов и больше никогда не обновлять)
      */
-    TemplatePage setPagedItems(String name, int x, int z, int width, int height, FramedIconsHandlerFactory iconFactory, FrameIterationHandler iterationHandler, boolean permanentCached);
+    TemplatePage setPagedItems(String name, int x, int z, int width, int height, PagedItemsBuilder pagedItemsBuilder, FrameIterationHandler iterationHandler, boolean permanentCached);
 
     /**
      * Добавляет предмет, который имеет возможность прокручивать страницы в указанной предметной рамки.
@@ -91,7 +92,7 @@ public interface TemplatePage {
      * @param type       Тип прокручивания (вперед/назад)
      * @param factory    Фабрика обработчика прокрутки
      */
-    TemplatePage setScrollItem(int slot, String pagedItems, PagedItems.ScrollType type, ScrollHandlerFactory factory);
+    TemplatePage setScrollItem(int slot, String pagedItems, ScrollType type, ScrollIconBuilder scrollIconBuilder);
 
     /**
      * Заполняет предметами задний фон. Любой самостоятельный предмет или рамка предметов всегда будут на первом плане.

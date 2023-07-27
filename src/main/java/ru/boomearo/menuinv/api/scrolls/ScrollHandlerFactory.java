@@ -5,6 +5,6 @@ package ru.boomearo.menuinv.api.scrolls;
  */
 public interface ScrollHandlerFactory {
 
-    ScrollHandler create();
+    ScrollHandler create(ScrollType scrollType);
 
 }
