@@ -20,7 +20,8 @@ public class Menu {
     private static final Map<Class<? extends JavaPlugin>, PluginTemplatePagesImpl> MENU_BY_PLUGIN = new HashMap<>();
 
     public static void initMenu(MenuInv menuInv) {
-        registerPages(menuInv).createTemplatePage(DefaultMenuPage.CONFIRM, InvType.HOPPER)
+        registerPages(menuInv)
+                .createTemplatePage(DefaultMenuPage.CONFIRM, InvType.HOPPER)
                 .setInventoryCreationHandler((inventoryPage) -> {
                     InventorySession session = inventoryPage.getSession();
                     if (session == null) {
@@ -34,7 +35,8 @@ public class Menu {
                     }
 
                     return data.getInventoryName(session);
-                }).setItem(0, () -> new IconHandler() {
+                })
+                .setItem(0, () -> new IconHandler() {
 
                     @Override
                     public void onClick(InventoryPage inventoryPage, Player player, ClickType clickType) {
@@ -70,7 +72,8 @@ public class Menu {
                         return confirm.getCancelItem(inventoryPage);
                     }
 
-                }).setItem(4, () -> new IconHandler() {
+                })
+                .setItem(4, () -> new IconHandler() {
 
                     @Override
                     public void onClick(InventoryPage inventoryPage, Player player, ClickType clickType) {
@@ -120,7 +123,7 @@ public class Menu {
 
         PluginTemplatePagesImpl tmp = MENU_BY_PLUGIN.get(plugin.getClass());
         if (tmp != null) {
-            throw new IllegalStateException("Plugin '" + plugin.getName() + "' already registered!");
+            return tmp;
         }
 
         PluginTemplatePagesImpl pages = new PluginTemplatePagesImpl(plugin);
@@ -165,7 +168,7 @@ public class Menu {
      * Открывает меню со страницей плагина
      *
      * @param pluginPage Страница, которая была зарегистрирована плагином
-     * @param player   Игрок, которому надо открыть страницу
+     * @param player     Игрок, которому надо открыть страницу
      */
     public static void open(PluginPage pluginPage, Player player) {
         open(pluginPage, player, null);
@@ -175,8 +178,8 @@ public class Menu {
      * Открывает меню со страницей плагина
      *
      * @param pluginPage Страница, которая была зарегистрирована плагином
-     * @param player   Игрок, которому надо открыть страницу
-     * @param session  Сессия, используемся для хранения внутренних параметров между страницами
+     * @param player     Игрок, которому надо открыть страницу
+     * @param session    Сессия, используемся для хранения внутренних параметров между страницами
      */
     public static void open(PluginPage pluginPage, Player player, InventorySession session) {
         Preconditions.checkArgument(pluginPage != null, "pluginPage is null!");
@@ -210,8 +213,7 @@ public class Menu {
                 newPage.update(true);
 
                 player.openInventory(newPage.getInventory());
-            }
-            catch (Throwable e) {
+            } catch (Throwable e) {
                 e.printStackTrace();
             }
         });
