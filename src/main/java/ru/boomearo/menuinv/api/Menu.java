@@ -21,7 +21,8 @@ public class Menu {
 
     public static void initMenu(MenuInv menuInv) {
         registerPages(menuInv)
-                .createTemplatePage(DefaultMenuPage.CONFIRM, InvType.HOPPER)
+                .createTemplatePage(DefaultMenuPage.CONFIRM)
+                .setMenuType(MenuType.HOPPER)
                 .setInventoryCreationHandler((inventoryPage) -> {
                     InventorySession session = inventoryPage.getSession();
                     if (session == null) {

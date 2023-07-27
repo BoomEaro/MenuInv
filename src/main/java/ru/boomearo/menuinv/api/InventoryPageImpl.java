@@ -3,7 +3,6 @@ package ru.boomearo.menuinv.api;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
-import org.bukkit.inventory.Inventory;
 
 import org.bukkit.inventory.ItemStack;
 
@@ -19,7 +18,7 @@ import java.util.*;
 public class InventoryPageImpl implements InventoryPage {
 
     private final String name;
-    private final InvType type;
+    private final MenuType menuType;
     private final InventoryCreationHandler inventoryCreationHandler;
     private final InventoryReopenHandler inventoryReopenHandler;
 
@@ -27,7 +26,7 @@ public class InventoryPageImpl implements InventoryPage {
 
     private final ItemIcon[] activeIcons;
 
-    private Inventory inventory;
+    private org.bukkit.inventory.Inventory inventory;
 
     private final Player player;
 
@@ -39,7 +38,7 @@ public class InventoryPageImpl implements InventoryPage {
     private boolean changes = false;
 
     public InventoryPageImpl(String name,
-                             InvType type,
+                             MenuType menuType,
                              Map<Integer, ItemIcon> iconsPosition,
                              Map<String, PagedItems> listedIcons,
                              InventoryCreationHandler inventoryCreationHandler,
@@ -49,7 +48,7 @@ public class InventoryPageImpl implements InventoryPage {
                              InventorySession session,
                              TemplatePageImpl templatePage) {
         this.name = name;
-        this.type = type;
+        this.menuType = menuType;
         this.listedIcons = listedIcons;
         this.inventoryCreationHandler = inventoryCreationHandler;
         this.inventoryReopenHandler = inventoryReopenHandler;
@@ -58,16 +57,16 @@ public class InventoryPageImpl implements InventoryPage {
         this.templatePage = templatePage;
 
         //Создаем новый инвентарь баккита и добавляет в него свой холдер для идентификации инвентари
-        this.inventory = this.type.createInventory(new MenuInvHolder(this), this.inventoryCreationHandler.createTitle(this));
+        this.inventory = this.menuType.createInventory(new MenuInvHolder(this), this.inventoryCreationHandler.createTitle(this));
 
         //Создаем массив активных предметов размеров в текущий инвентарь
-        this.activeIcons = new ItemIcon[this.type.getSize()];
+        this.activeIcons = new ItemIcon[this.menuType.getSize()];
         //Заполняем массив нулями
         Arrays.fill(this.activeIcons, null);
 
         //Сначала заполняем массив активных предметов задним фоном.
         if (background != null) {
-            for (int i = 0; i < this.type.getSize(); i++) {
+            for (int i = 0; i < this.menuType.getSize(); i++) {
                 this.activeIcons[i] = new ItemIcon(i, background.create());
             }
         }
@@ -84,8 +83,8 @@ public class InventoryPageImpl implements InventoryPage {
     }
 
     @Override
-    public InvType getType() {
-        return this.type;
+    public MenuType getMenuType() {
+        return this.menuType;
     }
 
     @Override
@@ -112,7 +111,7 @@ public class InventoryPageImpl implements InventoryPage {
         return this.activeIcons;
     }
 
-    public Inventory getInventory() {
+    public org.bukkit.inventory.Inventory getInventory() {
         return this.inventory;
     }
 
@@ -147,7 +146,7 @@ public class InventoryPageImpl implements InventoryPage {
             }
         }
 
-        ItemStack[] array = new ItemStack[this.type.getSize()];
+        ItemStack[] array = new ItemStack[this.menuType.getSize()];
         Arrays.fill(array, null);
 
         //Обновляем текущий массив активных предметов, используя рамочные предметы.
@@ -194,7 +193,7 @@ public class InventoryPageImpl implements InventoryPage {
     //TODO Работает странно. А именно, если во время открытия инвентаря игрок его закроет, то у игрока откроется фантомный инвентарь.
     private void performReopen() {
         //Сначала создаем новый экземпляр баккитовского инвентаря
-        this.inventory = this.type.createInventory(new MenuInvHolder(this), this.inventoryCreationHandler.createTitle(this));
+        this.inventory = this.menuType.createInventory(new MenuInvHolder(this), this.inventoryCreationHandler.createTitle(this));
         //Очищаем изменения скроллов страницы
         for (PagedItems pi : this.listedIcons.values()) {
             pi.resetChanges();

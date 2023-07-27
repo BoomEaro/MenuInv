@@ -29,13 +29,7 @@ public class PluginTemplatePagesImpl implements PluginTemplatePages {
 
     @Override
     public TemplatePage createTemplatePage(PluginPage pluginPage) {
-        return createTemplatePage(pluginPage, InvType.CHEST_9X6);
-    }
-
-    @Override
-    public TemplatePage createTemplatePage(PluginPage pluginPage, InvType type) {
         Preconditions.checkArgument(pluginPage != null, "pluginPage is null!");
-        Preconditions.checkArgument(type != null, "type is null!");
 
         String name = pluginPage.getPage();
 

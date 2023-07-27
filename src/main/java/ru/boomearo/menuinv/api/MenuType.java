@@ -2,13 +2,12 @@ package ru.boomearo.menuinv.api;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
 /**
  * Енум, представляющий все возможные инвентари с которым можно взаимодействовать
  */
-public enum InvType {
+public enum MenuType {
 
     ANVIL(InventoryType.ANVIL, 3, 1),
     BEACON(InventoryType.BEACON, 1, 1),
@@ -37,7 +36,7 @@ public enum InvType {
     private final int width;
     private final int height;
 
-    InvType(InventoryType type, int width, int height) {
+    MenuType(InventoryType type, int width, int height) {
         this.type = type;
         this.width = width;
         this.height = height;
@@ -59,7 +58,7 @@ public enum InvType {
         return this.width * this.height;
     }
 
-    public Inventory createInventory(InventoryHolder holder, String title) {
+    public org.bukkit.inventory.Inventory createInventory(InventoryHolder holder, String title) {
         if (title == null) {
             title = " ";
         }

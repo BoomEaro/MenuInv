@@ -17,7 +17,7 @@ public interface InventoryPage {
     /**
      * @return Тип инвентаря
      */
-    public InvType getType();
+    public MenuType getMenuType();
 
     /**
      * @return Игрок, открывший эту страницу

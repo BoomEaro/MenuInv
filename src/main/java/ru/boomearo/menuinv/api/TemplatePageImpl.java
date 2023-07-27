@@ -24,7 +24,7 @@ import java.util.Map;
 public class TemplatePageImpl implements TemplatePage {
 
     private final String name;
-    private InvType type = InvType.CHEST_9X6;
+    private MenuType menuType = MenuType.CHEST_9X6;
     private InventoryCreationHandler inventoryCreationHandler = (inventoryPage) -> "Default page";
     private InventoryReopenHandler inventoryReopenHandler = (inventoryPage, force) -> false;
 
@@ -45,15 +45,15 @@ public class TemplatePageImpl implements TemplatePage {
     }
 
     @Override
-    public InvType getType() {
-        return this.type;
+    public MenuType getMenuType() {
+        return this.menuType;
     }
 
     @Override
-    public TemplatePage setType(InvType type) {
+    public TemplatePage setMenuType(MenuType type) {
         Preconditions.checkArgument(type != null, "type is null!");
 
-        this.type = type;
+        this.menuType = type;
         return this;
     }
 
@@ -167,7 +167,7 @@ public class TemplatePageImpl implements TemplatePage {
         if (slot < 0) {
             throw new IllegalStateException("Button on slot '" + icon.getSlot() + "' is outside 0! (slot: " + slot + ")");
         }
-        int maxSlot = this.type.getSize() - 1;
+        int maxSlot = this.menuType.getSize() - 1;
         if (slot > maxSlot) {
             throw new IllegalStateException("Button on slot '" + icon.getSlot() + "' is more than possible! (slot: " + slot + "/" + maxSlot + ")");
         }
@@ -180,12 +180,12 @@ public class TemplatePageImpl implements TemplatePage {
             throw new IllegalStateException("Paged items with name '" + frame.getName() + "' went out of the area having a negative value of coordinates. (x: " + frame.getFirstX() + " z: " + frame.getFirstZ());
         }
 
-        if (frame.getFirstX() + frame.getWidth() > this.type.getWidth()) {
-            throw new IllegalStateException("Paged items with name '" + frame.getName() + "' went beyond the maximum area size (x: " + (frame.getFirstX() + frame.getWidth()) + " > width: " + this.type.getWidth());
+        if (frame.getFirstX() + frame.getWidth() > this.menuType.getWidth()) {
+            throw new IllegalStateException("Paged items with name '" + frame.getName() + "' went beyond the maximum area size (x: " + (frame.getFirstX() + frame.getWidth()) + " > width: " + this.menuType.getWidth());
         }
 
-        if (frame.getFirstZ() + frame.getHeight() > this.type.getHeight()) {
-            throw new IllegalStateException("Paged items with name '" + frame.getName() + "' went beyond the maximum area size (z: " + (frame.getFirstZ() + frame.getHeight()) + " > height: " + this.type.getHeight());
+        if (frame.getFirstZ() + frame.getHeight() > this.menuType.getHeight()) {
+            throw new IllegalStateException("Paged items with name '" + frame.getName() + "' went beyond the maximum area size (z: " + (frame.getFirstZ() + frame.getHeight()) + " > height: " + this.menuType.getHeight());
         }
     }
 
@@ -204,7 +204,7 @@ public class TemplatePageImpl implements TemplatePage {
         }
 
         return new InventoryPageImpl(this.name,
-                this.type,
+                this.menuType,
                 itemIconsActive,
                 pagedIconsActive,
                 this.inventoryCreationHandler,

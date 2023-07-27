@@ -1,7 +1,7 @@
 package ru.boomearo.menuinv.api.frames.inventory;
 
 import ru.boomearo.menuinv.api.IconHandler;
-import ru.boomearo.menuinv.api.InvType;
+import ru.boomearo.menuinv.api.MenuType;
 import ru.boomearo.menuinv.api.FramedIconsHandler;
 import ru.boomearo.menuinv.api.frames.iteration.FrameIterationHandler;
 import ru.boomearo.menuinv.api.InventoryPageImpl;
@@ -200,7 +200,7 @@ public class PagedItems extends FramedIcons {
 
             int maxSize = handlers.size();
 
-            InvType type = page.getType();
+            MenuType type = page.getMenuType();
 
             ItemIcon[] activeIcons = page.getUnsafeActiveIcons();
 

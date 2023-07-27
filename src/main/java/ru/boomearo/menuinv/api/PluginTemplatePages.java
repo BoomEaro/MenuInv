@@ -20,14 +20,4 @@ public interface PluginTemplatePages {
      * @return Шаблон страницы
      */
     TemplatePage createTemplatePage(PluginPage pluginPage);
-
-    /**
-     * Создает новый шаблон страниц.
-     *
-     * @param pluginPage   Тип страницы
-     * @param titleHandler Обработчик тайтла страницы
-     * @param type         Тип инвентаря
-     * @return Шаблон страницы
-     */
-    TemplatePage createTemplatePage(PluginPage pluginPage, InvType type);
 }

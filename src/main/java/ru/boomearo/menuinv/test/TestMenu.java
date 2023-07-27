@@ -54,7 +54,8 @@ public class TestMenu {
     private static void setupMenu(MenuInv menuInv) {
         {
             Menu.registerPages(menuInv)
-                    .createTemplatePage(MenuPage.TEST, InvType.CHEST_9X6)
+                    .createTemplatePage(MenuPage.TEST)
+                    .setMenuType(MenuType.CHEST_9X6)
                     .setInventoryCreationHandler((inventoryPage) -> {
                         PagedItems piTest = inventoryPage.getListedIconsItems("test");
                         PagedItems piTest2 = inventoryPage.getListedIconsItems("test2");
@@ -179,7 +180,7 @@ public class TestMenu {
 
                         @Override
                         public ItemStack onUpdate(InventoryPage consume, Player player) {
-                            return new ItemStack(Material.COMPASS, 1);
+                            return new ItemStack(Material.COOKIE, 1);
                         }
 
                         @Override
@@ -191,7 +192,8 @@ public class TestMenu {
         }
         {
             Menu.registerPages(menuInv)
-                    .createTemplatePage(MenuPage.TEST2, InvType.WORKBENCH)
+                    .createTemplatePage(MenuPage.TEST2)
+                    .setMenuType(MenuType.WORKBENCH)
                     .setInventoryCreationHandler((inventoryPage) -> "Привет2")
                     .setItem(9, () -> new IconHandler() {
 
@@ -264,7 +266,7 @@ public class TestMenu {
 
                         @Override
                         public ItemStack onUpdate(InventoryPage consume, Player player) {
-                            return new ItemStack(Material.COMPASS, 1);
+                            return new ItemStack(Material.COOKIE, 1);
                         }
 
                         @Override

@@ -11,9 +11,9 @@ public interface TemplatePage {
 
     String getName();
 
-    InvType getType();
+    MenuType getMenuType();
 
-    TemplatePage setType(InvType type);
+    TemplatePage setMenuType(MenuType type);
 
     InventoryCreationHandler getInventoryCreationHandler();
 
