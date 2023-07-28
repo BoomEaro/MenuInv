@@ -149,40 +149,40 @@ public class InventoryPageImpl implements InventoryPage {
     }
 
     private void performUpdate(boolean force, boolean reopenIfNeed) {
-        try {
-            boolean forceUpdate = this.changes || force;
+        boolean forceUpdate = this.changes || force;
 
-            if (reopenIfNeed) {
+        if (reopenIfNeed) {
+            try {
                 if (this.inventoryReopenHandler.reopenCondition(this, forceUpdate)) {
                     reopen(true);
                     return;
                 }
             }
+            catch (Exception e) {
+                this.updateExceptionHandler.onException(this, this.player, e);
+            }
+        }
 
-            ItemStack[] array = new ItemStack[this.menuType.getSize()];
-            Arrays.fill(array, null);
+        ItemStack[] array = new ItemStack[this.menuType.getSize()];
+        Arrays.fill(array, null);
 
-            //Обновляем текущий массив активных предметов, используя рамочные предметы.
-            for (PagedItems lii : this.listedIcons.values()) {
-                lii.updateActiveIcons(this, forceUpdate);
+        //Обновляем текущий массив активных предметов, используя рамочные предметы.
+        for (PagedItems lii : this.listedIcons.values()) {
+            lii.updateActiveIcons(this, forceUpdate, this.updateExceptionHandler);
+        }
+
+        //Используя массив активных предметов, заполняем массив баккитовских предметов
+        for (ItemIcon ii : this.activeIcons) {
+            if (ii == null) {
+                continue;
             }
 
-            //Используя массив активных предметов, заполняем массив баккитовских предметов
-            for (ItemIcon ii : this.activeIcons) {
-                if (ii == null) {
-                    continue;
-                }
-
-                array[ii.getSlot()] = ii.getItemStack(this, forceUpdate);
-            }
-
-            this.inventory.setContents(array);
-
-            this.changes = false;
+            array[ii.getSlot()] = ii.getItemStack(this, forceUpdate, this.updateExceptionHandler);
         }
-        catch (Exception e) {
-            this.updateExceptionHandler.onException(this, this.player, e);
-        }
+
+        this.inventory.setContents(array);
+
+        this.changes = false;
     }
 
     @Override

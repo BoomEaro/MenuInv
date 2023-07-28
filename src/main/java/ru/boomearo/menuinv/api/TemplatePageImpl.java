@@ -28,8 +28,14 @@ public class TemplatePageImpl implements TemplatePage {
     private MenuType menuType = MenuType.CHEST_9X6;
     private InventoryTitleHandler inventoryTitleHandler = (inventoryPage) -> "Default page";
     private InventoryReopenHandler inventoryReopenHandler = (inventoryPage, force) -> false;
-    private ClickExceptionHandler clickExceptionHandler = (inventoryPage, player, clickType, exception) -> exception.printStackTrace();
-    private UpdateExceptionHandler updateExceptionHandler = (inventoryPage, player, exception) -> exception.printStackTrace();
+    private ClickExceptionHandler clickExceptionHandler = (inventoryPage, player, clickType, exception) -> {
+        inventoryPage.close(true);
+        exception.printStackTrace();
+    };
+    private UpdateExceptionHandler updateExceptionHandler = (inventoryPage, player, exception) -> {
+        inventoryPage.close(true);
+        exception.printStackTrace();
+    };
 
     private final PluginTemplatePagesImpl pluginTemplatePages;
 

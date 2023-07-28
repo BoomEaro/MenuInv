@@ -25,14 +25,14 @@ public class ItemIcon extends SlotElement {
         return this.handler;
     }
 
-    public ItemStack getItemStack(InventoryPageImpl page, boolean force) {
+    public ItemStack getItemStack(InventoryPageImpl page, boolean force, UpdateExceptionHandler updateExceptionHandler) {
         /*
          * Проверяем в самом начале, первый ли раз вызывается извлечение предмета
          * Если это так, получаем обновленный предмет и возвращаем его.
          * В дальнейшем, будет ли обновление, зависит от реализации обработчика IconHandler
          */
         if (this.firstUpdate) {
-            ItemStack newItem = getUpdatedItem(page);
+            ItemStack newItem = getUpdatedItem(page, updateExceptionHandler);
 
             this.cache = newItem;
 
@@ -44,7 +44,7 @@ public class ItemIcon extends SlotElement {
         if (this.handler.shouldUpdate(page) && (((System.currentTimeMillis() - this.updateHandlerCooldown) > this.handler.getUpdateTime(page)) || force)) {
             this.updateHandlerCooldown = System.currentTimeMillis();
 
-            ItemStack newItem = getUpdatedItem(page);
+            ItemStack newItem = getUpdatedItem(page, updateExceptionHandler);
 
             this.cache = newItem;
 
@@ -54,7 +54,13 @@ public class ItemIcon extends SlotElement {
         return this.cache;
     }
 
-    private ItemStack getUpdatedItem(InventoryPageImpl page) {
-        return this.handler.onUpdate(page, page.getPlayer());
+    private ItemStack getUpdatedItem(InventoryPageImpl page, UpdateExceptionHandler updateExceptionHandler) {
+        try {
+            return this.handler.onUpdate(page, page.getPlayer());
+        }
+        catch (Exception e) {
+            updateExceptionHandler.onException(page, page.getPlayer(), e);
+            return null;
+        }
     }
 }

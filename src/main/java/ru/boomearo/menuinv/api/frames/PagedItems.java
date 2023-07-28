@@ -5,6 +5,7 @@ import ru.boomearo.menuinv.api.frames.iteration.FrameIterationHandler;
 import ru.boomearo.menuinv.api.InventoryPageImpl;
 import ru.boomearo.menuinv.api.icon.IconHandler;
 import ru.boomearo.menuinv.api.icon.ItemIcon;
+import ru.boomearo.menuinv.api.icon.UpdateExceptionHandler;
 import ru.boomearo.menuinv.api.icon.scrolls.ScrollType;
 
 import java.util.ArrayList;
@@ -160,8 +161,15 @@ public class PagedItems extends FramedIcons {
         return false;
     }
 
-    private List<IconHandler> getHandlers(InventoryPageImpl page) {
-        List<IconHandler> handlers = getIconsHandler().onUpdate(page, page.getPlayer());
+    private List<IconHandler> getHandlers(InventoryPageImpl page, UpdateExceptionHandler updateExceptionHandler) {
+        List<IconHandler> handlers = null;
+        try {
+            handlers = getIconsHandler().onUpdate(page, page.getPlayer());
+        }
+        catch (Exception e) {
+            updateExceptionHandler.onException(page, page.getPlayer(), e);
+        }
+
         if (handlers == null) {
             handlers = new ArrayList<>();
         }
@@ -169,17 +177,17 @@ public class PagedItems extends FramedIcons {
         return handlers;
     }
 
-    private List<IconHandler> getCachedHandler(InventoryPageImpl page) {
+    private List<IconHandler> getCachedHandler(InventoryPageImpl page, UpdateExceptionHandler updateExceptionHandler) {
         if (isPermanentCached()) {
             if (this.cachedHandler != null) {
                 return this.cachedHandler;
             }
 
-            this.cachedHandler = getHandlers(page);
+            this.cachedHandler = getHandlers(page, updateExceptionHandler);
             return this.cachedHandler;
         }
 
-        return getHandlers(page);
+        return getHandlers(page, updateExceptionHandler);
     }
 
     /**
@@ -188,13 +196,13 @@ public class PagedItems extends FramedIcons {
      * @param page  Страница инвентаря
      * @param force Игнорировать ли задержку обновления
      */
-    public void updateActiveIcons(InventoryPageImpl page, boolean force) {
+    public void updateActiveIcons(InventoryPageImpl page, boolean force, UpdateExceptionHandler updateExceptionHandler) {
         FramedIconsHandler handler = getIconsHandler();
 
         if (((System.currentTimeMillis() - this.updateHandlerCooldown) > handler.getUpdateTime(page)) || force) {
             this.updateHandlerCooldown = System.currentTimeMillis();
 
-            List<IconHandler> handlers = getCachedHandler(page);
+            List<IconHandler> handlers = getCachedHandler(page, updateExceptionHandler);
 
             Collections.sort(handlers);
 
