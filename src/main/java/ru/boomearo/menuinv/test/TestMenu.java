@@ -125,18 +125,9 @@ public class TestMenu {
                                 return tmp;
                             }))
 
-                    .setScrollItem(7, "test", ScrollType.PREVIOUSLY, new ScrollIconBuilder()
-                            .setScrollVisibleUpdate((inventoryPage, player, scrollType, currentPage, maxPage) -> createScrollItems(scrollType, currentPage, maxPage)))
-
-                    .setScrollItem(8, "test", ScrollType.NEXT, new ScrollIconBuilder()
-                            .setScrollVisibleUpdate((inventoryPage, player, scrollType, currentPage, maxPage) -> createScrollItems(scrollType, currentPage, maxPage)))
-
-                    .setBackground(new IconBuilder()
-                            .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.COOKIE, 1))
-                            .setIconUpdateCondition((inventoryPage) -> false))
                     .setStructure(
                             "# # # # # # # # #",
-                            "# . . . . . . . #",
+                            "# . . . . . < > #",
                             "# . . . ? . . . #",
                             "# . . . ? . . . #",
                             "# . . . . . . . #",
@@ -145,7 +136,21 @@ public class TestMenu {
                             .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.TNT, 1)))
                     .setIngredient('?', new IconBuilder()
                             .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.CACTUS, 1))
-                            .setIconClick((inventoryPage, player, clickType) -> player.sendMessage("Это кактус!")));
+                            .setIconClick((inventoryPage, player, clickType) -> player.sendMessage("Это кактус!")))
+
+                    .setIngredient('<', new IconBuilder()
+                            .setScrollIconBuilder(
+                                    new ScrollIconBuilder(ScrollType.PREVIOUSLY, "test")
+                                            .setScrollVisibleUpdate((inventoryPage, player, scrollType, currentPage, maxPage) -> createScrollItems(scrollType, currentPage, maxPage))))
+
+                    .setIngredient('>', new IconBuilder()
+                            .setScrollIconBuilder(
+                                    new ScrollIconBuilder(ScrollType.NEXT, "test")
+                                            .setScrollVisibleUpdate((inventoryPage, player, scrollType, currentPage, maxPage) -> createScrollItems(scrollType, currentPage, maxPage))))
+
+                    .setBackground(new IconBuilder()
+                            .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.COOKIE, 1))
+                            .setIconUpdateCondition((inventoryPage) -> false));
         }
         {
             Menu.registerPages(menuInv)

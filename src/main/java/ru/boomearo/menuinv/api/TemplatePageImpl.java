@@ -2,18 +2,12 @@ package ru.boomearo.menuinv.api;
 
 import com.google.common.base.Preconditions;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.inventory.ItemStack;
 
 import ru.boomearo.menuinv.api.frames.Frame;
 import ru.boomearo.menuinv.api.frames.PagedItems;
 import ru.boomearo.menuinv.api.frames.PagedItemsBuilder;
 import ru.boomearo.menuinv.api.icon.*;
-import ru.boomearo.menuinv.api.icon.scrolls.ScrollIconBuilder;
-import ru.boomearo.menuinv.api.icon.scrolls.ScrollType;
 import ru.boomearo.menuinv.api.frames.FramedIconsTemplate;
-import ru.boomearo.menuinv.api.icon.scrolls.ScrollHandler;
-import ru.boomearo.menuinv.api.icon.scrolls.ScrollHandlerFactory;
 import ru.boomearo.menuinv.api.session.InventorySession;
 
 import java.util.HashMap;
@@ -154,26 +148,6 @@ public class TemplatePageImpl implements TemplatePage {
     }
 
     @Override
-    public TemplatePage setScrollItem(int slot, String pagedItems, ScrollType type, ScrollIconBuilder scrollIconBuilder) {
-        Preconditions.checkArgument(pagedItems != null, "pagedItems is null!");
-        Preconditions.checkArgument(scrollIconBuilder != null, "scrollIconBuilder is null!");
-
-        ItemIconTemplate tmp = this.itemIcons.get(slot);
-        if (tmp != null) {
-            throw new IllegalStateException("Button on position '" + slot + "' already added!");
-        }
-
-        FramedIconsTemplate tli = this.pagedItems.get(pagedItems);
-        if (tli == null) {
-            throw new IllegalStateException("Paged items with name '" + pagedItems + "' is not found!");
-        }
-
-        addItem(new ItemIconTemplate(slot, new ScrollIconHandlerFactory(pagedItems, type, scrollIconBuilder.build())));
-
-        return this;
-    }
-
-    @Override
     public TemplatePage setBackground(IconBuilder iconBuilder) {
         Preconditions.checkArgument(iconBuilder != null, "iconBuilder is null!");
 
@@ -291,57 +265,6 @@ public class TemplatePageImpl implements TemplatePage {
                 player,
                 session,
                 this);
-    }
-
-    private static class ScrollIconHandlerFactory implements IconHandlerFactory {
-
-        private final String pagedItems;
-        private final ScrollType type;
-        private final ScrollHandlerFactory scrollHandlerFactory;
-
-        public ScrollIconHandlerFactory(String pagedItems, ScrollType type, ScrollHandlerFactory scrollHandlerFactory) {
-            this.pagedItems = pagedItems;
-            this.type = type;
-            this.scrollHandlerFactory = scrollHandlerFactory;
-        }
-
-        @Override
-        public IconHandler create() {
-            ScrollHandler handler = this.scrollHandlerFactory.create(ScrollIconHandlerFactory.this.type);
-
-            return new IconHandler() {
-
-                @Override
-                public void onClick(InventoryPage page, Player player, ClickType clickType) {
-                    boolean change = page.getListedIconsItems(ScrollIconHandlerFactory.this.pagedItems).scrollPage(ScrollIconHandlerFactory.this.type);
-                    if (change) {
-                        page.setNeedUpdate();
-                        handler.onClick(page, player, clickType);
-                    }
-                }
-
-                @Override
-                public ItemStack onUpdate(InventoryPage page, Player player) {
-                    PagedItems lii = page.getListedIconsItems(ScrollIconHandlerFactory.this.pagedItems);
-
-                    if (ScrollIconHandlerFactory.this.type == ScrollType.NEXT) {
-                        if (lii.getCurrentPage() >= lii.getMaxPage()) {
-                            return handler.onHide(page, player, ScrollIconHandlerFactory.this.type, lii.getCurrentPage(), lii.getMaxPage());
-                        } else {
-                            return handler.onVisible(page, player, ScrollIconHandlerFactory.this.type, lii.getCurrentPage(), lii.getMaxPage());
-                        }
-                    } else if (ScrollIconHandlerFactory.this.type == ScrollType.PREVIOUSLY) {
-                        if (lii.getCurrentPage() <= 1) {
-                            return handler.onHide(page, player, ScrollIconHandlerFactory.this.type, lii.getCurrentPage(), lii.getMaxPage());
-                        } else {
-                            return handler.onVisible(page, player, ScrollIconHandlerFactory.this.type, lii.getCurrentPage(), lii.getMaxPage());
-                        }
-                    }
-                    return null;
-                }
-
-            };
-        }
     }
 
     private static String[] removeEmptyChars(String[] value) {

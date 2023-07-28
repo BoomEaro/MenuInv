@@ -9,9 +9,25 @@ import ru.boomearo.menuinv.api.InventoryPage;
 
 public class ScrollIconBuilder {
 
+    private final ScrollType scrollType;
+    private final String name;
+
     private IconClick iconClick = (inventoryPage, player, clickType) -> {};
     private ScrollUpdate scrollVisibleUpdate = (inventoryPage, player, scrollType, currentPage, maxPage) -> null;
     private ScrollUpdate scrollHideUpdate = (inventoryPage, player, scrollType, currentPage, maxPage) -> null;
+
+    public ScrollIconBuilder(ScrollType scrollType, String name) {
+        this.scrollType = scrollType;
+        this.name = name;
+    }
+
+    public ScrollType getScrollType() {
+        return this.scrollType;
+    }
+
+    public String getName() {
+        return this.name;
+    }
 
     public ScrollIconBuilder setIconClick(IconClick iconClick) {
         Preconditions.checkArgument(iconClick != null, "iconClick is null!");
