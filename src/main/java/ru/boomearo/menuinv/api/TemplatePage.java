@@ -1,7 +1,11 @@
 package ru.boomearo.menuinv.api;
 
-import ru.boomearo.menuinv.api.scrolls.ScrollIconBuilder;
-import ru.boomearo.menuinv.api.scrolls.ScrollType;
+import ru.boomearo.menuinv.api.frames.PagedItemsBuilder;
+import ru.boomearo.menuinv.api.icon.ClickExceptionHandler;
+import ru.boomearo.menuinv.api.icon.IconBuilder;
+import ru.boomearo.menuinv.api.icon.UpdateExceptionHandler;
+import ru.boomearo.menuinv.api.icon.scrolls.ScrollIconBuilder;
+import ru.boomearo.menuinv.api.icon.scrolls.ScrollType;
 
 /**
  * Представляет шаблон страницы меню

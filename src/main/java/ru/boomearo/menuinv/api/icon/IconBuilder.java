@@ -1,9 +1,10 @@
-package ru.boomearo.menuinv.api;
+package ru.boomearo.menuinv.api.icon;
 
 import com.google.common.base.Preconditions;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
+import ru.boomearo.menuinv.api.InventoryPage;
 
 public class IconBuilder {
 

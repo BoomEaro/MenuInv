@@ -1,4 +1,4 @@
-package ru.boomearo.menuinv.api;
+package ru.boomearo.menuinv.api.frames;
 
 /**
  * Фабрика создания рамочных предметов

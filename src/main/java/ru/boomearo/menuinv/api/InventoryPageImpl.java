@@ -8,8 +8,12 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import ru.boomearo.menuinv.MenuInv;
+import ru.boomearo.menuinv.api.icon.ClickExceptionHandler;
+import ru.boomearo.menuinv.api.icon.IconHandlerFactory;
+import ru.boomearo.menuinv.api.icon.ItemIcon;
+import ru.boomearo.menuinv.api.icon.UpdateExceptionHandler;
 import ru.boomearo.menuinv.api.session.InventorySession;
-import ru.boomearo.menuinv.api.frames.inventory.PagedItems;
+import ru.boomearo.menuinv.api.frames.PagedItems;
 
 import java.util.*;
 
@@ -64,7 +68,7 @@ public class InventoryPageImpl implements InventoryPage {
         this.templatePage = templatePage;
 
         //Создаем новый инвентарь баккита и добавляет в него свой холдер для идентификации инвентари
-        this.inventory = this.menuType.createInventory(new MenuInvHolder(this), this.inventoryTitleHandler.createTitle(this));
+        this.inventory = this.menuType.createInventory(new MenuInventoryHolder(this), this.inventoryTitleHandler.createTitle(this));
 
         //Создаем массив активных предметов размеров в текущий инвентарь
         this.activeIcons = new ItemIcon[this.menuType.getSize()];
@@ -195,7 +199,7 @@ public class InventoryPageImpl implements InventoryPage {
     //TODO Работает странно. А именно, если во время открытия инвентаря игрок его закроет, то у игрока откроется фантомный инвентарь.
     private void performReopen() {
         //Сначала создаем новый экземпляр баккитовского инвентаря
-        this.inventory = this.menuType.createInventory(new MenuInvHolder(this), this.inventoryTitleHandler.createTitle(this));
+        this.inventory = this.menuType.createInventory(new MenuInventoryHolder(this), this.inventoryTitleHandler.createTitle(this));
         //Очищаем изменения скроллов страницы
         for (PagedItems pi : this.listedIcons.values()) {
             pi.resetChanges();

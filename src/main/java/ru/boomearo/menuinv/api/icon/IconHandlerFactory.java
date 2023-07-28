@@ -1,4 +1,4 @@
-package ru.boomearo.menuinv.api;
+package ru.boomearo.menuinv.api.icon;
 
 /**
  * Фабрика создания обработчиков предмета

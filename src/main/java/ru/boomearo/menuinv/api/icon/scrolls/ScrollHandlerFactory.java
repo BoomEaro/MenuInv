@@ -1,4 +1,4 @@
-package ru.boomearo.menuinv.api.scrolls;
+package ru.boomearo.menuinv.api.icon.scrolls;
 
 /**
  * Фабрика создания обработчика прокрутки страницы

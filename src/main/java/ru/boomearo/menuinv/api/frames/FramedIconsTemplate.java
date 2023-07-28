@@ -1,7 +1,5 @@
-package ru.boomearo.menuinv.api.frames.template;
+package ru.boomearo.menuinv.api.frames;
 
-import ru.boomearo.menuinv.api.FramedIconsHandlerFactory;
-import ru.boomearo.menuinv.api.frames.Frame;
 import ru.boomearo.menuinv.api.frames.iteration.FrameIterationHandler;
 
 /**

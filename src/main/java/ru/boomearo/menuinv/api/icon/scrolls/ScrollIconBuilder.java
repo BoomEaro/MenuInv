@@ -1,10 +1,10 @@
-package ru.boomearo.menuinv.api.scrolls;
+package ru.boomearo.menuinv.api.icon.scrolls;
 
 import com.google.common.base.Preconditions;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
-import ru.boomearo.menuinv.api.IconClick;
+import ru.boomearo.menuinv.api.icon.IconClick;
 import ru.boomearo.menuinv.api.InventoryPage;
 
 public class ScrollIconBuilder {

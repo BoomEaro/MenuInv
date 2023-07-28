@@ -1,4 +1,6 @@
-package ru.boomearo.menuinv.api;
+package ru.boomearo.menuinv.api.icon;
+
+import ru.boomearo.menuinv.api.SlotElement;
 
 /**
  * Шаблон предмета с позицией в инвентаре, использующий фабрику предметов.

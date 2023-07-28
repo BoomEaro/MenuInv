@@ -1,7 +1,7 @@
 package ru.boomearo.menuinv.api;
 
 import org.bukkit.entity.Player;
-import ru.boomearo.menuinv.api.frames.inventory.PagedItems;
+import ru.boomearo.menuinv.api.frames.PagedItems;
 import ru.boomearo.menuinv.api.session.InventorySession;
 
 /**

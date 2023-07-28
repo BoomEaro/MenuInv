@@ -6,12 +6,14 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 
 import ru.boomearo.menuinv.api.frames.Frame;
-import ru.boomearo.menuinv.api.frames.inventory.PagedItems;
-import ru.boomearo.menuinv.api.scrolls.ScrollIconBuilder;
-import ru.boomearo.menuinv.api.scrolls.ScrollType;
-import ru.boomearo.menuinv.api.frames.template.FramedIconsTemplate;
-import ru.boomearo.menuinv.api.scrolls.ScrollHandler;
-import ru.boomearo.menuinv.api.scrolls.ScrollHandlerFactory;
+import ru.boomearo.menuinv.api.frames.PagedItems;
+import ru.boomearo.menuinv.api.frames.PagedItemsBuilder;
+import ru.boomearo.menuinv.api.icon.*;
+import ru.boomearo.menuinv.api.icon.scrolls.ScrollIconBuilder;
+import ru.boomearo.menuinv.api.icon.scrolls.ScrollType;
+import ru.boomearo.menuinv.api.frames.FramedIconsTemplate;
+import ru.boomearo.menuinv.api.icon.scrolls.ScrollHandler;
+import ru.boomearo.menuinv.api.icon.scrolls.ScrollHandlerFactory;
 import ru.boomearo.menuinv.api.session.InventorySession;
 
 import java.util.HashMap;

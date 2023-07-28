@@ -1,9 +1,12 @@
-package ru.boomearo.menuinv.api;
+package ru.boomearo.menuinv.api.frames;
 
 import com.google.common.base.Preconditions;
 import org.bukkit.entity.Player;
+import ru.boomearo.menuinv.api.InventoryPage;
 import ru.boomearo.menuinv.api.frames.iteration.DefaultIterationHandler;
 import ru.boomearo.menuinv.api.frames.iteration.FrameIterationHandler;
+import ru.boomearo.menuinv.api.icon.IconHandler;
+import ru.boomearo.menuinv.api.icon.IconUpdateDelay;
 
 import java.util.ArrayList;
 import java.util.List;

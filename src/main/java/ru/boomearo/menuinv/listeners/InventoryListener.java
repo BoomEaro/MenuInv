@@ -14,7 +14,7 @@ import org.bukkit.inventory.InventoryHolder;
 
 import org.bukkit.inventory.InventoryView;
 import ru.boomearo.menuinv.api.InventoryPageImpl;
-import ru.boomearo.menuinv.api.MenuInvHolder;
+import ru.boomearo.menuinv.api.MenuInventoryHolder;
 
 public class InventoryListener implements Listener {
 
@@ -35,11 +35,11 @@ public class InventoryListener implements Listener {
         }
 
         InventoryHolder holder = topInventory.getHolder();
-        if (!(holder instanceof MenuInvHolder)) {
+        if (!(holder instanceof MenuInventoryHolder)) {
             return;
         }
 
-        MenuInvHolder menuHolder = (MenuInvHolder) holder;
+        MenuInventoryHolder menuHolder = (MenuInventoryHolder) holder;
 
         //Здесь очевидно если нажать на пустоту, то будет нулл, и игрок попытается выбросить вещь. Не даем это сделать.
         Inventory clickedInventory = e.getClickedInventory();
@@ -86,7 +86,7 @@ public class InventoryListener implements Listener {
         if (topInventory == null) {
             return;
         }
-        if (!(topInventory.getHolder() instanceof MenuInvHolder)) {
+        if (!(topInventory.getHolder() instanceof MenuInventoryHolder)) {
             return;
         }
 

@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.plugin.java.JavaPlugin;
 import ru.boomearo.menuinv.MenuInv;
+import ru.boomearo.menuinv.api.icon.IconBuilder;
 import ru.boomearo.menuinv.api.session.ConfirmData;
 import ru.boomearo.menuinv.api.session.InventorySession;
 import ru.boomearo.menuinv.api.session.InventorySessionImpl;
@@ -137,8 +138,8 @@ public class Menu {
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             InventoryHolder holder = player.getOpenInventory().getTopInventory().getHolder();
-            if (holder instanceof MenuInvHolder) {
-                MenuInvHolder mih = (MenuInvHolder) holder;
+            if (holder instanceof MenuInventoryHolder) {
+                MenuInventoryHolder mih = (MenuInventoryHolder) holder;
 
                 InventoryPageImpl page = mih.getPage();
 

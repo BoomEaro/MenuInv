@@ -14,11 +14,14 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import ru.boomearo.menuinv.MenuInv;
 import ru.boomearo.menuinv.api.*;
-import ru.boomearo.menuinv.api.scrolls.ScrollIconBuilder;
-import ru.boomearo.menuinv.api.scrolls.ScrollType;
+import ru.boomearo.menuinv.api.frames.PagedItemsBuilder;
+import ru.boomearo.menuinv.api.icon.IconBuilder;
+import ru.boomearo.menuinv.api.icon.IconHandler;
+import ru.boomearo.menuinv.api.icon.scrolls.ScrollIconBuilder;
+import ru.boomearo.menuinv.api.icon.scrolls.ScrollType;
 import ru.boomearo.menuinv.api.frames.iteration.InverseIterationHandler;
 import ru.boomearo.menuinv.api.session.InventorySessionImpl;
-import ru.boomearo.menuinv.api.frames.inventory.PagedItems;
+import ru.boomearo.menuinv.api.frames.PagedItems;
 
 import java.util.ArrayList;
 import java.util.Arrays;

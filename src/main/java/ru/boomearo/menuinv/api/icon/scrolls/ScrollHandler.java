@@ -1,4 +1,4 @@
-package ru.boomearo.menuinv.api.scrolls;
+package ru.boomearo.menuinv.api.icon.scrolls;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;

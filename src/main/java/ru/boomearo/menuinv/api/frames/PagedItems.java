@@ -1,12 +1,11 @@
-package ru.boomearo.menuinv.api.frames.inventory;
+package ru.boomearo.menuinv.api.frames;
 
-import ru.boomearo.menuinv.api.IconHandler;
 import ru.boomearo.menuinv.api.MenuType;
-import ru.boomearo.menuinv.api.FramedIconsHandler;
 import ru.boomearo.menuinv.api.frames.iteration.FrameIterationHandler;
 import ru.boomearo.menuinv.api.InventoryPageImpl;
-import ru.boomearo.menuinv.api.ItemIcon;
-import ru.boomearo.menuinv.api.scrolls.ScrollType;
+import ru.boomearo.menuinv.api.icon.IconHandler;
+import ru.boomearo.menuinv.api.icon.ItemIcon;
+import ru.boomearo.menuinv.api.icon.scrolls.ScrollType;
 
 import java.util.ArrayList;
 import java.util.Collections;

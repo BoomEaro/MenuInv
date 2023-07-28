@@ -3,11 +3,11 @@ package ru.boomearo.menuinv.api;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
-public class MenuInvHolder implements InventoryHolder {
+public class MenuInventoryHolder implements InventoryHolder {
 
     private final InventoryPageImpl page;
 
-    public MenuInvHolder(InventoryPageImpl page) {
+    public MenuInventoryHolder(InventoryPageImpl page) {
         this.page = page;
     }
 

@@ -7,7 +7,7 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import ru.boomearo.menuinv.MenuInv;
-import ru.boomearo.menuinv.api.MenuInvHolder;
+import ru.boomearo.menuinv.api.MenuInventoryHolder;
 
 public class MenuUpdater extends BukkitRunnable {
 
@@ -26,8 +26,8 @@ public class MenuUpdater extends BukkitRunnable {
 
             InventoryHolder holder = inv.getHolder();
 
-            if (holder instanceof MenuInvHolder) {
-                MenuInvHolder mih = (MenuInvHolder) holder;
+            if (holder instanceof MenuInventoryHolder) {
+                MenuInventoryHolder mih = (MenuInventoryHolder) holder;
                 mih.getPage().update();
             }
         }
