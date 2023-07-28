@@ -37,6 +37,8 @@ public class TemplatePageImpl implements TemplatePage {
         exception.printStackTrace();
     };
 
+    private StructureHolder[] structure = null;
+
     private final PluginTemplatePagesImpl pluginTemplatePages;
 
     private final Map<Integer, ItemIconTemplate> itemIcons = new HashMap<>();
@@ -180,6 +182,50 @@ public class TemplatePageImpl implements TemplatePage {
         return this;
     }
 
+    @Override
+    public TemplatePage setStructure(String... value) {
+        value = removeEmptyChars(value);
+
+        int height = value.length;
+
+        if (height > this.menuType.getHeight()) {
+            throw new IllegalStateException("Structure height is more than " + this.menuType.getHeight());
+        }
+
+        int width = 0;
+        StringBuilder sb = new StringBuilder();
+        for (String data : value) {
+            if (data.length() > this.menuType.getWidth()) {
+                throw new IllegalStateException("Structure width is more than " + this.menuType.getWidth());
+            }
+
+            width = data.length();
+
+            sb.append(data);
+        }
+
+        String readyValue = sb.toString();
+
+        this.structure = new StructureHolder[width * height];
+        for (int i = 0; i < this.structure.length; i++) {
+            char c = readyValue.charAt(i);
+
+            this.structure[i] = new StructureHolder(i, c);
+        }
+
+        return this;
+    }
+
+    @Override
+    public TemplatePage setIngredient(char value, IconBuilder iconBuilder) {
+        for (StructureHolder holder : this.structure) {
+            if (holder.getValue() == value) {
+                holder.setIconBuilder(iconBuilder);
+            }
+        }
+        return this;
+    }
+
     private void addItem(ItemIconTemplate icon) {
         int slot = icon.getSlot();
 
@@ -214,9 +260,20 @@ public class TemplatePageImpl implements TemplatePage {
 
     public InventoryPageImpl createNewInventoryPage(Player player, InventorySession session) {
         Map<Integer, ItemIcon> itemIconsActive = new HashMap<>();
+
+        if (this.structure != null) {
+            for (StructureHolder holder : this.structure) {
+                IconBuilder iconBuilder = holder.getIconBuilder();
+                if (iconBuilder != null) {
+                    itemIconsActive.put(holder.getSlot(), new ItemIcon(holder.getSlot(), iconBuilder.build().create()));
+                }
+            }
+        }
+
         for (ItemIconTemplate tii : this.itemIcons.values()) {
             itemIconsActive.put(tii.getSlot(), new ItemIcon(tii.getSlot(), tii.getFactory().create()));
         }
+
         Map<String, PagedItems> pagedIconsActive = new HashMap<>();
         for (FramedIconsTemplate tli : this.pagedItems.values()) {
             pagedIconsActive.put(tli.getName(), new PagedItems(tli.getName(), tli.getFirstX(), tli.getFirstZ(), tli.getWidth(), tli.getHeight(), tli.getIconsFactory().create(), tli.getIterationHandler(), tli.isPermanentCached()));
@@ -284,6 +341,41 @@ public class TemplatePageImpl implements TemplatePage {
                 }
 
             };
+        }
+    }
+
+    private static String[] removeEmptyChars(String[] value) {
+        String[] newValue = new String[value.length];
+        for (int i = 0; i < newValue.length; i++) {
+            newValue[i] = value[i].replace(" ", "");
+        }
+        return newValue;
+    }
+
+    private static class StructureHolder {
+        private final int slot;
+        private final char value;
+        private IconBuilder iconBuilder;
+
+        public StructureHolder(int slot, char value) {
+            this.slot = slot;
+            this.value = value;
+        }
+
+        public int getSlot() {
+            return this.slot;
+        }
+
+        public char getValue() {
+            return this.value;
+        }
+
+        public IconBuilder getIconBuilder() {
+            return this.iconBuilder;
+        }
+
+        public void setIconBuilder(IconBuilder iconBuilder) {
+            this.iconBuilder = iconBuilder;
         }
     }
 }

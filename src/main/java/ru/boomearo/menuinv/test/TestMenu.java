@@ -133,7 +133,19 @@ public class TestMenu {
 
                     .setBackground(new IconBuilder()
                             .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.COOKIE, 1))
-                            .setIconUpdateCondition((inventoryPage) -> false));
+                            .setIconUpdateCondition((inventoryPage) -> false))
+                    .setStructure(
+                            "# # # # # # # # #",
+                            "# . . . . . . . #",
+                            "# . . . ? . . . #",
+                            "# . . . ? . . . #",
+                            "# . . . . . . . #",
+                            "# # # # # # # # #")
+                    .setIngredient('#', new IconBuilder()
+                            .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.TNT, 1)))
+                    .setIngredient('?', new IconBuilder()
+                            .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.CACTUS, 1))
+                            .setIconClick((inventoryPage, player, clickType) -> player.sendMessage("Это кактус!")));
         }
         {
             Menu.registerPages(menuInv)

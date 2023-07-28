@@ -70,4 +70,8 @@ public interface TemplatePage {
      * @param factory Фабрика обработчика предмета
      */
     TemplatePage setBackground(IconBuilder iconBuilder);
+
+    TemplatePage setStructure(String... value);
+
+    TemplatePage setIngredient(char value, IconBuilder iconBuilder);
 }
