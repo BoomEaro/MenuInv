@@ -53,15 +53,6 @@ public class ItemIcon extends SlotElement {
     }
 
     private ItemStack getUpdatedItem(InventoryPageImpl page) {
-
-        ItemStack item = null;
-        try {
-            item = this.handler.onUpdate(page, page.getPlayer());
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return item;
+        return this.handler.onUpdate(page, page.getPlayer());
     }
 }

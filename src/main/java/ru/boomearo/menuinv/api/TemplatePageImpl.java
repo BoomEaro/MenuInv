@@ -26,6 +26,8 @@ public class TemplatePageImpl implements TemplatePage {
     private MenuType menuType = MenuType.CHEST_9X6;
     private InventoryTitleHandler inventoryTitleHandler = (inventoryPage) -> "Default page";
     private InventoryReopenHandler inventoryReopenHandler = (inventoryPage, force) -> false;
+    private ClickExceptionHandler clickExceptionHandler = (inventoryPage, player, clickType, exception) -> exception.printStackTrace();
+    private UpdateExceptionHandler updateExceptionHandler = (inventoryPage, player, exception) -> exception.printStackTrace();
 
     private final PluginTemplatePagesImpl pluginTemplatePages;
 
@@ -79,6 +81,32 @@ public class TemplatePageImpl implements TemplatePage {
         Preconditions.checkArgument(inventoryReopenHandler != null, "inventoryReopenHandler is null!");
 
         this.inventoryReopenHandler = inventoryReopenHandler;
+        return this;
+    }
+
+    @Override
+    public UpdateExceptionHandler getUpdateExceptionHandler() {
+        return this.updateExceptionHandler;
+    }
+
+    @Override
+    public TemplatePage setUpdateExceptionHandler(UpdateExceptionHandler updateExceptionHandler) {
+        Preconditions.checkArgument(updateExceptionHandler != null, "updateExceptionHandler is null!");
+        this.updateExceptionHandler = updateExceptionHandler;
+
+        return this;
+    }
+
+    @Override
+    public ClickExceptionHandler getClickExceptionHandler() {
+        return this.clickExceptionHandler;
+    }
+
+    @Override
+    public TemplatePage setClickExceptionHandler(ClickExceptionHandler clickExceptionHandler) {
+        Preconditions.checkArgument(clickExceptionHandler != null, "clickExceptionHandle is null!");
+
+        this.clickExceptionHandler = clickExceptionHandler;
         return this;
     }
 
@@ -192,6 +220,8 @@ public class TemplatePageImpl implements TemplatePage {
                 pagedIconsActive,
                 this.inventoryTitleHandler,
                 this.inventoryReopenHandler,
+                this.clickExceptionHandler,
+                this.updateExceptionHandler,
                 this.background,
                 player,
                 session,

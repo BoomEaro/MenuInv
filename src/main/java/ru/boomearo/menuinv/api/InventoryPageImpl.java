@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import ru.boomearo.menuinv.MenuInv;
@@ -21,12 +22,14 @@ public class InventoryPageImpl implements InventoryPage {
     private final MenuType menuType;
     private final InventoryTitleHandler inventoryTitleHandler;
     private final InventoryReopenHandler inventoryReopenHandler;
+    private final ClickExceptionHandler clickExceptionHandler;
+    private final UpdateExceptionHandler updateExceptionHandler;
 
     private final Map<String, PagedItems> listedIcons;
 
     private final ItemIcon[] activeIcons;
 
-    private org.bukkit.inventory.Inventory inventory;
+    private Inventory inventory;
 
     private final Player player;
 
@@ -43,6 +46,8 @@ public class InventoryPageImpl implements InventoryPage {
                              Map<String, PagedItems> listedIcons,
                              InventoryTitleHandler inventoryTitleHandler,
                              InventoryReopenHandler inventoryReopenHandler,
+                             ClickExceptionHandler clickExceptionHandler,
+                             UpdateExceptionHandler updateExceptionHandler,
                              IconHandlerFactory background,
                              Player player,
                              InventorySession session,
@@ -52,6 +57,8 @@ public class InventoryPageImpl implements InventoryPage {
         this.listedIcons = listedIcons;
         this.inventoryTitleHandler = inventoryTitleHandler;
         this.inventoryReopenHandler = inventoryReopenHandler;
+        this.clickExceptionHandler = clickExceptionHandler;
+        this.updateExceptionHandler = updateExceptionHandler;
         this.player = player;
         this.session = session;
         this.templatePage = templatePage;
@@ -119,7 +126,12 @@ public class InventoryPageImpl implements InventoryPage {
         ItemIcon ii = this.activeIcons[slot];
         if (ii != null) {
 
-            ii.getHandler().handleClick(this, this.player, type);
+            try {
+                ii.getHandler().handleClick(this, this.player, type);
+            }
+            catch (Exception e) {
+                this.clickExceptionHandler.onException(this, this.player, type, e);
+            }
         }
     }
 
@@ -132,51 +144,41 @@ public class InventoryPageImpl implements InventoryPage {
         performUpdate(force, true);
     }
 
-    //TODO Я хз, нужно ли оптимизировать, так как вызывается обновление каждый тик.
-    //TODO По замерам вроде вообще проблем нет
     private void performUpdate(boolean force, boolean reopenIfNeed) {
-        //long start = System.nanoTime();
+        try {
+            boolean forceUpdate = this.changes || force;
 
-        boolean forceUpdate = this.changes || force;
-
-        if (reopenIfNeed) {
-            if (this.inventoryReopenHandler.reopenCondition(this, forceUpdate)) {
-                reopen(true);
-                return;
-            }
-        }
-
-        ItemStack[] array = new ItemStack[this.menuType.getSize()];
-        Arrays.fill(array, null);
-
-        //Обновляем текущий массив активных предметов, используя рамочные предметы.
-        for (PagedItems lii : this.listedIcons.values()) {
-            lii.updateActiveIcons(this, forceUpdate);
-        }
-
-        //MenuInv.getInstance().getLogger().info("test " + this.activeIcons.toString());
-
-        //Используя массив активных предметов, заполняем массив баккитовских предметов
-        for (ItemIcon ii : this.activeIcons) {
-            if (ii == null) {
-                continue;
+            if (reopenIfNeed) {
+                if (this.inventoryReopenHandler.reopenCondition(this, forceUpdate)) {
+                    reopen(true);
+                    return;
+                }
             }
 
-            array[ii.getSlot()] = ii.getItemStack(this, forceUpdate);
+            ItemStack[] array = new ItemStack[this.menuType.getSize()];
+            Arrays.fill(array, null);
+
+            //Обновляем текущий массив активных предметов, используя рамочные предметы.
+            for (PagedItems lii : this.listedIcons.values()) {
+                lii.updateActiveIcons(this, forceUpdate);
+            }
+
+            //Используя массив активных предметов, заполняем массив баккитовских предметов
+            for (ItemIcon ii : this.activeIcons) {
+                if (ii == null) {
+                    continue;
+                }
+
+                array[ii.getSlot()] = ii.getItemStack(this, forceUpdate);
+            }
+
+            this.inventory.setContents(array);
+
+            this.changes = false;
         }
-
-        this.inventory.setContents(array);
-
-        //TODO Похоже, не требуется постоянное обновление инвентаря игрока, потому что метод setContents()
-        //TODO уже обновляет инвентарь для тех кто открыл его. Но все таки под вопросом синхронизация.
-        //TODO А так же выяснилось, что этот метод как никак, потребляет лишние ресурсы при обновлении.
-        //this.player.updateInventory();
-
-        //long end = System.nanoTime();
-
-        //MenuInv.getInstance().getLogger().info("test " + (end - start));
-
-        this.changes = false;
+        catch (Exception e) {
+            this.updateExceptionHandler.onException(this, this.player, e);
+        }
     }
 
     @Override

@@ -41,12 +41,7 @@ public abstract class IconHandler implements Updatable<ItemStack, InventoryPage>
         if (hasClicked(player.getName(), getClickTime(page, player, click))) {
             clickCd.put(player.getName(), System.currentTimeMillis());
 
-            try {
-                onClick(page, player, click);
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
+            onClick(page, player, click);
         }
     }
 

@@ -27,7 +27,14 @@ public class PagedItems extends FramedIcons {
 
     private List<IconHandler> cachedHandler = null;
 
-    public PagedItems(String name, int x, int z, int width, int height, FramedIconsHandler iconsHandler, FrameIterationHandler iterationHandler, boolean permanentCached) {
+    public PagedItems(String name,
+                      int x,
+                      int z,
+                      int width,
+                      int height,
+                      FramedIconsHandler iconsHandler,
+                      FrameIterationHandler iterationHandler,
+                      boolean permanentCached) {
         super(name, x, z, width, height, iconsHandler, iterationHandler, permanentCached);
     }
 
@@ -155,13 +162,7 @@ public class PagedItems extends FramedIcons {
     }
 
     private List<IconHandler> getHandlers(InventoryPageImpl page) {
-        List<IconHandler> handlers = null;
-        try {
-            handlers = getIconsHandler().onUpdate(page, page.getPlayer());
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
+        List<IconHandler> handlers = getIconsHandler().onUpdate(page, page.getPlayer());
         if (handlers == null) {
             handlers = new ArrayList<>();
         }
@@ -196,7 +197,6 @@ public class PagedItems extends FramedIcons {
 
             List<IconHandler> handlers = getCachedHandler(page);
 
-            //TODO не будет ли нагружать..
             Collections.sort(handlers);
 
             int maxSize = handlers.size();

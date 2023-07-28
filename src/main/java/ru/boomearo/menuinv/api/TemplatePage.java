@@ -22,6 +22,14 @@ public interface TemplatePage {
 
     TemplatePage setInventoryReopen(InventoryReopenHandler inventoryReopenHandler);
 
+    ClickExceptionHandler getClickExceptionHandler();
+
+    TemplatePage setClickExceptionHandler(ClickExceptionHandler clickExceptionHandler);
+
+    UpdateExceptionHandler getUpdateExceptionHandler();
+
+    TemplatePage setUpdateExceptionHandler(UpdateExceptionHandler updateExceptionHandler);
+
     /**
      * Добавляет предмет в шаблонную страницу
      *
