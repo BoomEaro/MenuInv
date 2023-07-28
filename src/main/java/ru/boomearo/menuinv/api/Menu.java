@@ -100,12 +100,6 @@ public class Menu {
                         }));
     }
 
-    /**
-     * Регистрирует плагин для создания шаблона страниц
-     *
-     * @param plugin Плагин, который регистрирует страницы
-     * @return Шаблон страниц плагина
-     */
     public static PluginTemplatePages registerPages(JavaPlugin plugin) {
         Preconditions.checkArgument(plugin != null, "plugin is null!");
 
@@ -120,12 +114,6 @@ public class Menu {
         return pages;
     }
 
-    /**
-     * Отменяет регистрацию плагина, удаляя все страницы которые были им добавлены.
-     * При удалении страниц, игроки у которых эти страницы остались открыты, будут принудительно закрыты.
-     *
-     * @param plugin Плагин, который зарегистрировал страницы
-     */
     public static void unregisterPages(JavaPlugin plugin) {
         Preconditions.checkArgument(plugin != null, "plugin is null!");
 
@@ -143,8 +131,9 @@ public class Menu {
 
                 InventoryPageImpl page = mih.getPage();
 
-                //Не будем сравнивать ссылки, потому что думаю, что может быть такая ситуация когда плагин не выгрузился.
-                //Поэтому просто сравниваем имена, а потом закрываем этим игрокам инвентари
+                // We will not compare references, because I think that there may be such a situation when the plugin has not been unloaded.
+                // Therefore, we simply compare the names, and then we close the inventories for these players
+
                 if (page.getTemplatePage().getPluginTemplatePages().getPlugin().getName().equals(plugin.getName())) {
                     page.close(true);
                 }
@@ -152,23 +141,10 @@ public class Menu {
         }
     }
 
-    /**
-     * Открывает меню со страницей плагина
-     *
-     * @param pluginPage Страница, которая была зарегистрирована плагином
-     * @param player     Игрок, которому надо открыть страницу
-     */
     public static void open(PluginPage pluginPage, Player player) {
         open(pluginPage, player, null);
     }
 
-    /**
-     * Открывает меню со страницей плагина
-     *
-     * @param pluginPage Страница, которая была зарегистрирована плагином
-     * @param player     Игрок, которому надо открыть страницу
-     * @param session    Сессия, используемся для хранения внутренних параметров между страницами
-     */
     public static void open(PluginPage pluginPage, Player player, InventorySession session) {
         Preconditions.checkArgument(pluginPage != null, "pluginPage is null!");
         Preconditions.checkArgument(player != null, "player is null!");

@@ -2,7 +2,6 @@ package ru.boomearo.menuinv.listeners;
 
 import com.google.common.base.Preconditions;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -41,19 +40,15 @@ public class InventoryListener implements Listener {
 
         MenuInventoryHolder menuHolder = (MenuInventoryHolder) holder;
 
-        //Здесь очевидно если нажать на пустоту, то будет нулл, и игрок попытается выбросить вещь. Не даем это сделать.
         Inventory clickedInventory = e.getClickedInventory();
         if (clickedInventory == null) {
             return;
         }
 
-        //MenuInv.getInstance().getLogger().info("TEST " + e.getAction() + " " + e.getClick() + " " + clickedInventory + " " + e.getCursor());
-
-        //Так-то разрешаем игроку перемещать вещи в своем инвентаре
+        // Allowing the player to modify their inventory
         if (e.getView().getBottomInventory() == clickedInventory) {
             InventoryAction action = e.getAction();
-            //Запрещаем перемещать из одного инвентаря в другой а так же собирать все похожие предметы. Нет способа узнать с какого инвентаря в какой перейдут предметы.
-            //TODO Не известно, все ли способы здесь учтены.
+
             if (action == InventoryAction.MOVE_TO_OTHER_INVENTORY || action == InventoryAction.COLLECT_TO_CURSOR) {
                 e.setCancelled(true);
             }
@@ -61,10 +56,9 @@ public class InventoryListener implements Listener {
             return;
         }
 
-        //Отменяем ивент только когда игрок пытается взаимодействовать с менюшкой.
+        // Now we cancel the event if it a menu
 
         e.setCancelled(true);
-        e.setResult(Event.Result.DENY);
 
         InventoryPageImpl page = menuHolder.getPage();
 
@@ -90,7 +84,6 @@ public class InventoryListener implements Listener {
             return;
         }
 
-        //Разрешаем игроку модифицировать инвентарь через драг ивент, однако до тех пор, пока в нем не окажется части менюшки.
         for (Integer slot : e.getRawSlots()) {
             Inventory i = getInventory(view, slot);
             if (i == null) {

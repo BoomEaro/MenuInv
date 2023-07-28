@@ -8,6 +8,7 @@ public enum ScrollType {
             return currentPage + 1;
         }
     },
+
     PREVIOUSLY() {
         @Override
         public int getNextPage(int currentPage) {

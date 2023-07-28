@@ -30,7 +30,7 @@ import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
- * Тестовый класс, используется только для отладки
+ * Just a test menu for debug
  */
 public class TestMenu {
 
@@ -48,7 +48,7 @@ public class TestMenu {
 
     public static void setupTest(MenuInv menuInv) {
         if (menuInv.getConfig().getBoolean("debug")) {
-            menuInv.getLogger().warning("Активирован режим дебага!");
+            menuInv.getLogger().warning("Debug mode activated!");
 
             setupMenu(menuInv);
             menuInv.getServer().getPluginManager().registerEvents(new TestListener(), menuInv);
@@ -101,7 +101,7 @@ public class TestMenu {
                                 for (int i = 1; i <= new Random().nextInt(5000); i++) {
                                     int t = i;
                                     tmp.add(new IconBuilder()
-                                            .setIconClick((inventoryPage2, player2, type) -> player2.sendMessage("Вот так вот алмазы: " + t))
+                                            .setIconClick((inventoryPage2, player2, type) -> player2.sendMessage("Diamond: " + t))
                                             .setIconUpdate((inventoryPage2, player2) -> new ItemStack(Material.DIAMOND, t))
                                             .build()
                                             .create());
@@ -117,7 +117,7 @@ public class TestMenu {
                                 for (int i = 1; i <= new Random().nextInt(20); i++) {
                                     int t = i;
                                     tmp.add(new IconBuilder()
-                                            .setIconClick((inventoryPage2, player2, clickType) -> player2.sendMessage("Вот так вот редстоун: " + t))
+                                            .setIconClick((inventoryPage2, player2, clickType) -> player2.sendMessage("Resdstone: " + t))
                                             .setIconUpdate((inventoryPage2, player2) -> new ItemStack(Material.REDSTONE_ORE, t))
                                             .build()
                                             .create());
@@ -136,7 +136,7 @@ public class TestMenu {
                             .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.TNT, 1)))
                     .setIngredient('?', new IconBuilder()
                             .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.CACTUS, 1))
-                            .setIconClick((inventoryPage, player, clickType) -> player.sendMessage("Это кактус!")))
+                            .setIconClick((inventoryPage, player, clickType) -> player.sendMessage("It is a cactus?")))
 
                     .setIngredient('<', new IconBuilder()
                             .setScrollIconBuilder(
@@ -156,13 +156,13 @@ public class TestMenu {
             Menu.registerPages(menuInv)
                     .createTemplatePage(MenuPage.TEST2)
                     .setMenuType(MenuType.WORKBENCH)
-                    .setInventoryTitle((inventoryPage) -> "Привет2")
+                    .setInventoryTitle((inventoryPage) -> "Hello2")
                     .setItem(9, new IconBuilder()
                             .setIconClick((inventoryPage, player, click) -> Menu.open(MenuPage.TEST, player, inventoryPage.getSession()))
                             .setIconUpdate((inventoryPage, player) -> {
                                 ItemStack item = new ItemStack(MATERIALS.get(ThreadLocalRandom.current().nextInt(MATERIALS.size())), 1);
                                 ItemMeta meta = item.getItemMeta();
-                                meta.setDisplayName("Привет тест!");
+                                meta.setDisplayName("Hello@");
                                 meta.setLore(Arrays.asList("Time: " + System.currentTimeMillis()));
                                 item.setItemMeta(meta);
                                 return item;
@@ -173,7 +173,7 @@ public class TestMenu {
                             .setIconUpdate((inventoryPage, player) -> {
                                 ItemStack item = new ItemStack(MATERIALS.get(ThreadLocalRandom.current().nextInt(MATERIALS.size())), 1);
                                 ItemMeta meta = item.getItemMeta();
-                                meta.setDisplayName("Привет тест2!");
+                                meta.setDisplayName("Hello!");
                                 meta.setLore(Arrays.asList("Time2: " + System.currentTimeMillis()));
                                 item.setItemMeta(meta);
                                 return item;
@@ -185,8 +185,8 @@ public class TestMenu {
                             .setIconUpdate((inventoryPage, player) -> {
                                 ItemStack item = new ItemStack(Material.BARRIER, 1);
                                 ItemMeta meta = item.getItemMeta();
-                                meta.setDisplayName("Закрыть");
-                                meta.setLore(Arrays.asList("Агагага22"));
+                                meta.setDisplayName("Close");
+                                meta.setLore(Arrays.asList("UwU"));
                                 item.setItemMeta(meta);
                                 return item;
                             }))

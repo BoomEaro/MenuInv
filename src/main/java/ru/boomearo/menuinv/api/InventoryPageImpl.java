@@ -17,9 +17,6 @@ import ru.boomearo.menuinv.api.frames.PagedItems;
 
 import java.util.*;
 
-/**
- * Реализация страницы инвентаря
- */
 public class InventoryPageImpl implements InventoryPage {
 
     private final String name;
@@ -39,7 +36,6 @@ public class InventoryPageImpl implements InventoryPage {
 
     private final InventorySession session;
 
-    //Используется только для того, чтобы узнать от кого был создан этот экземпляр и чтобы можно было узнать плагин создавший этот шаблон.
     private final TemplatePageImpl templatePage;
 
     private boolean changes = false;
@@ -67,22 +63,22 @@ public class InventoryPageImpl implements InventoryPage {
         this.session = session;
         this.templatePage = templatePage;
 
-        //Создаем новый инвентарь баккита и добавляет в него свой холдер для идентификации инвентари
+        // Create a new bukkit inventory and add our own holder to it to identify the inventory
         this.inventory = this.menuType.createInventory(new MenuInventoryHolder(this), this.inventoryTitleHandler.createTitle(this));
 
-        //Создаем массив активных предметов размеров в текущий инвентарь
+        // Create an array of active size items in the current inventory
         this.activeIcons = new ItemIcon[this.menuType.getSize()];
-        //Заполняем массив нулями
+        // Filling the array with nulls
         Arrays.fill(this.activeIcons, null);
 
-        //Сначала заполняем массив активных предметов задним фоном.
+        // First, we fill the array of active objects with the background.
         if (background != null) {
             for (int i = 0; i < this.menuType.getSize(); i++) {
                 this.activeIcons[i] = new ItemIcon(i, background.create());
             }
         }
 
-        //Затем заполняем массив активных предметов самостоятельными предметами.
+        // Then we fill the array of active objects with independent objects.
         for (ItemIcon ii : iconsPosition.values()) {
             this.activeIcons[ii.getSlot()] = ii;
         }
@@ -166,12 +162,12 @@ public class InventoryPageImpl implements InventoryPage {
         ItemStack[] array = new ItemStack[this.menuType.getSize()];
         Arrays.fill(array, null);
 
-        //Обновляем текущий массив активных предметов, используя рамочные предметы.
+        // Update the current array of active items using frame items.
         for (PagedItems lii : this.listedIcons.values()) {
             lii.updateActiveIcons(this, forceUpdate, this.updateExceptionHandler);
         }
 
-        //Используя массив активных предметов, заполняем массив баккитовских предметов
+        // Using an array of active items, we fill the array of Bakkit items
         for (ItemIcon ii : this.activeIcons) {
             if (ii == null) {
                 continue;
@@ -195,18 +191,18 @@ public class InventoryPageImpl implements InventoryPage {
         Bukkit.getScheduler().runTask(MenuInv.getInstance(), this::performReopen);
     }
 
-    //Пересоздание страницы
-    //TODO Работает странно. А именно, если во время открытия инвентаря игрок его закроет, то у игрока откроется фантомный инвентарь.
+    // Recreate the page
+    // TODO Works weird. Namely, if during the opening of the inventory the player closes it, then the player will open a phantom inventory.
     private void performReopen() {
-        //Сначала создаем новый экземпляр баккитовского инвентаря
+        // First, create a new instance of Bucket's inventory
         this.inventory = this.menuType.createInventory(new MenuInventoryHolder(this), this.inventoryTitleHandler.createTitle(this));
-        //Очищаем изменения скроллов страницы
+        // Clear page scroll changes
         for (PagedItems pi : this.listedIcons.values()) {
             pi.resetChanges();
         }
-        //Заполняем инвентарь
+        // Filling inventory
         performUpdate(false, false);
-        //Открываем этот инвентарь тому игроку
+        // Open this inventory to that player
         this.player.openInventory(this.inventory);
     }
 

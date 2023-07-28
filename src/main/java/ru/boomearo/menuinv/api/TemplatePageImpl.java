@@ -13,9 +13,6 @@ import ru.boomearo.menuinv.api.session.InventorySession;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Представляет реализацию шаблона страницы
- */
 public class TemplatePageImpl implements TemplatePage {
 
     private final String name;

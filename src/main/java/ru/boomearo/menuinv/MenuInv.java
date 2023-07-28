@@ -42,7 +42,6 @@ public final class MenuInv extends JavaPlugin {
     public void onDisable() {
         this.updater.cancel();
 
-        //Закрываем всем инвентари этого меню, вне зависимости от всего
         for (Player player : Bukkit.getOnlinePlayers()) {
             InventoryHolder holder = player.getOpenInventory().getTopInventory().getHolder();
             if (holder instanceof MenuInventoryHolder) {

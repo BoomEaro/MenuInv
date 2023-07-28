@@ -27,9 +27,9 @@ public class ItemIcon extends SlotElement {
 
     public ItemStack getItemStack(InventoryPageImpl page, boolean force, UpdateExceptionHandler updateExceptionHandler) {
         /*
-         * Проверяем в самом начале, первый ли раз вызывается извлечение предмета
-         * Если это так, получаем обновленный предмет и возвращаем его.
-         * В дальнейшем, будет ли обновление, зависит от реализации обработчика IconHandler
+         * We check at the very beginning whether the object is being retrieved for the first time
+         * If so, get the upgraded item and return it.
+         * In the future, whether there will be an update depends on the implementation of the IconHandler handler
          */
         if (this.firstUpdate) {
             ItemStack newItem = getUpdatedItem(page, updateExceptionHandler);
@@ -57,8 +57,7 @@ public class ItemIcon extends SlotElement {
     private ItemStack getUpdatedItem(InventoryPageImpl page, UpdateExceptionHandler updateExceptionHandler) {
         try {
             return this.handler.onUpdate(page, page.getPlayer());
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             updateExceptionHandler.onException(page, page.getPlayer(), e);
             return null;
         }

@@ -6,9 +6,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Представляет реализацию шаблона страниц плагина
- */
 public class PluginTemplatePagesImpl implements PluginTemplatePages {
 
     private final JavaPlugin plugin;
@@ -35,7 +32,7 @@ public class PluginTemplatePagesImpl implements PluginTemplatePages {
 
         TemplatePage tmp = this.pages.get(name);
         if (tmp != null) {
-            throw new IllegalStateException("Page with name '" + name + "' alreadt created!");
+            throw new IllegalStateException("Page with name '" + name + "' already created!");
         }
 
         TemplatePageImpl newPage = new TemplatePageImpl(name, this);
