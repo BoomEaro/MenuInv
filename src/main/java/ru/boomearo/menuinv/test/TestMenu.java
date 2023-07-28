@@ -46,6 +46,7 @@ public class TestMenu {
         MATERIALS = tmp;
     }
 
+
     public static void setupTest(MenuInv menuInv) {
         if (menuInv.getConfig().getBoolean("debug")) {
             menuInv.getLogger().warning("Debug mode activated!");
@@ -58,7 +59,7 @@ public class TestMenu {
     private static void setupMenu(MenuInv menuInv) {
         {
             Menu.registerPages(menuInv)
-                    .createTemplatePage(MenuPage.TEST)
+                    .createTemplatePage(MenuPage.MAIN)
                     .setMenuType(MenuType.CHEST_9X6)
                     .setInventoryTitle((inventoryPage) -> {
                         PagedItems piTest = inventoryPage.getListedIconsItems("test");
@@ -67,7 +68,7 @@ public class TestMenu {
                         return "Test: " + piTest.getCurrentPage() + "/" + piTest.getMaxPage() + " ||| " + piTest2.getCurrentPage() + "/" + piTest2.getMaxPage();
                     })
                     .setItem(1, new IconBuilder()
-                            .setIconClick((inventoryPage, player, type) -> Menu.open(MenuPage.TEST2, player, inventoryPage.getSession()))
+                            .setIconClick((inventoryPage, player, type) -> Menu.open(MenuPage.OTHER, player, inventoryPage.getSession()))
                             .setIconUpdate((consume, player) -> new ItemStack(Material.STONE, 1)))
 
                     .setItem(3, new IconBuilder()
@@ -154,11 +155,11 @@ public class TestMenu {
         }
         {
             Menu.registerPages(menuInv)
-                    .createTemplatePage(MenuPage.TEST2)
+                    .createTemplatePage(MenuPage.OTHER)
                     .setMenuType(MenuType.WORKBENCH)
                     .setInventoryTitle((inventoryPage) -> "Hello2")
                     .setItem(9, new IconBuilder()
-                            .setIconClick((inventoryPage, player, click) -> Menu.open(MenuPage.TEST, player, inventoryPage.getSession()))
+                            .setIconClick((inventoryPage, player, click) -> Menu.open(MenuPage.MAIN, player, inventoryPage.getSession()))
                             .setIconUpdate((inventoryPage, player) -> {
                                 ItemStack item = new ItemStack(MATERIALS.get(ThreadLocalRandom.current().nextInt(MATERIALS.size())), 1);
                                 ItemMeta meta = item.getItemMeta();
@@ -225,7 +226,7 @@ public class TestMenu {
                 e.setUseInteractedBlock(Event.Result.DENY);
                 e.setUseItemInHand(Event.Result.DENY);
 
-                Menu.open(MenuPage.TEST, pl, new TestSession());
+                Menu.open(MenuPage.MAIN, pl, new TestSession());
             }
         }
     }
@@ -242,8 +243,8 @@ public class TestMenu {
 
     private static enum MenuPage implements PluginPage {
 
-        TEST(MenuInv.getInstance(), "test"),
-        TEST2(MenuInv.getInstance(), "test2");
+        MAIN(MenuInv.getInstance(), "main"),
+        OTHER(MenuInv.getInstance(), "other");
 
         private final JavaPlugin javaPlugin;
         private final String page;
