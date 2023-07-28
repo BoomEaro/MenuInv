@@ -66,6 +66,7 @@ public class TestMenu {
                     .setItem(1, new IconBuilder()
                             .setIconClick((inventoryPage, player, type) -> Menu.open(MenuPage.TEST2, player, inventoryPage.getSession()))
                             .setIconUpdate((consume, player) -> new ItemStack(Material.STONE, 1)))
+
                     .setItem(3, new IconBuilder()
                             .setIconClick((inventoryPage, player, type) -> {
                                 TestSession ts = (TestSession) inventoryPage.getSession();
@@ -80,6 +81,7 @@ public class TestMenu {
                                 inventoryPage.setNeedUpdate();
                             })
                             .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.REDSTONE_ORE, 1)))
+
                     .setItem(4, new IconBuilder()
                             .setIconClick((inventoryPage, player, type) -> {
                                 TestSession ts = (TestSession) inventoryPage.getSession();
@@ -89,21 +91,23 @@ public class TestMenu {
                                 inventoryPage.setNeedUpdate();
                             })
                             .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.EMERALD_BLOCK, 1)))
+
                     .setPagedItems("test", 0, 2, 3, 3, new PagedItemsBuilder()
-                                    .setPagedItemsUpdate((inventoryPage, player) -> {
-                                        List<IconHandler> tmp = new ArrayList<>();
-                                        for (int i = 1; i <= new Random().nextInt(5000); i++) {
-                                            int t = i;
-                                            tmp.add(new IconBuilder()
-                                                    .setIconClick((inventoryPage2, player2, type) -> player2.sendMessage("Вот так вот алмазы: " + t))
-                                                    .setIconUpdate((inventoryPage2, player2) -> new ItemStack(Material.DIAMOND, t))
-                                                    .build()
-                                                    .create());
-                                        }
-                                        return tmp;
-                                    })
-                                    .setIconUpdateDelay((inventoryPage) -> 250),
-                            new InverseIterationHandler())
+                            .setPagedItemsUpdate((inventoryPage, player) -> {
+                                List<IconHandler> tmp = new ArrayList<>();
+                                for (int i = 1; i <= new Random().nextInt(5000); i++) {
+                                    int t = i;
+                                    tmp.add(new IconBuilder()
+                                            .setIconClick((inventoryPage2, player2, type) -> player2.sendMessage("Вот так вот алмазы: " + t))
+                                            .setIconUpdate((inventoryPage2, player2) -> new ItemStack(Material.DIAMOND, t))
+                                            .build()
+                                            .create());
+                                }
+                                return tmp;
+                            })
+                            .setIconUpdateDelay((inventoryPage) -> 250)
+                            .setFrameIterationHandler(new InverseIterationHandler()))
+
                     .setPagedItems("test2", 6, 2, 3, 3, new PagedItemsBuilder()
                             .setPagedItemsUpdate((inventoryPage, player) -> {
                                 List<IconHandler> tmp = new ArrayList<>();
@@ -120,6 +124,7 @@ public class TestMenu {
 
                     .setScrollItem(7, "test", ScrollType.PREVIOUSLY, new ScrollIconBuilder()
                             .setScrollVisibleUpdate((inventoryPage, player, scrollType, currentPage, maxPage) -> createScrollItems(scrollType, currentPage, maxPage)))
+
                     .setScrollItem(8, "test", ScrollType.NEXT, new ScrollIconBuilder()
                             .setScrollVisibleUpdate((inventoryPage, player, scrollType, currentPage, maxPage) -> createScrollItems(scrollType, currentPage, maxPage)))
 
@@ -143,6 +148,7 @@ public class TestMenu {
                                 return item;
                             })
                             .setIconUpdateDelay((inventortPage) -> 0))
+
                     .setItem(0, new IconBuilder()
                             .setIconUpdate((inventoryPage, player) -> {
                                 ItemStack item = new ItemStack(MATERIALS.get(ThreadLocalRandom.current().nextInt(MATERIALS.size())), 1);
@@ -153,6 +159,7 @@ public class TestMenu {
                                 return item;
                             })
                             .setIconUpdateDelay((inventoryPage) -> 500))
+
                     .setItem(1, new IconBuilder()
                             .setIconClick((inventoryPage, player, clickType) -> inventoryPage.close())
                             .setIconUpdate((inventoryPage, player) -> {
@@ -163,6 +170,7 @@ public class TestMenu {
                                 item.setItemMeta(meta);
                                 return item;
                             }))
+
                     .setBackground(new IconBuilder()
                             .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.COOKIE, 1))
                             .setIconUpdateCondition((inventoryPage) -> false));

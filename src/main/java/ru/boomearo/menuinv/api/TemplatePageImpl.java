@@ -9,8 +9,6 @@ import ru.boomearo.menuinv.api.frames.Frame;
 import ru.boomearo.menuinv.api.frames.inventory.PagedItems;
 import ru.boomearo.menuinv.api.scrolls.ScrollIconBuilder;
 import ru.boomearo.menuinv.api.scrolls.ScrollType;
-import ru.boomearo.menuinv.api.frames.iteration.DefaultIterationHandler;
-import ru.boomearo.menuinv.api.frames.iteration.FrameIterationHandler;
 import ru.boomearo.menuinv.api.frames.template.FramedIconsTemplate;
 import ru.boomearo.menuinv.api.scrolls.ScrollHandler;
 import ru.boomearo.menuinv.api.scrolls.ScrollHandlerFactory;
@@ -97,33 +95,18 @@ public class TemplatePageImpl implements TemplatePage {
         return this;
     }
 
+
     @Override
     public TemplatePage setPagedItems(String name, int x, int z, int width, int height, PagedItemsBuilder pagedItemsBuilder) {
-        return setPagedItems(name, x, z, width, height, pagedItemsBuilder, false);
-    }
-
-    @Override
-    public TemplatePage setPagedItems(String name, int x, int z, int width, int height, PagedItemsBuilder pagedItemsBuilder, boolean permanentCached) {
-        return setPagedItems(name, x, z, width, height, pagedItemsBuilder, new DefaultIterationHandler(), permanentCached);
-    }
-
-    @Override
-    public TemplatePage setPagedItems(String name, int x, int z, int width, int height, PagedItemsBuilder pagedItemsBuilder, FrameIterationHandler iterationHandler) {
-        return setPagedItems(name, x, z, width, height, pagedItemsBuilder, iterationHandler, false);
-    }
-
-    @Override
-    public TemplatePage setPagedItems(String name, int x, int z, int width, int height, PagedItemsBuilder pagedItemsBuilder, FrameIterationHandler iterationHandler, boolean permanentCached) {
         Preconditions.checkArgument(name != null, "name is null!");
         Preconditions.checkArgument(pagedItemsBuilder != null, "pagedItemsBuilder is null!");
-        Preconditions.checkArgument(iterationHandler != null, "iterationHandler is null!");
 
         FramedIconsTemplate tmp = this.pagedItems.get(name);
         if (tmp != null) {
             throw new IllegalStateException("Paged items with name '" + name + "' already added!");
         }
 
-        FramedIconsTemplate tli = new FramedIconsTemplate(name, x, z, width, height, pagedItemsBuilder.build(), iterationHandler, permanentCached);
+        FramedIconsTemplate tli = new FramedIconsTemplate(name, x, z, width, height, pagedItemsBuilder.build(), pagedItemsBuilder.getFrameIterationHandler(), pagedItemsBuilder.isPermanent());
 
         checkBorder(tli);
 
