@@ -49,7 +49,7 @@ To open the menu, you also need to specify an enum.
 
 ```
         Menu.registerPages(menuInv)
-                .createTemplatePage(MenuPage.MAIN)
+                .createTemplatePage(CustomMenuPage.MAIN)
                 .setMenuType(MenuType.CHEST_9X6)
                 .setStructure(
                         "# # # # # # # # #",
@@ -62,7 +62,7 @@ To open the menu, you also need to specify an enum.
                         .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.COOKIE, 1))
                         .setIconClick((inventoryPage, player, clickType) -> {
                             player.sendMessage("Delicious cookies!");
-                            Menu.open(MenuPage.OTHER, player);
+                            Menu.open(CustomMenuPage.OTHER, player);
                         }))
                 .setIngredient('*', new IconBuilder()
                         .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.COMPASS, 1))
@@ -72,7 +72,7 @@ To open the menu, you also need to specify an enum.
                         .setIconClick((inventoryPage, player, clickType) -> player.sendMessage("Surprise!")));
 
         Menu.registerPages(menuInv)
-                .createTemplatePage(MenuPage.OTHER)
+                .createTemplatePage(CustomMenuPage.OTHER)
                 .setMenuType(MenuType.CHEST_9X1)
                 .setStructure(
                         "# . # . # . # . #"
@@ -81,7 +81,7 @@ To open the menu, you also need to specify an enum.
                         .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.PAPER, 1))
                         .setIconClick((inventoryPage, player, clickType) -> {
                             player.sendMessage("Returning back");
-                            Menu.open(MenuPage.MAIN, player);
+                            Menu.open(CustomMenuPage.MAIN, player);
                         }));
 ```
 
