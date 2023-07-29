@@ -3,6 +3,7 @@ package ru.boomearo.menuinv.api;
 import com.google.common.base.Preconditions;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.plugin.java.JavaPlugin;
 import ru.boomearo.menuinv.MenuInv;
@@ -146,6 +147,32 @@ public class Menu {
     }
 
     public static void open(PluginPage pluginPage, Player player, InventorySession session) {
+        Inventory inventory = create(pluginPage, player, session);
+
+        Bukkit.getScheduler().runTask(MenuInv.getInstance(), () -> {
+            try {
+                player.openInventory(inventory);
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    public static void openNow(PluginPage pluginPage, Player player) {
+        openNow(pluginPage, player, null);
+    }
+
+    public static void openNow(PluginPage pluginPage, Player player, InventorySession session) {
+        Inventory inventory = create(pluginPage, player, session);
+
+        player.openInventory(inventory);
+    }
+
+    public static Inventory create(PluginPage pluginPage, Player player) {
+        return create(pluginPage, player, null);
+    }
+
+    public static Inventory create(PluginPage pluginPage, Player player, InventorySession session) {
         Preconditions.checkArgument(pluginPage != null, "pluginPage is null!");
         Preconditions.checkArgument(player != null, "player is null!");
 
@@ -166,21 +193,13 @@ public class Menu {
             session = new InventorySessionImpl();
         }
 
-        InventorySession finalSession = session;
+        session.setCurrentPage(pluginPage);
 
-        Bukkit.getScheduler().runTask(MenuInv.getInstance(), () -> {
-            try {
-                finalSession.setCurrentPage(pluginPage);
+        InventoryPageImpl newPage = templatePage.createNewInventoryPage(player, session);
 
-                InventoryPageImpl newPage = templatePage.createNewInventoryPage(player, finalSession);
+        newPage.update(true);
 
-                newPage.update(true);
-
-                player.openInventory(newPage.getInventory());
-            } catch (Throwable e) {
-                e.printStackTrace();
-            }
-        });
+        return newPage.getInventory();
     }
 
 }
