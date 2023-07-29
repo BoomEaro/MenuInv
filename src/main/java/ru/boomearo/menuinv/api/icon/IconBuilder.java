@@ -8,13 +8,15 @@ import ru.boomearo.menuinv.api.InventoryPage;
 import ru.boomearo.menuinv.api.frames.PagedItems;
 import ru.boomearo.menuinv.api.icon.scrolls.*;
 
+import java.util.function.Predicate;
+
 public class IconBuilder {
 
     private IconClick iconClick = (inventoryPage, player, clickType) -> {};
     private IconClickDelay iconClickDelay = (inventoryPage, player, clickType) -> 250;
     private IconUpdate iconUpdate = (inventoryPage, player) -> null;
     private IconUpdateDelay iconUpdateDelay = (inventoryPage) -> 250;
-    private IconUpdateCondition iconUpdateCondition = (inventoryPage) -> true;
+    private Predicate<InventoryPage> iconUpdateCondition = (inventoryPage) -> true;
 
     private ScrollIconBuilder scrollIconBuilder = null;
 
@@ -36,7 +38,7 @@ public class IconBuilder {
         return this;
     }
 
-    public IconBuilder setIconUpdateCondition(IconUpdateCondition iconUpdateCondition) {
+    public IconBuilder setIconUpdateCondition(Predicate<InventoryPage> iconUpdateCondition) {
         Preconditions.checkArgument(iconUpdateCondition != null, "iconUpdateCondition is null!");
         this.iconUpdateCondition = iconUpdateCondition;
         return this;
@@ -84,7 +86,7 @@ public class IconBuilder {
 
                 @Override
                 public boolean shouldUpdate(InventoryPage page) {
-                    return IconBuilder.this.iconUpdateCondition.shouldUpdate(page);
+                    return IconBuilder.this.iconUpdateCondition.test(page);
                 }
             };
         };
