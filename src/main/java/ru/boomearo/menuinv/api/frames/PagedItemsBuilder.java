@@ -10,11 +10,13 @@ import ru.boomearo.menuinv.api.icon.IconUpdateDelay;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 public class PagedItemsBuilder {
 
     private PagedItemsUpdate pagedItemsUpdate = (inventoryPage, player) -> new ArrayList<>();
     private IconUpdateDelay iconUpdateDelay = (inventoryPage) -> 250;
+    private Predicate<InventoryPage> iconUpdateCondition = (inventoryPage) -> true;
     private FrameIterationHandler frameIterationHandler = new DefaultIterationHandler();
     private boolean permanent = false;
 
@@ -30,6 +32,12 @@ public class PagedItemsBuilder {
         return this;
     }
 
+    public PagedItemsBuilder setIconUpdateCondition(Predicate<InventoryPage> iconUpdateCondition) {
+        Preconditions.checkArgument(iconUpdateCondition != null, "iconUpdateCondition is null!");
+        this.iconUpdateCondition = iconUpdateCondition;
+        return this;
+    }
+
     public PagedItemsBuilder setFrameIterationHandler(FrameIterationHandler frameIterationHandler) {
         Preconditions.checkArgument(frameIterationHandler != null, "frameIterationHandler is null!");
         this.frameIterationHandler = frameIterationHandler;
@@ -38,6 +46,11 @@ public class PagedItemsBuilder {
 
     public PagedItemsBuilder setPermanent(boolean permanent) {
         this.permanent = permanent;
+        return this;
+    }
+
+    public PagedItemsBuilder permanent() {
+        this.permanent = true;
         return this;
     }
 
@@ -64,6 +77,11 @@ public class PagedItemsBuilder {
                     @Override
                     public long getUpdateTime(InventoryPage inventoryPage) {
                         return PagedItemsBuilder.this.iconUpdateDelay.getUpdateTime(inventoryPage);
+                    }
+
+                    @Override
+                    public boolean shouldUpdate(InventoryPage inventoryPage) {
+                        return PagedItemsBuilder.this.iconUpdateCondition.test(inventoryPage);
                     }
 
                 };
