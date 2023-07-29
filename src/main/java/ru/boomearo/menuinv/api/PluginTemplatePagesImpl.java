@@ -1,17 +1,17 @@
 package ru.boomearo.menuinv.api;
 
 import com.google.common.base.Preconditions;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.Plugin;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class PluginTemplatePagesImpl implements PluginTemplatePages {
 
-    private final JavaPlugin plugin;
+    private final Plugin plugin;
     private final Map<String, TemplatePageImpl> pages = new HashMap<>();
 
-    public PluginTemplatePagesImpl(JavaPlugin plugin) {
+    public PluginTemplatePagesImpl(Plugin plugin) {
         this.plugin = plugin;
     }
 
@@ -20,7 +20,7 @@ public class PluginTemplatePagesImpl implements PluginTemplatePages {
     }
 
     @Override
-    public JavaPlugin getPlugin() {
+    public Plugin getPlugin() {
         return this.plugin;
     }
 

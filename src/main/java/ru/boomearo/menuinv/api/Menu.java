@@ -5,7 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.Plugin;
 import ru.boomearo.menuinv.MenuInv;
 import ru.boomearo.menuinv.api.icon.IconBuilder;
 import ru.boomearo.menuinv.api.session.ConfirmData;
@@ -17,7 +17,7 @@ import java.util.Map;
 
 public class Menu {
 
-    private static final Map<Class<? extends JavaPlugin>, PluginTemplatePagesImpl> MENU_BY_PLUGIN = new HashMap<>();
+    private static final Map<Class<? extends Plugin>, PluginTemplatePagesImpl> MENU_BY_PLUGIN = new HashMap<>();
 
     public static void initMenu(MenuInv menuInv) {
         registerPages(menuInv)
@@ -101,7 +101,7 @@ public class Menu {
                         }));
     }
 
-    public static PluginTemplatePages registerPages(JavaPlugin plugin) {
+    public static PluginTemplatePages registerPages(Plugin plugin) {
         Preconditions.checkArgument(plugin != null, "plugin is null!");
 
         PluginTemplatePagesImpl tmp = MENU_BY_PLUGIN.get(plugin.getClass());
@@ -115,7 +115,7 @@ public class Menu {
         return pages;
     }
 
-    public static void unregisterPages(JavaPlugin plugin) {
+    public static void unregisterPages(Plugin plugin) {
         Preconditions.checkArgument(plugin != null, "plugin is null!");
 
         PluginTemplatePagesImpl tmp = MENU_BY_PLUGIN.get(plugin.getClass());
@@ -176,7 +176,7 @@ public class Menu {
         Preconditions.checkArgument(pluginPage != null, "pluginPage is null!");
         Preconditions.checkArgument(player != null, "player is null!");
 
-        JavaPlugin plugin = pluginPage.getPlugin();
+        Plugin plugin = pluginPage.getPlugin();
         String page = pluginPage.getPage();
 
         PluginTemplatePagesImpl pp = MENU_BY_PLUGIN.get(plugin.getClass());

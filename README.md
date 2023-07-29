@@ -23,17 +23,17 @@ Note that getPlugin should return a reference to your plugin.
         MAIN(MenuInv.getInstance(), "main"),
         OTHER(MenuInv.getInstance(), "other");
 
-        private final JavaPlugin javaPlugin;
+        private final Plugin Plugin;
         private final String page;
 
-        CustomMenuPage(JavaPlugin javaPlugin, String page) {
-            this.javaPlugin = javaPlugin;
+        CustomMenuPage(Plugin Plugin, String page) {
+            this.Plugin = Plugin;
             this.page = page;
         }
 
         @Override
-        public JavaPlugin getPlugin() {
-            return this.javaPlugin;
+        public Plugin getPlugin() {
+            return this.Plugin;
         }
 
         @Override

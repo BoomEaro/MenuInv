@@ -1,10 +1,10 @@
 package ru.boomearo.menuinv.api;
 
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.Plugin;
 
 public interface PluginPage {
 
-    JavaPlugin getPlugin();
+    Plugin getPlugin();
 
     String getPage();
 }

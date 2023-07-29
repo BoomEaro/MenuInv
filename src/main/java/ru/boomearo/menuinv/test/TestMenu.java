@@ -10,7 +10,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.Plugin;
 
 import ru.boomearo.menuinv.MenuInv;
 import ru.boomearo.menuinv.api.*;
@@ -246,16 +246,16 @@ public class TestMenu {
         MAIN(MenuInv.getInstance(), "main"),
         OTHER(MenuInv.getInstance(), "other");
 
-        private final JavaPlugin javaPlugin;
+        private final Plugin javaPlugin;
         private final String page;
 
-        MenuPage(JavaPlugin javaPlugin, String page) {
+        MenuPage(Plugin javaPlugin, String page) {
             this.javaPlugin = javaPlugin;
             this.page = page;
         }
 
         @Override
-        public JavaPlugin getPlugin() {
+        public Plugin getPlugin() {
             return this.javaPlugin;
         }
 
