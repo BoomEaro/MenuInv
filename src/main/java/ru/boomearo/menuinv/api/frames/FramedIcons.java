@@ -4,9 +4,9 @@ import ru.boomearo.menuinv.api.frames.iteration.FrameIterationHandler;
 
 public class FramedIcons extends Frame {
 
-    private final FramedIconsHandler iconsHandler;
-    private final FrameIterationHandler iterationHandler;
-    private final boolean permanentCached;
+    protected final FramedIconsHandler iconsHandler;
+    protected final FrameIterationHandler iterationHandler;
+    protected final boolean permanentCached;
 
     public FramedIcons(String name,
                        int x,

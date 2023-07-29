@@ -118,7 +118,7 @@ public class InventoryPageImpl implements InventoryPage {
         return this.activeIcons;
     }
 
-    public org.bukkit.inventory.Inventory getInventory() {
+    public Inventory getInventory() {
         return this.inventory;
     }
 
@@ -194,7 +194,7 @@ public class InventoryPageImpl implements InventoryPage {
     // Recreate the page
     // TODO Works weird. Namely, if during the opening of the inventory the player closes it, then the player will open a phantom inventory.
     private void performReopen() {
-        // First, create a new instance of Bucket's inventory
+        // First, create a new instance of bukkit's inventory
         this.inventory = this.menuType.createInventory(new MenuInventoryHolder(this), this.inventoryTitleHandler.createTitle(this));
         // Clear page scroll changes
         for (PagedItems pi : this.listedIcons.values()) {

@@ -133,7 +133,7 @@ public class PagedItems extends FramedIcons {
     private List<IconHandler> getHandlers(InventoryPageImpl page, UpdateExceptionHandler updateExceptionHandler) {
         List<IconHandler> handlers = null;
         try {
-            handlers = getIconsHandler().onUpdate(page, page.getPlayer());
+            handlers = this.iconsHandler.onUpdate(page, page.getPlayer());
         }
         catch (Exception e) {
             updateExceptionHandler.onException(page, page.getPlayer(), e);
@@ -147,7 +147,7 @@ public class PagedItems extends FramedIcons {
     }
 
     private List<IconHandler> getCachedHandler(InventoryPageImpl page, UpdateExceptionHandler updateExceptionHandler) {
-        if (isPermanentCached()) {
+        if (this.permanentCached) {
             if (this.cachedHandler != null) {
                 return this.cachedHandler;
             }
@@ -160,7 +160,7 @@ public class PagedItems extends FramedIcons {
     }
 
     public void updateActiveIcons(InventoryPageImpl page, boolean force, UpdateExceptionHandler updateExceptionHandler) {
-        FramedIconsHandler handler = getIconsHandler();
+        FramedIconsHandler handler = this.iconsHandler;
 
         if (((System.currentTimeMillis() - this.updateHandlerCooldown) > handler.getUpdateTime(page)) || force) {
             this.updateHandlerCooldown = System.currentTimeMillis();
@@ -188,7 +188,7 @@ public class PagedItems extends FramedIcons {
 
             int i = pageOffset;
 
-            FrameIterationHandler iterationHandler = getIterationHandler();
+            FrameIterationHandler iterationHandler = this.iterationHandler;
 
             for (int z = iterationHandler.startPositionZ(getHeight()); iterationHandler.hasNextZ(z, getHeight()); z = iterationHandler.manipulateZ(z)) {
                 for (int x = iterationHandler.startPositionX(getWidth()); iterationHandler.hasNextX(x, getWidth()); x = iterationHandler.manipulateX(x)) {
