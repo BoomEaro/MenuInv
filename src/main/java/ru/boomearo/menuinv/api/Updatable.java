@@ -2,6 +2,7 @@ package ru.boomearo.menuinv.api;
 
 import org.bukkit.entity.Player;
 
+@FunctionalInterface
 public interface Updatable<T, C> {
 
     public T onUpdate(C consume, Player player);
