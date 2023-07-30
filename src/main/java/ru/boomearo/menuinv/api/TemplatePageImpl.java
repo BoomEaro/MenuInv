@@ -169,7 +169,8 @@ public class TemplatePageImpl implements TemplatePage {
         pagedIconsBuilder.setIconUpdateCondition((inventoryPage) -> false);
         pagedIconsBuilder.setIconUpdateDelay((inventoryPage) -> Long.MAX_VALUE);
         pagedIconsBuilder.setPermanent(true);
-        setImmutablePagedIcons(name, x, z, width, height, pagedIconsBuilder);
+
+        setPagedIcons(name, x, z, width, height, pagedIconsBuilder);
         return this;
     }
 
