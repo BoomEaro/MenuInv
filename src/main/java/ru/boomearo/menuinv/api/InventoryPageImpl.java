@@ -13,7 +13,7 @@ import ru.boomearo.menuinv.api.icon.IconHandlerFactory;
 import ru.boomearo.menuinv.api.icon.ItemIcon;
 import ru.boomearo.menuinv.api.icon.UpdateExceptionHandler;
 import ru.boomearo.menuinv.api.session.InventorySession;
-import ru.boomearo.menuinv.api.frames.PagedItems;
+import ru.boomearo.menuinv.api.frames.PagedIcons;
 
 import java.util.*;
 
@@ -26,7 +26,7 @@ public class InventoryPageImpl implements InventoryPage {
     private final ClickExceptionHandler clickExceptionHandler;
     private final UpdateExceptionHandler updateExceptionHandler;
 
-    private final Map<String, PagedItems> listedIcons;
+    private final Map<String, PagedIcons> listedIcons;
 
     private final ItemIcon[] activeIcons;
 
@@ -43,7 +43,7 @@ public class InventoryPageImpl implements InventoryPage {
     public InventoryPageImpl(String name,
                              MenuType menuType,
                              Map<Integer, ItemIcon> iconsPosition,
-                             Map<String, PagedItems> listedIcons,
+                             Map<String, PagedIcons> listedIcons,
                              InventoryTitleHandler inventoryTitleHandler,
                              InventoryReopenHandler inventoryReopenHandler,
                              ClickExceptionHandler clickExceptionHandler,
@@ -110,7 +110,7 @@ public class InventoryPageImpl implements InventoryPage {
     }
 
     @Override
-    public PagedItems getListedIconsItems(String name) {
+    public PagedIcons getListedIconsItems(String name) {
         return this.listedIcons.get(name);
     }
 
@@ -163,7 +163,7 @@ public class InventoryPageImpl implements InventoryPage {
         Arrays.fill(array, null);
 
         // Update the current array of active items using frame items.
-        for (PagedItems lii : this.listedIcons.values()) {
+        for (PagedIcons lii : this.listedIcons.values()) {
             lii.updateActiveIcons(this, forceUpdate, this.updateExceptionHandler);
         }
 
@@ -197,7 +197,7 @@ public class InventoryPageImpl implements InventoryPage {
         // First, create a new instance of bukkit's inventory
         this.inventory = this.menuType.createInventory(new MenuInventoryHolder(this), this.inventoryTitleHandler.createTitle(this));
         // Clear page scroll changes
-        for (PagedItems pi : this.listedIcons.values()) {
+        for (PagedIcons pi : this.listedIcons.values()) {
             pi.resetChanges();
         }
         // Filling inventory

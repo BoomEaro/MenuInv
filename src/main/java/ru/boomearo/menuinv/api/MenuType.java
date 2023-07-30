@@ -2,6 +2,7 @@ package ru.boomearo.menuinv.api;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
 public enum MenuType {
@@ -53,7 +54,7 @@ public enum MenuType {
         return this.width * this.height;
     }
 
-    public org.bukkit.inventory.Inventory createInventory(InventoryHolder holder, String title) {
+    public Inventory createInventory(InventoryHolder holder, String title) {
         if (title == null) {
             title = " ";
         }

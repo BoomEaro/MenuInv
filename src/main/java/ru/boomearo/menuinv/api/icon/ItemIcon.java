@@ -4,9 +4,6 @@ import org.bukkit.inventory.ItemStack;
 import ru.boomearo.menuinv.api.InventoryPageImpl;
 import ru.boomearo.menuinv.api.SlotElement;
 
-/**
- * Представляет активный предмет с позицией, активно используемый для обработки инвентаря
- */
 public class ItemIcon extends SlotElement {
 
     private long updateHandlerCooldown = System.currentTimeMillis();

@@ -6,7 +6,7 @@ import ru.boomearo.menuinv.api.icon.IconHandler;
 
 import java.util.List;
 
-public interface PagedItemsUpdate {
+public interface PagedIconsUpdate {
 
     List<IconHandler> onUpdate(InventoryPage inventoryPage, Player player);
 

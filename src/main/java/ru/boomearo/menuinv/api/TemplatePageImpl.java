@@ -4,8 +4,8 @@ import com.google.common.base.Preconditions;
 import org.bukkit.entity.Player;
 
 import ru.boomearo.menuinv.api.frames.Frame;
-import ru.boomearo.menuinv.api.frames.PagedItems;
-import ru.boomearo.menuinv.api.frames.PagedItemsBuilder;
+import ru.boomearo.menuinv.api.frames.PagedIcons;
+import ru.boomearo.menuinv.api.frames.PagedIconsBuilder;
 import ru.boomearo.menuinv.api.icon.*;
 import ru.boomearo.menuinv.api.frames.FramedIconsTemplate;
 import ru.boomearo.menuinv.api.session.InventorySession;
@@ -112,44 +112,85 @@ public class TemplatePageImpl implements TemplatePage {
     }
 
     @Override
-    public TemplatePage setItem(int slot, IconBuilder iconBuilder) {
-        Preconditions.checkArgument(iconBuilder != null, "iconBuilder is null!");
+    public TemplatePage setIcon(int slot, ElementBuilder elementBuilder) {
+        Preconditions.checkArgument(elementBuilder != null, "elementBuilder is null!");
 
         ItemIconTemplate tmp = this.itemIcons.get(slot);
         if (tmp != null) {
             throw new IllegalStateException("Button on slot '" + slot + "' already added!");
         }
 
-        addItem(new ItemIconTemplate(slot, iconBuilder.build()));
+        addItem(new ItemIconTemplate(slot, elementBuilder.build()));
+        return this;
+    }
+
+    @Override
+    public TemplatePage setImmutableIcon(int slot, ElementBuilder elementBuilder) {
+        if (elementBuilder instanceof ElementBuilderUpdatable) {
+            ElementBuilderUpdatable elementBuilderUpdatable = (ElementBuilderUpdatable) elementBuilder;
+            elementBuilderUpdatable.setIconUpdateCondition((inventoryPage) -> false);
+            elementBuilderUpdatable.setIconUpdateDelay((inventoryPage) -> Long.MAX_VALUE);
+        }
+        setIcon(slot, elementBuilder);
         return this;
     }
 
 
     @Override
-    public TemplatePage setPagedItems(String name, int x, int z, int width, int height, PagedItemsBuilder pagedItemsBuilder) {
+    public TemplatePage setPagedIcons(String name, int x, int z, int width, int height, PagedIconsBuilder pagedIconsBuilder) {
         Preconditions.checkArgument(name != null, "name is null!");
-        Preconditions.checkArgument(pagedItemsBuilder != null, "pagedItemsBuilder is null!");
+        Preconditions.checkArgument(pagedIconsBuilder != null, "pagedItemsBuilder is null!");
 
-        FramedIconsTemplate tmp = this.pagedItems.get(name);
-        if (tmp != null) {
-            throw new IllegalStateException("Paged items with name '" + name + "' already added!");
-        }
+        FramedIconsTemplate tli = new FramedIconsTemplate(name, x, z, width, height, pagedIconsBuilder.build(), pagedIconsBuilder.getFrameIterationHandler(), pagedIconsBuilder.isPermanent());
 
-        FramedIconsTemplate tli = new FramedIconsTemplate(name, x, z, width, height, pagedItemsBuilder.build(), pagedItemsBuilder.getFrameIterationHandler(), pagedItemsBuilder.isPermanent());
-
-        checkBorder(tli);
+        checkPagedItemsBorder(tli);
 
         this.pagedItems.put(name, tli);
 
         return this;
     }
 
+    private void checkPagedItemsBorder(Frame frame) {
+        if (frame.getFirstX() < 0 || frame.getFirstZ() < 0) {
+            throw new IllegalStateException("Paged items with name '" + frame.getName() + "' went out of the area having a negative value of coordinates. (x: " + frame.getFirstX() + " z: " + frame.getFirstZ());
+        }
+
+        if (frame.getFirstX() + frame.getWidth() > this.menuType.getWidth()) {
+            throw new IllegalStateException("Paged items with name '" + frame.getName() + "' went beyond the maximum area size (x: " + (frame.getFirstX() + frame.getWidth()) + " > width: " + this.menuType.getWidth());
+        }
+
+        if (frame.getFirstZ() + frame.getHeight() > this.menuType.getHeight()) {
+            throw new IllegalStateException("Paged items with name '" + frame.getName() + "' went beyond the maximum area size (z: " + (frame.getFirstZ() + frame.getHeight()) + " > height: " + this.menuType.getHeight());
+        }
+    }
+
     @Override
-    public TemplatePage setBackground(IconBuilder iconBuilder) {
-        Preconditions.checkArgument(iconBuilder != null, "iconBuilder is null!");
+    public TemplatePage setImmutablePagedIcons(String name, int x, int z, int width, int height, PagedIconsBuilder pagedIconsBuilder) {
+        pagedIconsBuilder.setIconUpdateCondition((inventoryPage) -> false);
+        pagedIconsBuilder.setIconUpdateDelay((inventoryPage) -> Long.MAX_VALUE);
+        pagedIconsBuilder.setPermanent(true);
+        setImmutablePagedIcons(name, x, z, width, height, pagedIconsBuilder);
+        return this;
+    }
 
-        this.background = iconBuilder.build();
+    @Override
+    public TemplatePage setBackground(ElementBuilder elementBuilder) {
+        Preconditions.checkArgument(elementBuilder != null, "elementBuilder is null!");
 
+        this.background = elementBuilder.build();
+
+        return this;
+    }
+
+    @Override
+    public TemplatePage setImmutableBackground(ElementBuilder elementBuilder) {
+        if (elementBuilder instanceof ElementBuilderUpdatable) {
+            ElementBuilderUpdatable elementBuilderUpdatable = (ElementBuilderUpdatable) elementBuilder;
+            elementBuilderUpdatable.setIconUpdateCondition((inventoryPage) -> false);
+            elementBuilderUpdatable.setIconUpdateDelay((inventoryPage) -> Long.MAX_VALUE);
+        }
+
+        setBackground(elementBuilder);
         return this;
     }
 
@@ -188,12 +229,24 @@ public class TemplatePageImpl implements TemplatePage {
     }
 
     @Override
-    public TemplatePage setIngredient(char value, IconBuilder iconBuilder) {
+    public TemplatePage setIngredient(char value, ElementBuilder elementBuilder) {
         for (StructureHolder holder : this.structure) {
             if (holder.getValue() == value) {
-                holder.setIconBuilder(iconBuilder);
+                holder.setElementBuilder(elementBuilder);
             }
         }
+        return this;
+    }
+
+    @Override
+    public TemplatePage setImmutableIngredient(char value, ElementBuilder elementBuilder) {
+        if (elementBuilder instanceof ElementBuilderUpdatable) {
+            ElementBuilderUpdatable elementBuilderUpdatable = (ElementBuilderUpdatable) elementBuilder;
+            elementBuilderUpdatable.setIconUpdateCondition((inventoryPage) -> false);
+            elementBuilderUpdatable.setIconUpdateDelay((inventoryPage) -> Long.MAX_VALUE);
+        }
+
+        setIngredient(value, elementBuilder);
         return this;
     }
 
@@ -211,20 +264,6 @@ public class TemplatePageImpl implements TemplatePage {
         this.itemIcons.put(icon.getSlot(), icon);
     }
 
-    private void checkBorder(Frame frame) {
-        if (frame.getFirstX() < 0 || frame.getFirstZ() < 0) {
-            throw new IllegalStateException("Paged items with name '" + frame.getName() + "' went out of the area having a negative value of coordinates. (x: " + frame.getFirstX() + " z: " + frame.getFirstZ());
-        }
-
-        if (frame.getFirstX() + frame.getWidth() > this.menuType.getWidth()) {
-            throw new IllegalStateException("Paged items with name '" + frame.getName() + "' went beyond the maximum area size (x: " + (frame.getFirstX() + frame.getWidth()) + " > width: " + this.menuType.getWidth());
-        }
-
-        if (frame.getFirstZ() + frame.getHeight() > this.menuType.getHeight()) {
-            throw new IllegalStateException("Paged items with name '" + frame.getName() + "' went beyond the maximum area size (z: " + (frame.getFirstZ() + frame.getHeight()) + " > height: " + this.menuType.getHeight());
-        }
-    }
-
     public PluginTemplatePagesImpl getPluginTemplatePages() {
         return this.pluginTemplatePages;
     }
@@ -234,9 +273,9 @@ public class TemplatePageImpl implements TemplatePage {
 
         if (this.structure != null) {
             for (StructureHolder holder : this.structure) {
-                IconBuilder iconBuilder = holder.getIconBuilder();
-                if (iconBuilder != null) {
-                    itemIconsActive.put(holder.getSlot(), new ItemIcon(holder.getSlot(), iconBuilder.build().create()));
+                ElementBuilder elementBuilder = holder.getElementBuilder();
+                if (elementBuilder != null) {
+                    itemIconsActive.put(holder.getSlot(), new ItemIcon(holder.getSlot(), elementBuilder.build().create()));
                 }
             }
         }
@@ -245,9 +284,9 @@ public class TemplatePageImpl implements TemplatePage {
             itemIconsActive.put(tii.getSlot(), new ItemIcon(tii.getSlot(), tii.getFactory().create()));
         }
 
-        Map<String, PagedItems> pagedIconsActive = new HashMap<>();
+        Map<String, PagedIcons> pagedIconsActive = new HashMap<>();
         for (FramedIconsTemplate tli : this.pagedItems.values()) {
-            pagedIconsActive.put(tli.getName(), new PagedItems(tli.getName(), tli.getFirstX(), tli.getFirstZ(), tli.getWidth(), tli.getHeight(), tli.getIconsFactory().create(), tli.getIterationHandler(), tli.isPermanentCached()));
+            pagedIconsActive.put(tli.getName(), new PagedIcons(tli.getName(), tli.getFirstX(), tli.getFirstZ(), tli.getWidth(), tli.getHeight(), tli.getIconsFactory().create(), tli.getIterationHandler(), tli.isPermanentCached()));
         }
 
         return new InventoryPageImpl(this.name,
@@ -275,7 +314,7 @@ public class TemplatePageImpl implements TemplatePage {
     private static class StructureHolder {
         private final int slot;
         private final char value;
-        private IconBuilder iconBuilder;
+        private ElementBuilder elementBuilder;
 
         public StructureHolder(int slot, char value) {
             this.slot = slot;
@@ -290,12 +329,12 @@ public class TemplatePageImpl implements TemplatePage {
             return this.value;
         }
 
-        public IconBuilder getIconBuilder() {
-            return this.iconBuilder;
+        public ElementBuilder getElementBuilder() {
+            return this.elementBuilder;
         }
 
-        public void setIconBuilder(IconBuilder iconBuilder) {
-            this.iconBuilder = iconBuilder;
+        public void setElementBuilder(ElementBuilder elementBuilder) {
+            this.elementBuilder = elementBuilder;
         }
     }
 }

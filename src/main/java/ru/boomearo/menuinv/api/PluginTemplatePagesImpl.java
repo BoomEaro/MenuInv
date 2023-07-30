@@ -30,11 +30,6 @@ public class PluginTemplatePagesImpl implements PluginTemplatePages {
 
         String name = pluginPage.getPage();
 
-        TemplatePage tmp = this.pages.get(name);
-        if (tmp != null) {
-            throw new IllegalStateException("Page with name '" + name + "' already created!");
-        }
-
         TemplatePageImpl newPage = new TemplatePageImpl(name, this);
 
         this.pages.put(name, newPage);

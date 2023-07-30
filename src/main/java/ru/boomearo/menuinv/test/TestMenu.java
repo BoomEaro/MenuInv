@@ -14,14 +14,14 @@ import org.bukkit.plugin.Plugin;
 
 import ru.boomearo.menuinv.MenuInv;
 import ru.boomearo.menuinv.api.*;
-import ru.boomearo.menuinv.api.frames.PagedItemsBuilder;
+import ru.boomearo.menuinv.api.frames.PagedIconsBuilder;
 import ru.boomearo.menuinv.api.icon.IconBuilder;
 import ru.boomearo.menuinv.api.icon.IconHandler;
 import ru.boomearo.menuinv.api.icon.scrolls.ScrollIconBuilder;
 import ru.boomearo.menuinv.api.icon.scrolls.ScrollType;
 import ru.boomearo.menuinv.api.frames.iteration.InverseIterationHandler;
 import ru.boomearo.menuinv.api.session.InventorySessionImpl;
-import ru.boomearo.menuinv.api.frames.PagedItems;
+import ru.boomearo.menuinv.api.frames.PagedIcons;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -62,16 +62,16 @@ public class TestMenu {
                     .createTemplatePage(MenuPage.MAIN)
                     .setMenuType(MenuType.CHEST_9X6)
                     .setInventoryTitle((inventoryPage) -> {
-                        PagedItems piTest = inventoryPage.getListedIconsItems("test");
-                        PagedItems piTest2 = inventoryPage.getListedIconsItems("test2");
+                        PagedIcons piTest = inventoryPage.getListedIconsItems("test");
+                        PagedIcons piTest2 = inventoryPage.getListedIconsItems("test2");
 
                         return "Test: " + piTest.getCurrentPage() + "/" + piTest.getMaxPage() + " ||| " + piTest2.getCurrentPage() + "/" + piTest2.getMaxPage();
                     })
-                    .setItem(1, new IconBuilder()
+                    .setIcon(1, new IconBuilder()
                             .setIconClick((inventoryPage, player, type) -> Menu.open(MenuPage.OTHER, player, inventoryPage.getSession()))
                             .setIconUpdate((consume, player) -> new ItemStack(Material.STONE, 1)))
 
-                    .setItem(3, new IconBuilder()
+                    .setIcon(3, new IconBuilder()
                             .setIconClick((inventoryPage, player, type) -> {
                                 TestSession ts = (TestSession) inventoryPage.getSession();
 
@@ -86,7 +86,7 @@ public class TestMenu {
                             })
                             .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.REDSTONE_ORE, 1)))
 
-                    .setItem(4, new IconBuilder()
+                    .setIcon(4, new IconBuilder()
                             .setIconClick((inventoryPage, player, type) -> {
                                 TestSession ts = (TestSession) inventoryPage.getSession();
 
@@ -96,7 +96,7 @@ public class TestMenu {
                             })
                             .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.EMERALD_BLOCK, 1)))
 
-                    .setPagedItems("test", 0, 2, 3, 3, new PagedItemsBuilder()
+                    .setPagedIcons("test", 0, 2, 3, 3, new PagedIconsBuilder()
                             .setPagedItemsUpdate((inventoryPage, player) -> {
                                 List<IconHandler> tmp = new ArrayList<>();
                                 for (int i = 1; i <= new Random().nextInt(5000); i++) {
@@ -112,7 +112,7 @@ public class TestMenu {
                             .setIconUpdateDelay((inventoryPage) -> 250)
                             .setFrameIterationHandler(new InverseIterationHandler()))
 
-                    .setPagedItems("test2", 6, 2, 3, 3, new PagedItemsBuilder()
+                    .setPagedIcons("test2", 6, 2, 3, 3, new PagedIconsBuilder()
                             .setPagedItemsUpdate((inventoryPage, player) -> {
                                 List<IconHandler> tmp = new ArrayList<>();
                                 for (int i = 1; i <= new Random().nextInt(20); i++) {
@@ -139,26 +139,25 @@ public class TestMenu {
                             .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.CACTUS, 1))
                             .setIconClick((inventoryPage, player, clickType) -> player.sendMessage("It is a cactus?")))
 
-                    .setIngredient('<', new IconBuilder()
-                            .setScrollIconBuilder(
-                                    new ScrollIconBuilder(ScrollType.PREVIOUSLY, "test")
-                                            .setScrollVisibleUpdate((inventoryPage, player, scrollType, currentPage, maxPage) -> createScrollItems(scrollType, currentPage, maxPage))))
+                    .setIngredient('<', new ScrollIconBuilder()
+                            .setName("test")
+                            .setScrollType(ScrollType.PREVIOUSLY)
+                            .setScrollVisibleUpdate((inventoryPage, player, scrollType, currentPage, maxPage) -> createScrollItems(scrollType, currentPage, maxPage)))
 
-                    .setIngredient('>', new IconBuilder()
-                            .setScrollIconBuilder(
-                                    new ScrollIconBuilder(ScrollType.NEXT, "test")
-                                            .setScrollVisibleUpdate((inventoryPage, player, scrollType, currentPage, maxPage) -> createScrollItems(scrollType, currentPage, maxPage))))
+                    .setIngredient('>', new ScrollIconBuilder()
+                            .setName("test")
+                            .setScrollType(ScrollType.NEXT)
+                            .setScrollVisibleUpdate((inventoryPage, player, scrollType, currentPage, maxPage) -> createScrollItems(scrollType, currentPage, maxPage)))
 
-                    .setBackground(new IconBuilder()
-                            .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.COOKIE, 1))
-                            .setIconUpdateCondition((inventoryPage) -> false));
+                    .setImmutableBackground(new IconBuilder()
+                            .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.COOKIE, 1)));
         }
         {
             Menu.registerPages(menuInv)
                     .createTemplatePage(MenuPage.OTHER)
                     .setMenuType(MenuType.WORKBENCH)
                     .setInventoryTitle((inventoryPage) -> "Hello2")
-                    .setItem(9, new IconBuilder()
+                    .setIcon(9, new IconBuilder()
                             .setIconClick((inventoryPage, player, click) -> Menu.open(MenuPage.MAIN, player, inventoryPage.getSession()))
                             .setIconUpdate((inventoryPage, player) -> {
                                 ItemStack item = new ItemStack(MATERIALS.get(ThreadLocalRandom.current().nextInt(MATERIALS.size())), 1);
@@ -170,7 +169,7 @@ public class TestMenu {
                             })
                             .setIconUpdateDelay((inventortPage) -> 0))
 
-                    .setItem(0, new IconBuilder()
+                    .setIcon(0, new IconBuilder()
                             .setIconUpdate((inventoryPage, player) -> {
                                 ItemStack item = new ItemStack(MATERIALS.get(ThreadLocalRandom.current().nextInt(MATERIALS.size())), 1);
                                 ItemMeta meta = item.getItemMeta();
@@ -181,7 +180,7 @@ public class TestMenu {
                             })
                             .setIconUpdateDelay((inventoryPage) -> 500))
 
-                    .setItem(1, new IconBuilder()
+                    .setIcon(1, new IconBuilder()
                             .setIconClick((inventoryPage, player, clickType) -> inventoryPage.close())
                             .setIconUpdate((inventoryPage, player) -> {
                                 ItemStack item = new ItemStack(Material.BARRIER, 1);
@@ -192,9 +191,8 @@ public class TestMenu {
                                 return item;
                             }))
 
-                    .setBackground(new IconBuilder()
-                            .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.COOKIE, 1))
-                            .setIconUpdateCondition((inventoryPage) -> false));
+                    .setImmutableBackground(new IconBuilder()
+                            .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.COOKIE, 1)));
         }
     }
 

@@ -1,8 +1,8 @@
 package ru.boomearo.menuinv.api;
 
-import ru.boomearo.menuinv.api.frames.PagedItemsBuilder;
+import ru.boomearo.menuinv.api.frames.PagedIconsBuilder;
 import ru.boomearo.menuinv.api.icon.ClickExceptionHandler;
-import ru.boomearo.menuinv.api.icon.IconBuilder;
+import ru.boomearo.menuinv.api.icon.ElementBuilder;
 import ru.boomearo.menuinv.api.icon.UpdateExceptionHandler;
 
 public interface TemplatePage {
@@ -29,13 +29,21 @@ public interface TemplatePage {
 
     TemplatePage setUpdateExceptionHandler(UpdateExceptionHandler updateExceptionHandler);
 
-    TemplatePage setItem(int slot, IconBuilder iconBuilder);
+    TemplatePage setIcon(int slot, ElementBuilder elementBuilder);
 
-    TemplatePage setPagedItems(String name, int x, int z, int width, int height, PagedItemsBuilder pagedItemsBuilder);
+    TemplatePage setImmutableIcon(int slot, ElementBuilder elementBuilder);
 
-    TemplatePage setBackground(IconBuilder iconBuilder);
+    TemplatePage setPagedIcons(String name, int x, int z, int width, int height, PagedIconsBuilder pagedIconsBuilder);
+
+    TemplatePage setImmutablePagedIcons(String name, int x, int z, int width, int height, PagedIconsBuilder pagedIconsBuilder);
+
+    TemplatePage setBackground(ElementBuilder elementBuilder);
+
+    TemplatePage setImmutableBackground(ElementBuilder elementBuilder);
 
     TemplatePage setStructure(String... value);
 
-    TemplatePage setIngredient(char value, IconBuilder iconBuilder);
+    TemplatePage setIngredient(char value, ElementBuilder elementBuilder);
+
+    TemplatePage setImmutableIngredient(char value, ElementBuilder elementBuilderr);
 }

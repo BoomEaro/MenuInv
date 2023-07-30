@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class PagedItems extends FramedIcons {
+public class PagedIcons extends FramedIcons {
 
     private long updateHandlerCooldown = 0;
 
@@ -24,7 +24,7 @@ public class PagedItems extends FramedIcons {
 
     private List<IconHandler> cachedHandler = null;
 
-    public PagedItems(String name,
+    public PagedIcons(String name,
                       int x,
                       int z,
                       int width,

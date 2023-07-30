@@ -12,44 +12,44 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
-public class PagedItemsBuilder {
+public class PagedIconsBuilder {
 
-    private PagedItemsUpdate pagedItemsUpdate = (inventoryPage, player) -> new ArrayList<>();
+    private PagedIconsUpdate pagedIconsUpdate = (inventoryPage, player) -> new ArrayList<>();
     private IconUpdateDelay iconUpdateDelay = (inventoryPage) -> 250;
     private Predicate<InventoryPage> iconUpdateCondition = (inventoryPage) -> true;
     private FrameIterationHandler frameIterationHandler = new DefaultIterationHandler();
     private boolean permanent = false;
 
-    public PagedItemsBuilder setPagedItemsUpdate(PagedItemsUpdate pagedItemsUpdate) {
-        Preconditions.checkArgument(pagedItemsUpdate != null, "pagedItemsUpdate is null!");
-        this.pagedItemsUpdate = pagedItemsUpdate;
+    public PagedIconsBuilder setPagedItemsUpdate(PagedIconsUpdate pagedIconsUpdate) {
+        Preconditions.checkArgument(pagedIconsUpdate != null, "pagedItemsUpdate is null!");
+        this.pagedIconsUpdate = pagedIconsUpdate;
         return this;
     }
 
-    public PagedItemsBuilder setIconUpdateDelay(IconUpdateDelay iconUpdateDelay) {
+    public PagedIconsBuilder setIconUpdateDelay(IconUpdateDelay iconUpdateDelay) {
         Preconditions.checkArgument(iconUpdateDelay != null, "iconUpdateDelay is null!");
         this.iconUpdateDelay = iconUpdateDelay;
         return this;
     }
 
-    public PagedItemsBuilder setIconUpdateCondition(Predicate<InventoryPage> iconUpdateCondition) {
+    public PagedIconsBuilder setIconUpdateCondition(Predicate<InventoryPage> iconUpdateCondition) {
         Preconditions.checkArgument(iconUpdateCondition != null, "iconUpdateCondition is null!");
         this.iconUpdateCondition = iconUpdateCondition;
         return this;
     }
 
-    public PagedItemsBuilder setFrameIterationHandler(FrameIterationHandler frameIterationHandler) {
+    public PagedIconsBuilder setFrameIterationHandler(FrameIterationHandler frameIterationHandler) {
         Preconditions.checkArgument(frameIterationHandler != null, "frameIterationHandler is null!");
         this.frameIterationHandler = frameIterationHandler;
         return this;
     }
 
-    public PagedItemsBuilder setPermanent(boolean permanent) {
+    public PagedIconsBuilder setPermanent(boolean permanent) {
         this.permanent = permanent;
         return this;
     }
 
-    public PagedItemsBuilder permanent() {
+    public PagedIconsBuilder permanent() {
         this.permanent = true;
         return this;
     }
@@ -71,17 +71,17 @@ public class PagedItemsBuilder {
 
                     @Override
                     public List<IconHandler> onUpdate(InventoryPage inventoryPage, Player player) {
-                        return PagedItemsBuilder.this.pagedItemsUpdate.onUpdate(inventoryPage, player);
+                        return PagedIconsBuilder.this.pagedIconsUpdate.onUpdate(inventoryPage, player);
                     }
 
                     @Override
                     public long getUpdateTime(InventoryPage inventoryPage) {
-                        return PagedItemsBuilder.this.iconUpdateDelay.getUpdateTime(inventoryPage);
+                        return PagedIconsBuilder.this.iconUpdateDelay.getUpdateTime(inventoryPage);
                     }
 
                     @Override
                     public boolean shouldUpdate(InventoryPage inventoryPage) {
-                        return PagedItemsBuilder.this.iconUpdateCondition.test(inventoryPage);
+                        return PagedIconsBuilder.this.iconUpdateCondition.test(inventoryPage);
                     }
 
                 };

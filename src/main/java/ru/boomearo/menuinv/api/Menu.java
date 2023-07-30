@@ -37,7 +37,7 @@ public class Menu {
 
                     return data.getInventoryName(session);
                 })
-                .setItem(0, new IconBuilder()
+                .setIcon(0, new IconBuilder()
                         .setIconClick((inventoryPage, player, clickType) -> {
                             InventorySession session = inventoryPage.getSession();
 
@@ -68,7 +68,7 @@ public class Menu {
 
                             return confirm.getCancelItem(inventoryPage);
                         }))
-                .setItem(4, new IconBuilder()
+                .setIcon(4, new IconBuilder()
                         .setIconClick((inventoryPage, player, clickType) -> {
                             InventorySession session = inventoryPage.getSession();
 
@@ -120,7 +120,7 @@ public class Menu {
 
         PluginTemplatePagesImpl tmp = MENU_BY_PLUGIN.get(plugin.getClass());
         if (tmp == null) {
-            throw new IllegalStateException("Plugin '" + plugin.getName() + "' not registered pages yet!");
+            return;
         }
 
         MENU_BY_PLUGIN.remove(plugin.getClass());
