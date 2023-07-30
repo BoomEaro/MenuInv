@@ -8,11 +8,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
 import org.bukkit.inventory.InventoryView;
 import ru.boomearo.menuinv.api.InventoryPageImpl;
+import ru.boomearo.menuinv.api.Menu;
 import ru.boomearo.menuinv.api.MenuInventoryHolder;
 
 public class InventoryListener implements Listener {
@@ -95,6 +97,11 @@ public class InventoryListener implements Listener {
                 return;
             }
         }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onPluginDisableEvent(PluginDisableEvent e) {
+        Menu.unregisterPages(e.getPlugin());
     }
 
     // Copied from newer version to backend compatability
