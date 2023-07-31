@@ -29,6 +29,10 @@ public interface TemplatePage {
 
     TemplatePage setUpdateExceptionHandler(UpdateExceptionHandler updateExceptionHandler);
 
+    InventoryCloseHandler getInventoryCloseHandler();
+
+    TemplatePage setInvnetoryCloseHandler(InventoryCloseHandler invnetoryCloseHandler);
+
     TemplatePage setIcon(int slot, ElementBuilder elementBuilder);
 
     TemplatePage setImmutableIcon(int slot, ElementBuilder elementBuilder);

@@ -7,12 +7,14 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
 import org.bukkit.inventory.InventoryView;
+import ru.boomearo.menuinv.api.InventoryPage;
 import ru.boomearo.menuinv.api.InventoryPageImpl;
 import ru.boomearo.menuinv.api.Menu;
 import ru.boomearo.menuinv.api.MenuInventoryHolder;
@@ -97,6 +99,32 @@ public class InventoryListener implements Listener {
                 return;
             }
         }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onInventoryCloseEvent(InventoryCloseEvent e) {
+        if (!(e.getPlayer() instanceof Player)) {
+            return;
+        }
+
+        InventoryView view = e.getView();
+
+        Inventory topInventory = view.getTopInventory();
+        if (topInventory == null) {
+            return;
+        }
+
+        if (!(topInventory.getHolder() instanceof MenuInventoryHolder)) {
+            return;
+        }
+
+        Player pl = (Player) e.getPlayer();
+
+        MenuInventoryHolder menuInventoryHolder = (MenuInventoryHolder) topInventory.getHolder();
+
+        InventoryPage inventoryPage = menuInventoryHolder.getPage();
+
+        inventoryPage.getInventoryCloseHandler().onClose(inventoryPage, pl);
     }
 
     @EventHandler(priority = EventPriority.MONITOR)

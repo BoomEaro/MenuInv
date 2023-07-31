@@ -25,6 +25,7 @@ public class InventoryPageImpl implements InventoryPage {
     private final InventoryReopenHandler inventoryReopenHandler;
     private final ClickExceptionHandler clickExceptionHandler;
     private final UpdateExceptionHandler updateExceptionHandler;
+    private final InventoryCloseHandler inventoryCloseHandler;
 
     private final Map<String, PagedIcons> listedIcons;
 
@@ -48,6 +49,7 @@ public class InventoryPageImpl implements InventoryPage {
                              InventoryReopenHandler inventoryReopenHandler,
                              ClickExceptionHandler clickExceptionHandler,
                              UpdateExceptionHandler updateExceptionHandler,
+                             InventoryCloseHandler inventoryCloseHandler,
                              IconHandlerFactory background,
                              Player player,
                              InventorySession session,
@@ -59,6 +61,7 @@ public class InventoryPageImpl implements InventoryPage {
         this.inventoryReopenHandler = inventoryReopenHandler;
         this.clickExceptionHandler = clickExceptionHandler;
         this.updateExceptionHandler = updateExceptionHandler;
+        this.inventoryCloseHandler = inventoryCloseHandler;
         this.player = player;
         this.session = session;
         this.templatePage = templatePage;
@@ -112,6 +115,11 @@ public class InventoryPageImpl implements InventoryPage {
     @Override
     public PagedIcons getListedIconsItems(String name) {
         return this.listedIcons.get(name);
+    }
+
+    @Override
+    public InventoryCloseHandler getInventoryCloseHandler() {
+        return this.inventoryCloseHandler;
     }
 
     public ItemIcon[] getUnsafeActiveIcons() {

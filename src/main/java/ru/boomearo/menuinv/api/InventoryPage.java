@@ -6,34 +6,36 @@ import ru.boomearo.menuinv.api.session.InventorySession;
 
 public interface InventoryPage {
 
-    public String getName();
+    String getName();
 
-    public MenuType getMenuType();
+    MenuType getMenuType();
 
-    public Player getPlayer();
+    Player getPlayer();
 
-    public PagedIcons getListedIconsItems(String name);
+    PagedIcons getListedIconsItems(String name);
 
-    public InventorySession getSession();
+    InventorySession getSession();
 
-    public void setNeedUpdate();
+    void setNeedUpdate();
 
-    public default void update() {
+    default void update() {
         update(false);
     }
 
-    public void update(boolean force);
+    void update(boolean force);
 
-    public default void reopen() {
+    default void reopen() {
         reopen(false);
     }
 
-    public void reopen(boolean force);
+    void reopen(boolean force);
 
-    public default void close() {
+    default void close() {
         close(false);
     }
 
-    public void close(boolean force);
+    void close(boolean force);
+
+    InventoryCloseHandler getInventoryCloseHandler();
 
 }

@@ -28,6 +28,8 @@ public class TemplatePageImpl implements TemplatePage {
         exception.printStackTrace();
     };
 
+    private InventoryCloseHandler inventoryCloseHandler = (inventoryPage, player) -> {};
+
     private StructureHolder[] structure = null;
 
     private final PluginTemplatePagesImpl pluginTemplatePages;
@@ -94,6 +96,19 @@ public class TemplatePageImpl implements TemplatePage {
     public TemplatePage setUpdateExceptionHandler(UpdateExceptionHandler updateExceptionHandler) {
         Preconditions.checkArgument(updateExceptionHandler != null, "updateExceptionHandler is null!");
         this.updateExceptionHandler = updateExceptionHandler;
+
+        return this;
+    }
+
+    @Override
+    public InventoryCloseHandler getInventoryCloseHandler() {
+        return this.inventoryCloseHandler;
+    }
+
+    @Override
+    public TemplatePage setInvnetoryCloseHandler(InventoryCloseHandler invnetoryCloseHandler) {
+        Preconditions.checkArgument(invnetoryCloseHandler != null, "invnetoryCloseHandler is null!");
+        this.inventoryCloseHandler = invnetoryCloseHandler;
 
         return this;
     }
@@ -298,6 +313,7 @@ public class TemplatePageImpl implements TemplatePage {
                 this.inventoryReopenHandler,
                 this.clickExceptionHandler,
                 this.updateExceptionHandler,
+                this.inventoryCloseHandler,
                 this.background,
                 player,
                 session,
