@@ -28,11 +28,12 @@ jobs:
     - name: Build with Maven
       run: mvn clean package
       
-    - name: Create Release
-      uses: softprops/action-gh-release@v1
+    - name: Upload to the GitHub release
+      uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: dev-${{ github.sha }}
-        name: ${{ github.event.head_commit.message }} (${{ github.sha }})
-        files: target/MenuInv.jar
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: target/MenuInv.jar
+        asset_name: MenuInv.jar
+        asset_content_type: application/java-archive
