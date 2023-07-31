@@ -82,7 +82,7 @@ public class TestMenu {
 
                                 items.remove(items.size() - 1);
 
-                                inventoryPage.setNeedUpdate();
+                                inventoryPage.update(true);
                             })
                             .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.REDSTONE_ORE, 1)))
 
@@ -92,7 +92,7 @@ public class TestMenu {
 
                                 ts.getItems().add(new ItemStack(Material.DIAMOND, 1));
 
-                                inventoryPage.setNeedUpdate();
+                                inventoryPage.update(true);
                             })
                             .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.EMERALD_BLOCK, 1)))
 

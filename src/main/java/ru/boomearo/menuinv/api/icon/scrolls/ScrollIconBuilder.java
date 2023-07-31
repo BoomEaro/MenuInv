@@ -80,7 +80,7 @@ public class ScrollIconBuilder implements ElementBuilderUpdatable<ScrollIconBuil
 
                     boolean change = pagedIcons.scrollPage(ScrollIconBuilder.this.scrollType);
                     if (change) {
-                        page.setNeedUpdate();
+                        page.update(true);
                         ScrollIconBuilder.this.iconClick.onClick(page, player, clickType);
                     }
                 }
