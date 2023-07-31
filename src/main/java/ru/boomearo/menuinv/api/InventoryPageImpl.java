@@ -183,7 +183,7 @@ public class InventoryPageImpl implements InventoryPage {
 
             // Update the current array of active items using frame items.
             for (PagedIcons lii : this.listedIcons.values()) {
-                lii.updateActiveIcons(this, forceUpdate, this.updateExceptionHandler);
+                lii.updateActiveIcons(this, forceUpdate, create, this.updateExceptionHandler);
             }
 
             // Using an array of active items, we fill the array of Bukkit items
@@ -192,7 +192,7 @@ public class InventoryPageImpl implements InventoryPage {
                     continue;
                 }
 
-                array[ii.getSlot()] = ii.getItemStack(this, forceUpdate, this.updateExceptionHandler);
+                array[ii.getSlot()] = ii.getItemStack(this, forceUpdate, create, this.updateExceptionHandler);
             }
 
             this.inventory.setContents(array);

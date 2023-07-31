@@ -22,7 +22,7 @@ public class ItemIcon extends SlotElement {
         return this.handler;
     }
 
-    public ItemStack getItemStack(InventoryPageImpl page, boolean force, UpdateExceptionHandler updateExceptionHandler) {
+    public ItemStack getItemStack(InventoryPageImpl page, boolean force, boolean create, UpdateExceptionHandler updateExceptionHandler) {
         /*
          * We check at the very beginning whether the object is being retrieved for the first time
          * If so, get the upgraded item and return it.
@@ -38,7 +38,7 @@ public class ItemIcon extends SlotElement {
             return newItem;
         }
 
-        if (this.handler.canUpdate(page, force, this.updateHandlerCooldown)) {
+        if (this.handler.canUpdate(page, force, this.updateHandlerCooldown) || create) {
             this.updateHandlerCooldown = System.currentTimeMillis();
 
             ItemStack newItem = getUpdatedItem(page, updateExceptionHandler);
