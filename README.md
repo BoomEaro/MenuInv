@@ -20,8 +20,8 @@ Note that getPlugin should return a reference to your plugin.
 ```
     private static enum CustomMenuPage implements PluginPage {
 
-        MAIN(MenuInv.getInstance(), "main"),
-        OTHER(MenuInv.getInstance(), "other");
+        MAIN(CustomPlugin.getInstance(), "main"),
+        OTHER(CustomPlugin.getInstance(), "other");
 
         private final Plugin Plugin;
         private final String page;
@@ -48,8 +48,10 @@ As arguments to registerPages you need to specify your page enum.
 To open the menu, you also need to specify an enum.
 
 ```
-        Menu.registerPages(menuInv)
+        Menu.registerPages(customPlugin)
                 .createTemplatePage(CustomMenuPage.MAIN)
+                .setInventoryTitle((inventoryPage) -> "Main page")
+                .setInventoryCloseHandler((inventoryPage, player) -> player.sendMessage("Menu was closed!"))
                 .setMenuType(MenuType.CHEST_9X6)
                 .setStructure(
                         "# # # # # # # # #",
@@ -62,7 +64,7 @@ To open the menu, you also need to specify an enum.
                         .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.COOKIE, 1))
                         .setIconClick((inventoryPage, player, clickType) -> {
                             player.sendMessage("Delicious cookies!");
-                            Menu.open(CustomMenuPage.OTHER, player);
+                            Menu.open(CustomMenuPage.OTHER, player, inventoryPage.getSession());
                         }))
                 .setIngredient('*', new IconBuilder()
                         .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.COMPASS, 1))
@@ -71,8 +73,9 @@ To open the menu, you also need to specify an enum.
                         .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.DIAMOND, 6))
                         .setIconClick((inventoryPage, player, clickType) -> player.sendMessage("Surprise!")));
 
-        Menu.registerPages(menuInv)
+        Menu.registerPages(customPlugin)
                 .createTemplatePage(CustomMenuPage.OTHER)
+                .setInventoryTitle((inventoryPage) -> "Other page")
                 .setMenuType(MenuType.CHEST_9X1)
                 .setStructure(
                         "# . # . # . # . #"
@@ -81,7 +84,7 @@ To open the menu, you also need to specify an enum.
                         .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.PAPER, 1))
                         .setIconClick((inventoryPage, player, clickType) -> {
                             player.sendMessage("Returning back");
-                            Menu.open(CustomMenuPage.MAIN, player);
+                            Menu.open(CustomMenuPage.MAIN, player, inventoryPage.getSession());
                         }));
 ```
 

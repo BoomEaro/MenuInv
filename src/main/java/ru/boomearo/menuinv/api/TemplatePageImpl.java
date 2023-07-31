@@ -106,9 +106,9 @@ public class TemplatePageImpl implements TemplatePage {
     }
 
     @Override
-    public TemplatePage setInvnetoryCloseHandler(InventoryCloseHandler invnetoryCloseHandler) {
-        Preconditions.checkArgument(invnetoryCloseHandler != null, "invnetoryCloseHandler is null!");
-        this.inventoryCloseHandler = invnetoryCloseHandler;
+    public TemplatePage setInventoryCloseHandler(InventoryCloseHandler inventoryCloseHandler) {
+        Preconditions.checkArgument(inventoryCloseHandler != null, "inventoryCloseHandler is null!");
+        this.inventoryCloseHandler = inventoryCloseHandler;
 
         return this;
     }

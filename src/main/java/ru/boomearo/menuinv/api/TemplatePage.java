@@ -31,7 +31,7 @@ public interface TemplatePage {
 
     InventoryCloseHandler getInventoryCloseHandler();
 
-    TemplatePage setInvnetoryCloseHandler(InventoryCloseHandler invnetoryCloseHandler);
+    TemplatePage setInventoryCloseHandler(InventoryCloseHandler inventoryCloseHandler);
 
     TemplatePage setIcon(int slot, ElementBuilder elementBuilder);
 
