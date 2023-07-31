@@ -4,17 +4,16 @@ import com.google.common.base.Preconditions;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
+import ru.boomearo.menuinv.api.DefaultUpdateDelay;
+import ru.boomearo.menuinv.api.Delayable;
 import ru.boomearo.menuinv.api.InventoryPage;
-
-import java.util.function.Predicate;
 
 public class IconBuilder implements ElementBuilderUpdatable<IconBuilder> {
 
     private IconClick iconClick = (inventoryPage, player, clickType) -> {};
-    private IconClickDelay iconClickDelay = (inventoryPage, player, clickType) -> 250;
+    private IconClickDelay iconClickDelay = new DefaultIconClickDelay();
     private IconUpdate iconUpdate = (inventoryPage, player) -> null;
-    private IconUpdateDelay iconUpdateDelay = (inventoryPage) -> 250;
-    private Predicate<InventoryPage> iconUpdateCondition = (inventoryPage) -> true;
+    private Delayable<InventoryPage> updateDelay = new DefaultUpdateDelay();
 
     public IconBuilder setIconClick(IconClick iconClick) {
         Preconditions.checkArgument(iconClick != null, "iconClick is null!");
@@ -29,16 +28,9 @@ public class IconBuilder implements ElementBuilderUpdatable<IconBuilder> {
     }
 
     @Override
-    public IconBuilder setIconUpdateDelay(IconUpdateDelay iconUpdateDelay) {
-        Preconditions.checkArgument(iconUpdateDelay != null, "iconUpdateDelay is null!");
-        this.iconUpdateDelay = iconUpdateDelay;
-        return this;
-    }
-
-    @Override
-    public IconBuilder setIconUpdateCondition(Predicate<InventoryPage> iconUpdateCondition) {
-        Preconditions.checkArgument(iconUpdateCondition != null, "iconUpdateCondition is null!");
-        this.iconUpdateCondition = iconUpdateCondition;
+    public IconBuilder setUpdateDelay(Delayable<InventoryPage> updateDelay) {
+        Preconditions.checkArgument(updateDelay != null, "updateDelay is null!");
+        this.updateDelay = updateDelay;
         return this;
     }
 
@@ -69,14 +61,10 @@ public class IconBuilder implements ElementBuilderUpdatable<IconBuilder> {
                 }
 
                 @Override
-                public long getUpdateTime(InventoryPage page) {
-                    return IconBuilder.this.iconUpdateDelay.getUpdateTime(page);
+                public long onUpdateTime(InventoryPage page, boolean force) {
+                    return IconBuilder.this.updateDelay.onUpdateTime(page, force);
                 }
 
-                @Override
-                public boolean shouldUpdate(InventoryPage page) {
-                    return IconBuilder.this.iconUpdateCondition.test(page);
-                }
             };
         };
     }

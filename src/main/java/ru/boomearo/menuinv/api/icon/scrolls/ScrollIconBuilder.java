@@ -4,11 +4,11 @@ import com.google.common.base.Preconditions;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
+import ru.boomearo.menuinv.api.DefaultUpdateDelay;
+import ru.boomearo.menuinv.api.Delayable;
 import ru.boomearo.menuinv.api.InventoryPage;
 import ru.boomearo.menuinv.api.frames.PagedIcons;
 import ru.boomearo.menuinv.api.icon.*;
-
-import java.util.function.Predicate;
 
 public class ScrollIconBuilder implements ElementBuilderUpdatable<ScrollIconBuilder> {
 
@@ -19,9 +19,8 @@ public class ScrollIconBuilder implements ElementBuilderUpdatable<ScrollIconBuil
     private ScrollUpdate scrollHideUpdate = (inventoryPage, player, scrollType, currentPage, maxPage) -> null;
 
     private IconClick iconClick = (inventoryPage, player, clickType) -> {};
-    private IconClickDelay iconClickDelay = (inventoryPage, player, clickType) -> 250;
-    private IconUpdateDelay iconUpdateDelay = (inventoryPage) -> 250;
-    private Predicate<InventoryPage> iconUpdateCondition = (inventoryPage) -> true;
+    private IconClickDelay iconClickDelay = new DefaultIconClickDelay();
+    private Delayable<InventoryPage> updateDelay = new DefaultUpdateDelay();
 
     public ScrollIconBuilder setScrollType(ScrollType scrollType) {
         Preconditions.checkArgument(scrollType != null, "scrollType is null!");
@@ -54,16 +53,9 @@ public class ScrollIconBuilder implements ElementBuilderUpdatable<ScrollIconBuil
     }
 
     @Override
-    public ScrollIconBuilder setIconUpdateDelay(IconUpdateDelay iconUpdateDelay) {
-        Preconditions.checkArgument(iconUpdateDelay != null, "iconUpdateDelay is null!");
-        this.iconUpdateDelay = iconUpdateDelay;
-        return this;
-    }
-
-    @Override
-    public ScrollIconBuilder setIconUpdateCondition(Predicate<InventoryPage> iconUpdateCondition) {
-        Preconditions.checkArgument(iconUpdateCondition != null, "iconUpdateCondition is null!");
-        this.iconUpdateCondition = iconUpdateCondition;
+    public ScrollIconBuilder setUpdateDelay(Delayable<InventoryPage> updateDelay) {
+        Preconditions.checkArgument(updateDelay != null, "updateDelay is null!");
+        this.updateDelay = updateDelay;
         return this;
     }
 
@@ -122,13 +114,8 @@ public class ScrollIconBuilder implements ElementBuilderUpdatable<ScrollIconBuil
                 }
 
                 @Override
-                public long getUpdateTime(InventoryPage page) {
-                    return ScrollIconBuilder.this.iconUpdateDelay.getUpdateTime(page);
-                }
-
-                @Override
-                public boolean shouldUpdate(InventoryPage page) {
-                    return ScrollIconBuilder.this.iconUpdateCondition.test(page);
+                public long onUpdateTime(InventoryPage page, boolean force) {
+                    return ScrollIconBuilder.this.updateDelay.onUpdateTime(page, force);
                 }
 
             };

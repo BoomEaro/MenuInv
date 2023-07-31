@@ -109,7 +109,6 @@ public class TestMenu {
                                 }
                                 return tmp;
                             })
-                            .setIconUpdateDelay((inventoryPage) -> 250)
                             .setFrameIterationHandler(new InverseIterationHandler()))
 
                     .setPagedIcons("test2", 6, 2, 3, 3, new PagedIconsBuilder()
@@ -167,7 +166,7 @@ public class TestMenu {
                                 item.setItemMeta(meta);
                                 return item;
                             })
-                            .setIconUpdateDelay((inventortPage) -> 0))
+                            .setUpdateDelay((inventortPage, force) -> 0))
 
                     .setIcon(0, new IconBuilder()
                             .setIconUpdate((inventoryPage, player) -> {
@@ -178,7 +177,13 @@ public class TestMenu {
                                 item.setItemMeta(meta);
                                 return item;
                             })
-                            .setIconUpdateDelay((inventoryPage) -> 500))
+                            .setUpdateDelay((inventoryPage, force) -> {
+                                if (force) {
+                                    return 0;
+                                }
+
+                                return 500;
+                            }))
 
                     .setIcon(1, new IconBuilder()
                             .setIconClick((inventoryPage, player, clickType) -> inventoryPage.close())

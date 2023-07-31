@@ -29,6 +29,7 @@ public class TemplatePageImpl implements TemplatePage {
     };
 
     private InventoryCloseHandler inventoryCloseHandler = (inventoryPage, player) -> {};
+    private Delayable<InventoryPage> globalUpdateDelay = new DefaultUpdateDelay();
 
     private StructureHolder[] structure = null;
 
@@ -114,6 +115,19 @@ public class TemplatePageImpl implements TemplatePage {
     }
 
     @Override
+    public Delayable<InventoryPage> getGlobalUpdateDelay() {
+        return this.globalUpdateDelay;
+    }
+
+    @Override
+    public TemplatePage setGlobalUpdateDelay(Delayable<InventoryPage> globalUpdateDelay) {
+        Preconditions.checkArgument(globalUpdateDelay != null, "globalUpdateDelay is null!");
+        this.globalUpdateDelay = globalUpdateDelay;
+
+        return this;
+    }
+
+    @Override
     public ClickExceptionHandler getClickExceptionHandler() {
         return this.clickExceptionHandler;
     }
@@ -143,8 +157,7 @@ public class TemplatePageImpl implements TemplatePage {
     public TemplatePage setImmutableIcon(int slot, ElementBuilder elementBuilder) {
         if (elementBuilder instanceof ElementBuilderUpdatable) {
             ElementBuilderUpdatable elementBuilderUpdatable = (ElementBuilderUpdatable) elementBuilder;
-            elementBuilderUpdatable.setIconUpdateCondition((inventoryPage) -> false);
-            elementBuilderUpdatable.setIconUpdateDelay((inventoryPage) -> Long.MAX_VALUE);
+            elementBuilderUpdatable.setUpdateDelay((inventoryPage, force) -> Long.MAX_VALUE);
         }
         setIcon(slot, elementBuilder);
         return this;
@@ -181,8 +194,7 @@ public class TemplatePageImpl implements TemplatePage {
 
     @Override
     public TemplatePage setImmutablePagedIcons(String name, int x, int z, int width, int height, PagedIconsBuilder pagedIconsBuilder) {
-        pagedIconsBuilder.setIconUpdateCondition((inventoryPage) -> false);
-        pagedIconsBuilder.setIconUpdateDelay((inventoryPage) -> Long.MAX_VALUE);
+        pagedIconsBuilder.setUpdateDelay((inventoryPage, force) -> Long.MAX_VALUE);
         pagedIconsBuilder.setPermanent(true);
 
         setPagedIcons(name, x, z, width, height, pagedIconsBuilder);
@@ -202,8 +214,7 @@ public class TemplatePageImpl implements TemplatePage {
     public TemplatePage setImmutableBackground(ElementBuilder elementBuilder) {
         if (elementBuilder instanceof ElementBuilderUpdatable) {
             ElementBuilderUpdatable elementBuilderUpdatable = (ElementBuilderUpdatable) elementBuilder;
-            elementBuilderUpdatable.setIconUpdateCondition((inventoryPage) -> false);
-            elementBuilderUpdatable.setIconUpdateDelay((inventoryPage) -> Long.MAX_VALUE);
+            elementBuilderUpdatable.setUpdateDelay((inventoryPage, force) -> Long.MAX_VALUE);
         }
 
         setBackground(elementBuilder);
@@ -258,8 +269,7 @@ public class TemplatePageImpl implements TemplatePage {
     public TemplatePage setImmutableIngredient(char value, ElementBuilder elementBuilder) {
         if (elementBuilder instanceof ElementBuilderUpdatable) {
             ElementBuilderUpdatable elementBuilderUpdatable = (ElementBuilderUpdatable) elementBuilder;
-            elementBuilderUpdatable.setIconUpdateCondition((inventoryPage) -> false);
-            elementBuilderUpdatable.setIconUpdateDelay((inventoryPage) -> Long.MAX_VALUE);
+            elementBuilderUpdatable.setUpdateDelay((inventoryPage, force) -> Long.MAX_VALUE);
         }
 
         setIngredient(value, elementBuilder);
@@ -314,6 +324,7 @@ public class TemplatePageImpl implements TemplatePage {
                 this.clickExceptionHandler,
                 this.updateExceptionHandler,
                 this.inventoryCloseHandler,
+                this.globalUpdateDelay,
                 this.background,
                 player,
                 session,

@@ -26,6 +26,7 @@ public class InventoryPageImpl implements InventoryPage {
     private final ClickExceptionHandler clickExceptionHandler;
     private final UpdateExceptionHandler updateExceptionHandler;
     private final InventoryCloseHandler inventoryCloseHandler;
+    private final Delayable<InventoryPage> globalUpdateDelay;
 
     private final Map<String, PagedIcons> listedIcons;
 
@@ -39,6 +40,8 @@ public class InventoryPageImpl implements InventoryPage {
 
     private final TemplatePageImpl templatePage;
 
+    private long cooldown = 0;
+
     private boolean changes = false;
 
     public InventoryPageImpl(String name,
@@ -50,6 +53,7 @@ public class InventoryPageImpl implements InventoryPage {
                              ClickExceptionHandler clickExceptionHandler,
                              UpdateExceptionHandler updateExceptionHandler,
                              InventoryCloseHandler inventoryCloseHandler,
+                             Delayable<InventoryPage> globalUpdateDelay,
                              IconHandlerFactory background,
                              Player player,
                              InventorySession session,
@@ -62,6 +66,7 @@ public class InventoryPageImpl implements InventoryPage {
         this.clickExceptionHandler = clickExceptionHandler;
         this.updateExceptionHandler = updateExceptionHandler;
         this.inventoryCloseHandler = inventoryCloseHandler;
+        this.globalUpdateDelay = globalUpdateDelay;
         this.player = player;
         this.session = session;
         this.templatePage = templatePage;
@@ -155,38 +160,41 @@ public class InventoryPageImpl implements InventoryPage {
     private void performUpdate(boolean force, boolean reopenIfNeed) {
         boolean forceUpdate = this.changes || force;
 
-        if (reopenIfNeed) {
-            try {
-                if (this.inventoryReopenHandler.reopenCondition(this, forceUpdate)) {
-                    reopen(true);
-                    return;
+        if (this.globalUpdateDelay.canUpdate(this, force, this.cooldown)) {
+            this.cooldown = System.currentTimeMillis();
+
+            if (reopenIfNeed) {
+                try {
+                    if (this.inventoryReopenHandler.reopenCondition(this, forceUpdate)) {
+                        reopen(true);
+                        return;
+                    }
+                }
+                catch (Exception e) {
+                    this.updateExceptionHandler.onException(this, this.player, e);
                 }
             }
-            catch (Exception e) {
-                this.updateExceptionHandler.onException(this, this.player, e);
-            }
-        }
 
-        ItemStack[] array = new ItemStack[this.menuType.getSize()];
-        Arrays.fill(array, null);
+            ItemStack[] array = new ItemStack[this.menuType.getSize()];
 
-        // Update the current array of active items using frame items.
-        for (PagedIcons lii : this.listedIcons.values()) {
-            lii.updateActiveIcons(this, forceUpdate, this.updateExceptionHandler);
-        }
-
-        // Using an array of active items, we fill the array of Bakkit items
-        for (ItemIcon ii : this.activeIcons) {
-            if (ii == null) {
-                continue;
+            // Update the current array of active items using frame items.
+            for (PagedIcons lii : this.listedIcons.values()) {
+                lii.updateActiveIcons(this, forceUpdate, this.updateExceptionHandler);
             }
 
-            array[ii.getSlot()] = ii.getItemStack(this, forceUpdate, this.updateExceptionHandler);
+            // Using an array of active items, we fill the array of Bukkit items
+            for (ItemIcon ii : this.activeIcons) {
+                if (ii == null) {
+                    continue;
+                }
+
+                array[ii.getSlot()] = ii.getItemStack(this, forceUpdate, this.updateExceptionHandler);
+            }
+
+            this.inventory.setContents(array);
+
+            this.changes = false;
         }
-
-        this.inventory.setContents(array);
-
-        this.changes = false;
     }
 
     @Override

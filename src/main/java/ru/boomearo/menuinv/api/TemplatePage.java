@@ -33,6 +33,10 @@ public interface TemplatePage {
 
     TemplatePage setInventoryCloseHandler(InventoryCloseHandler inventoryCloseHandler);
 
+    Delayable<InventoryPage> getGlobalUpdateDelay();
+
+    TemplatePage setGlobalUpdateDelay(Delayable<InventoryPage> updateDelay);
+
     TemplatePage setIcon(int slot, ElementBuilder elementBuilder);
 
     TemplatePage setImmutableIcon(int slot, ElementBuilder elementBuilder);

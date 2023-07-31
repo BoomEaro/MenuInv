@@ -162,7 +162,7 @@ public class PagedIcons extends FramedIcons {
     public void updateActiveIcons(InventoryPageImpl page, boolean force, UpdateExceptionHandler updateExceptionHandler) {
         FramedIconsHandler handler = this.iconsHandler;
 
-        if ((handler.shouldUpdate(page) && ((System.currentTimeMillis() - this.updateHandlerCooldown) > handler.getUpdateTime(page))) || force) {
+        if (handler.canUpdate(page, force, this.updateHandlerCooldown)) {
             this.updateHandlerCooldown = System.currentTimeMillis();
 
             List<IconHandler> handlers = getCachedHandler(page, updateExceptionHandler);

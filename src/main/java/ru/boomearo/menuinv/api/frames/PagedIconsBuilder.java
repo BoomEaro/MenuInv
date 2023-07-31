@@ -2,21 +2,20 @@ package ru.boomearo.menuinv.api.frames;
 
 import com.google.common.base.Preconditions;
 import org.bukkit.entity.Player;
+import ru.boomearo.menuinv.api.Delayable;
 import ru.boomearo.menuinv.api.InventoryPage;
 import ru.boomearo.menuinv.api.frames.iteration.DefaultIterationHandler;
 import ru.boomearo.menuinv.api.frames.iteration.FrameIterationHandler;
+import ru.boomearo.menuinv.api.DefaultUpdateDelay;
 import ru.boomearo.menuinv.api.icon.IconHandler;
-import ru.boomearo.menuinv.api.icon.IconUpdateDelay;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Predicate;
 
 public class PagedIconsBuilder {
 
     private PagedIconsUpdate pagedIconsUpdate = (inventoryPage, player) -> new ArrayList<>();
-    private IconUpdateDelay iconUpdateDelay = (inventoryPage) -> 250;
-    private Predicate<InventoryPage> iconUpdateCondition = (inventoryPage) -> true;
+    private Delayable<InventoryPage> updateDelay = new DefaultUpdateDelay();
     private FrameIterationHandler frameIterationHandler = new DefaultIterationHandler();
     private boolean permanent = false;
 
@@ -26,15 +25,9 @@ public class PagedIconsBuilder {
         return this;
     }
 
-    public PagedIconsBuilder setIconUpdateDelay(IconUpdateDelay iconUpdateDelay) {
-        Preconditions.checkArgument(iconUpdateDelay != null, "iconUpdateDelay is null!");
-        this.iconUpdateDelay = iconUpdateDelay;
-        return this;
-    }
-
-    public PagedIconsBuilder setIconUpdateCondition(Predicate<InventoryPage> iconUpdateCondition) {
-        Preconditions.checkArgument(iconUpdateCondition != null, "iconUpdateCondition is null!");
-        this.iconUpdateCondition = iconUpdateCondition;
+    public PagedIconsBuilder setUpdateDelay(Delayable<InventoryPage> updateDelay) {
+        Preconditions.checkArgument(updateDelay != null, "updateDelay is null!");
+        this.updateDelay = updateDelay;
         return this;
     }
 
@@ -75,15 +68,9 @@ public class PagedIconsBuilder {
                     }
 
                     @Override
-                    public long getUpdateTime(InventoryPage inventoryPage) {
-                        return PagedIconsBuilder.this.iconUpdateDelay.getUpdateTime(inventoryPage);
+                    public long onUpdateTime(InventoryPage inventoryPage, boolean force) {
+                        return PagedIconsBuilder.this.updateDelay.onUpdateTime(inventoryPage, force);
                     }
-
-                    @Override
-                    public boolean shouldUpdate(InventoryPage inventoryPage) {
-                        return PagedIconsBuilder.this.iconUpdateCondition.test(inventoryPage);
-                    }
-
                 };
             }
         };
