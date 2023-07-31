@@ -9,6 +9,7 @@ import ru.boomearo.menuinv.api.Delayable;
 import ru.boomearo.menuinv.api.InventoryPage;
 import ru.boomearo.menuinv.api.frames.PagedIcons;
 import ru.boomearo.menuinv.api.icon.*;
+import ru.boomearo.menuinv.api.icon.DefaultIconClickDelay;
 
 public class ScrollIconBuilder implements ElementBuilderUpdatable<ScrollIconBuilder> {
 
