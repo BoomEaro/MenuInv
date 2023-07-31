@@ -154,13 +154,17 @@ public class InventoryPageImpl implements InventoryPage {
 
     @Override
     public void update(boolean force) {
-        performUpdate(force, true);
+        performUpdate(force, true, false);
     }
 
-    private void performUpdate(boolean force, boolean reopenIfNeed) {
+    public void updateOnCreate() {
+        performUpdate(true, false, true);
+    }
+
+    private void performUpdate(boolean force, boolean reopenIfNeed, boolean create) {
         boolean forceUpdate = this.changes || force;
 
-        if (this.globalUpdateDelay.canUpdate(this, force, this.cooldown)) {
+        if (this.globalUpdateDelay.canUpdate(this, force, this.cooldown) || create) {
             this.cooldown = System.currentTimeMillis();
 
             if (reopenIfNeed) {
@@ -217,7 +221,7 @@ public class InventoryPageImpl implements InventoryPage {
             pi.resetChanges();
         }
         // Filling inventory
-        performUpdate(false, false);
+        performUpdate(false, false, false);
         // Open this inventory to that player
         this.player.openInventory(this.inventory);
     }

@@ -197,7 +197,7 @@ public class Menu {
 
         InventoryPageImpl newPage = templatePage.createNewInventoryPage(player, session);
 
-        newPage.update(true);
+        newPage.updateOnCreate();
 
         return newPage.getInventory();
     }
