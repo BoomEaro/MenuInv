@@ -1,8 +1,13 @@
 package ru.boomearo.menuinv.api.frames;
 
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
+import org.bukkit.inventory.ItemStack;
+import ru.boomearo.menuinv.api.InventoryPage;
 import ru.boomearo.menuinv.api.MenuType;
 import ru.boomearo.menuinv.api.frames.iteration.FrameIterationHandler;
 import ru.boomearo.menuinv.api.InventoryPageImpl;
+import ru.boomearo.menuinv.api.icon.DummyIconHandler;
 import ru.boomearo.menuinv.api.icon.IconHandler;
 import ru.boomearo.menuinv.api.icon.ItemIcon;
 import ru.boomearo.menuinv.api.icon.UpdateExceptionHandler;
@@ -159,7 +164,11 @@ public class PagedIcons extends FramedIcons {
         return getHandlers(page, updateExceptionHandler);
     }
 
-    public void updateActiveIcons(InventoryPageImpl page, boolean force, boolean create, UpdateExceptionHandler updateExceptionHandler) {
+    public void updateActiveIcons(InventoryPageImpl page,
+                                  ItemIcon[] activeIcons,
+                                  boolean force,
+                                  boolean create,
+                                  UpdateExceptionHandler updateExceptionHandler) {
         FramedIconsHandler handler = this.iconsHandler;
 
         if (handler.canUpdate(page, force, this.updateHandlerCooldown) || create) {
@@ -172,8 +181,6 @@ public class PagedIcons extends FramedIcons {
             int maxSize = handlers.size();
 
             MenuType type = page.getMenuType();
-
-            ItemIcon[] activeIcons = page.getUnsafeActiveIcons();
 
             int pageLimit = (getWidth() * getHeight());
 
@@ -202,16 +209,26 @@ public class PagedIcons extends FramedIcons {
                     }
 
                     if (i > (maxSize - 1)) {
-                        activeIcons[slotOffset] = null;
+                        setItemIcon(activeIcons, slotOffset, DummyIconHandler.INSTANCE);
                     }
                     else {
-                        activeIcons[slotOffset] = new ItemIcon(slotOffset, handlers.get(i));
+                        setItemIcon(activeIcons, slotOffset, handlers.get(i));
                     }
 
                     i++;
                 }
             }
         }
+    }
+
+    private void setItemIcon(ItemIcon[] activeIcons, int slot, IconHandler iconHandler) {
+        ItemIcon current = activeIcons[slot];
+        if (current != null) {
+            current.setHandler(iconHandler);
+            return;
+        }
+
+        activeIcons[slot] = new ItemIcon(slot, iconHandler);
     }
 
     public boolean hasChanges() {

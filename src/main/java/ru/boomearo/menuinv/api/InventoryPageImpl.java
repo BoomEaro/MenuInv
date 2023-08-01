@@ -127,10 +127,6 @@ public class InventoryPageImpl implements InventoryPage {
         return this.inventoryCloseHandler;
     }
 
-    public ItemIcon[] getUnsafeActiveIcons() {
-        return this.activeIcons;
-    }
-
     public Inventory getInventory() {
         return this.inventory;
     }
@@ -161,6 +157,10 @@ public class InventoryPageImpl implements InventoryPage {
         performUpdate(true, false, true);
     }
 
+    private void performUpdate() {
+        performUpdate(false, false, false);
+    }
+
     private void performUpdate(boolean force, boolean reopenIfNeed, boolean create) {
         boolean forceUpdate = this.changes || force;
 
@@ -179,11 +179,9 @@ public class InventoryPageImpl implements InventoryPage {
                 }
             }
 
-            ItemStack[] array = new ItemStack[this.menuType.getSize()];
-
             // Update the current array of active items using frame items.
             for (PagedIcons lii : this.listedIcons.values()) {
-                lii.updateActiveIcons(this, forceUpdate, create, this.updateExceptionHandler);
+                lii.updateActiveIcons(this, this.activeIcons, forceUpdate, create, this.updateExceptionHandler);
             }
 
             // Using an array of active items, we fill the array of Bukkit items
@@ -192,10 +190,13 @@ public class InventoryPageImpl implements InventoryPage {
                     continue;
                 }
 
-                array[ii.getSlot()] = ii.getItemStack(this, forceUpdate, create, this.updateExceptionHandler);
-            }
+                ItemStack itemStack = ii.getItemStack(this, forceUpdate, create, this.updateExceptionHandler);
+                if (itemStack == null) {
+                    continue;
+                }
 
-            this.inventory.setContents(array);
+                this.inventory.setItem(ii.getSlot(), itemStack);
+            }
 
             this.changes = false;
         }
@@ -221,7 +222,7 @@ public class InventoryPageImpl implements InventoryPage {
             pi.resetChanges();
         }
         // Filling inventory
-        performUpdate(false, false, false);
+        performUpdate();
         // Open this inventory to that player
         this.player.openInventory(this.inventory);
     }

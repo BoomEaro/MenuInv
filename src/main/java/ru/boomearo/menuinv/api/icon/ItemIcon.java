@@ -1,5 +1,6 @@
 package ru.boomearo.menuinv.api.icon;
 
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import ru.boomearo.menuinv.api.InventoryPageImpl;
 import ru.boomearo.menuinv.api.SlotElement;
@@ -8,10 +9,9 @@ public class ItemIcon extends SlotElement {
 
     private long updateHandlerCooldown = System.currentTimeMillis();
 
-    private ItemStack cache = null;
-    private boolean firstUpdate = true;
+    private boolean forceUpdate = true;
 
-    private final IconHandler handler;
+    private IconHandler handler;
 
     public ItemIcon(int position, IconHandler handler) {
         super(position);
@@ -22,38 +22,40 @@ public class ItemIcon extends SlotElement {
         return this.handler;
     }
 
+    public void setHandler(IconHandler handler) {
+        this.handler = handler;
+        this.forceUpdate = true;
+    }
+
     public ItemStack getItemStack(InventoryPageImpl page, boolean force, boolean create, UpdateExceptionHandler updateExceptionHandler) {
         /*
          * We check at the very beginning whether the object is being retrieved for the first time
          * If so, get the upgraded item and return it.
          * In the future, whether there will be an update depends on the implementation of the IconHandler handler
          */
-        if (this.firstUpdate) {
-            ItemStack newItem = getUpdatedItem(page, updateExceptionHandler);
+        if (this.forceUpdate) {
+            this.forceUpdate = false;
 
-            this.cache = newItem;
-
-            this.firstUpdate = false;
-
-            return newItem;
+            return getUpdatedItem(page, updateExceptionHandler);
         }
 
         if (this.handler.canUpdate(page, force, this.updateHandlerCooldown) || create) {
             this.updateHandlerCooldown = System.currentTimeMillis();
 
-            ItemStack newItem = getUpdatedItem(page, updateExceptionHandler);
-
-            this.cache = newItem;
-
-            return newItem;
+            return getUpdatedItem(page, updateExceptionHandler);
         }
 
-        return this.cache;
+        return null;
     }
 
     private ItemStack getUpdatedItem(InventoryPageImpl page, UpdateExceptionHandler updateExceptionHandler) {
         try {
-            return this.handler.onUpdate(page, page.getPlayer());
+            ItemStack itemStack = this.handler.onUpdate(page, page.getPlayer());
+            if (itemStack != null) {
+                return itemStack;
+            }
+
+            return new ItemStack(Material.AIR, 1);
         } catch (Exception e) {
             updateExceptionHandler.onException(page, page.getPlayer(), e);
             return null;
