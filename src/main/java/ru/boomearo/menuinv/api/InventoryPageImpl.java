@@ -127,6 +127,7 @@ public class InventoryPageImpl implements InventoryPage {
         return this.inventoryCloseHandler;
     }
 
+    @Override
     public Inventory getInventory() {
         return this.inventory;
     }

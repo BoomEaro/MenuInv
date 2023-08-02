@@ -3,7 +3,6 @@ package ru.boomearo.menuinv.api;
 import com.google.common.base.Preconditions;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.plugin.Plugin;
 import ru.boomearo.menuinv.MenuInv;
@@ -142,37 +141,40 @@ public class Menu {
         }
     }
 
-    public static void open(PluginPage pluginPage, Player player) {
-        open(pluginPage, player, null);
+    public static InventoryPage open(PluginPage pluginPage, Player player) {
+        return open(pluginPage, player, null);
     }
 
-    public static void open(PluginPage pluginPage, Player player, InventorySession session) {
-        Inventory inventory = create(pluginPage, player, session);
+    public static InventoryPage open(PluginPage pluginPage, Player player, InventorySession session) {
+        InventoryPage inventoryPage = create(pluginPage, player, session);
 
         Bukkit.getScheduler().runTask(MenuInv.getInstance(), () -> {
             try {
-                player.openInventory(inventory);
+                player.openInventory(inventoryPage.getInventory());
             } catch (Throwable e) {
                 e.printStackTrace();
             }
         });
+
+        return inventoryPage;
     }
 
     public static void openNow(PluginPage pluginPage, Player player) {
         openNow(pluginPage, player, null);
     }
 
-    public static void openNow(PluginPage pluginPage, Player player, InventorySession session) {
-        Inventory inventory = create(pluginPage, player, session);
+    public static InventoryPage openNow(PluginPage pluginPage, Player player, InventorySession session) {
+        InventoryPage inventoryPage = create(pluginPage, player, session);
 
-        player.openInventory(inventory);
+        player.openInventory(inventoryPage.getInventory());
+        return inventoryPage;
     }
 
-    public static Inventory create(PluginPage pluginPage, Player player) {
+    public static InventoryPage create(PluginPage pluginPage, Player player) {
         return create(pluginPage, player, null);
     }
 
-    public static Inventory create(PluginPage pluginPage, Player player, InventorySession session) {
+    public static InventoryPage create(PluginPage pluginPage, Player player, InventorySession session) {
         Preconditions.checkArgument(pluginPage != null, "pluginPage is null!");
         Preconditions.checkArgument(player != null, "player is null!");
 
@@ -199,7 +201,7 @@ public class Menu {
 
         newPage.updateOnCreate();
 
-        return newPage.getInventory();
+        return newPage;
     }
 
 }
