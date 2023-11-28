@@ -1,14 +1,12 @@
 package ru.boomearo.menuinv.api;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@Getter
+@RequiredArgsConstructor
 public abstract class SlotElement {
 
     private final int slot;
 
-    public SlotElement(int slot) {
-        this.slot = slot;
-    }
-
-    public int getSlot() {
-        return this.slot;
-    }
 }

@@ -1,36 +1,39 @@
 package ru.boomearo.menuinv.api.frames;
 
+import lombok.Getter;
+import ru.boomearo.menuinv.api.InventoryLocation;
 import ru.boomearo.menuinv.api.frames.iteration.FrameIterationHandler;
 
+@Getter
 public class FramedIconsTemplate extends Frame {
 
-    private final FramedIconsHandlerFactory iconsFactory;
-    private final FrameIterationHandler iterationHandler;
-    private final boolean permanentCached;
+    protected final FramedIconsHandlerFactory iconsFactory;
+    protected final FrameIterationHandler iterationHandler;
+    protected final boolean permanentCached;
 
     public FramedIconsTemplate(String name,
-                               int x,
-                               int z,
-                               int width,
-                               int height,
+                               InventoryLocation first,
+                               InventoryLocation second,
                                FramedIconsHandlerFactory iconsFactory,
                                FrameIterationHandler iterationHandler,
                                boolean permanentCached) {
-        super(name, x, z, width, height);
+        super(name, first, second);
         this.iconsFactory = iconsFactory;
         this.iterationHandler = iterationHandler;
         this.permanentCached = permanentCached;
     }
 
-    public FramedIconsHandlerFactory getIconsFactory() {
-        return this.iconsFactory;
+    public FramedIconsTemplate(String name,
+                               InventoryLocation first,
+                               int width,
+                               int height,
+                               FramedIconsHandlerFactory iconsFactory,
+                               FrameIterationHandler iterationHandler,
+                               boolean permanentCached) {
+        super(name, first, width, height);
+        this.iconsFactory = iconsFactory;
+        this.iterationHandler = iterationHandler;
+        this.permanentCached = permanentCached;
     }
 
-    public FrameIterationHandler getIterationHandler() {
-        return this.iterationHandler;
-    }
-
-    public boolean isPermanentCached() {
-        return this.permanentCached;
-    }
 }

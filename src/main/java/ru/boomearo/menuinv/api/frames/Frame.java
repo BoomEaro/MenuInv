@@ -1,54 +1,39 @@
 package ru.boomearo.menuinv.api.frames;
 
+import lombok.Getter;
+import ru.boomearo.menuinv.api.InventoryLocation;
+
+@Getter
 public abstract class Frame {
+    protected final String name;
 
-    private final String name;
+    protected final InventoryLocation first;
+    protected final InventoryLocation second;
 
-    private final int firstX;
-    private final int firstZ;
-    private final int secondX;
-    private final int secondZ;
+    protected final int width;
+    protected final int height;
 
-    private final int width;
-    private final int height;
-
-    public Frame(String name, int x, int z, int width, int height) {
+    public Frame(String name, InventoryLocation first, InventoryLocation second) {
         this.name = name;
-        this.firstX = x;
-        this.secondX = x + width - 1;
-        this.firstZ = z;
-        this.secondZ = z + height - 1;
 
-        this.width = width;
-        this.height = height;
+        int xMin = (Math.min(first.getX(), second.getX()));
+        int zMin = (Math.min(first.getZ(), second.getZ()));
+        this.first = InventoryLocation.of(xMin, zMin);
+
+        int xMax = (Math.max(first.getX(), second.getX()));
+        int zMax = (Math.max(first.getZ(), second.getZ()));
+        this.second = InventoryLocation.of(xMax, zMax);
+
+        this.width = Math.abs(second.getX() - first.getX());
+        this.height = Math.abs(second.getZ() - first.getZ());
     }
 
-    public String getName() {
-        return this.name;
-    }
-
-    public int getFirstX() {
-        return this.firstX;
-    }
-
-    public int getFirstZ() {
-        return this.firstZ;
-    }
-
-    public int getSecondX() {
-        return this.secondX;
-    }
-
-    public int getSecondZ() {
-        return this.secondZ;
-    }
-
-    public int getWidth() {
-        return this.width;
-    }
-
-    public int getHeight() {
-        return this.height;
+    public Frame(String name, InventoryLocation loc, int width, int height) {
+        this(
+                name,
+                InventoryLocation.of(loc.getX(), loc.getZ()),
+                InventoryLocation.of(loc.getX() + width, loc.getZ() + height)
+        );
     }
 
     public boolean isInsideFrame(int slot) {
@@ -58,6 +43,6 @@ public abstract class Frame {
     }
 
     public boolean isInsideFrame(int x, int z) {
-        return x >= this.firstX && z >= this.firstZ && x <= this.secondX && z <= this.secondZ;
+        return x >= this.first.getX() && z >= this.first.getZ() && x <= this.second.getX() && z <= this.second.getZ();
     }
 }

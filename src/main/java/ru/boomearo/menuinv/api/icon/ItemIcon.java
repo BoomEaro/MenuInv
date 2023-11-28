@@ -1,10 +1,12 @@
 package ru.boomearo.menuinv.api.icon;
 
+import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import ru.boomearo.menuinv.api.InventoryPageImpl;
 import ru.boomearo.menuinv.api.SlotElement;
 
+@Getter
 public class ItemIcon extends SlotElement {
 
     private long updateHandlerCooldown = System.currentTimeMillis();
@@ -16,10 +18,6 @@ public class ItemIcon extends SlotElement {
     public ItemIcon(int position, IconHandler handler) {
         super(position);
         this.handler = handler;
-    }
-
-    public IconHandler getHandler() {
-        return this.handler;
     }
 
     public void setHandler(IconHandler handler) {

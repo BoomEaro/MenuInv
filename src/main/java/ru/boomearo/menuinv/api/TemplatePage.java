@@ -5,6 +5,8 @@ import ru.boomearo.menuinv.api.icon.ClickExceptionHandler;
 import ru.boomearo.menuinv.api.icon.ElementBuilder;
 import ru.boomearo.menuinv.api.icon.UpdateExceptionHandler;
 
+import java.util.List;
+
 public interface TemplatePage {
 
     String getName();
@@ -41,15 +43,25 @@ public interface TemplatePage {
 
     TemplatePage setImmutableIcon(int slot, ElementBuilder elementBuilder);
 
-    TemplatePage setPagedIcons(String name, int x, int z, int width, int height, PagedIconsBuilder pagedIconsBuilder);
+    TemplatePage setPagedIcons(String name, InventoryLocation first, int width, int height, PagedIconsBuilder pagedIconsBuilder);
 
-    TemplatePage setImmutablePagedIcons(String name, int x, int z, int width, int height, PagedIconsBuilder pagedIconsBuilder);
+    TemplatePage setPagedIcons(String name, InventoryLocation first, InventoryLocation second, PagedIconsBuilder pagedIconsBuilder);
+
+    TemplatePage setPagedIconsIngredients(String name, char first, char second, PagedIconsBuilder pagedIconsBuilder);
+
+    TemplatePage setImmutablePagedIcons(String name, InventoryLocation first, int width, int height, PagedIconsBuilder pagedIconsBuilder);
+
+    TemplatePage setImmutablePagedIcons(String name, InventoryLocation first, InventoryLocation second, PagedIconsBuilder pagedIconsBuilder);
+
+    TemplatePage setImmutablePagedIconsIngredients(String name, char first, char second, PagedIconsBuilder pagedIconsBuilder);
 
     TemplatePage setBackground(ElementBuilder elementBuilder);
 
     TemplatePage setImmutableBackground(ElementBuilder elementBuilder);
 
     TemplatePage setStructure(String... value);
+
+    TemplatePage setStructure(List<String> value);
 
     TemplatePage setIngredient(char value, ElementBuilder elementBuilder);
 

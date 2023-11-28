@@ -1,17 +1,16 @@
 package ru.boomearo.menuinv.api.icon;
 
+import lombok.Getter;
 import ru.boomearo.menuinv.api.SlotElement;
 
+@Getter
 public class ItemIconTemplate extends SlotElement {
 
-    private final IconHandlerFactory factory;
+    protected final IconHandlerFactory factory;
 
     public ItemIconTemplate(int slot, IconHandlerFactory factory) {
         super(slot);
         this.factory = factory;
     }
 
-    public IconHandlerFactory getFactory() {
-        return this.factory;
-    }
 }

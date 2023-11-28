@@ -1,10 +1,14 @@
 package ru.boomearo.menuinv.api;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
+@RequiredArgsConstructor
+@Getter
 public enum MenuType {
 
     ANVIL(InventoryType.ANVIL, 3, 1),
@@ -31,24 +35,6 @@ public enum MenuType {
     private final InventoryType type;
     private final int width;
     private final int height;
-
-    MenuType(InventoryType type, int width, int height) {
-        this.type = type;
-        this.width = width;
-        this.height = height;
-    }
-
-    public InventoryType getInventoryType() {
-        return this.type;
-    }
-
-    public int getWidth() {
-        return this.width;
-    }
-
-    public int getHeight() {
-        return this.height;
-    }
 
     public int getSize() {
         return this.width * this.height;

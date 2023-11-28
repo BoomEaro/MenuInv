@@ -1,7 +1,10 @@
 package ru.boomearo.menuinv.api.frames;
 
+import lombok.Getter;
+import ru.boomearo.menuinv.api.InventoryLocation;
 import ru.boomearo.menuinv.api.frames.iteration.FrameIterationHandler;
 
+@Getter
 public class FramedIcons extends Frame {
 
     protected final FramedIconsHandler iconsHandler;
@@ -9,28 +12,15 @@ public class FramedIcons extends Frame {
     protected final boolean permanentCached;
 
     public FramedIcons(String name,
-                       int x,
-                       int z,
-                       int width,
-                       int height,
+                       InventoryLocation first,
+                       InventoryLocation second,
                        FramedIconsHandler iconsHandler,
                        FrameIterationHandler iterationHandler,
                        boolean permanentCached) {
-        super(name, x, z, width, height);
+        super(name, first, second);
         this.iconsHandler = iconsHandler;
         this.iterationHandler = iterationHandler;
         this.permanentCached = permanentCached;
     }
 
-    public FramedIconsHandler getIconsHandler() {
-        return this.iconsHandler;
-    }
-
-    public FrameIterationHandler getIterationHandler() {
-        return this.iterationHandler;
-    }
-
-    public boolean isPermanentCached() {
-        return this.permanentCached;
-    }
 }

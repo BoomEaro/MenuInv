@@ -1,9 +1,7 @@
 package ru.boomearo.menuinv.api.frames;
 
-import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.inventory.ItemStack;
-import ru.boomearo.menuinv.api.InventoryPage;
+import lombok.Getter;
+import ru.boomearo.menuinv.api.InventoryLocation;
 import ru.boomearo.menuinv.api.MenuType;
 import ru.boomearo.menuinv.api.frames.iteration.FrameIterationHandler;
 import ru.boomearo.menuinv.api.InventoryPageImpl;
@@ -17,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@Getter
 public class PagedIcons extends FramedIcons {
 
     private long updateHandlerCooldown = 0;
@@ -30,14 +29,12 @@ public class PagedIcons extends FramedIcons {
     private List<IconHandler> cachedHandler = null;
 
     public PagedIcons(String name,
-                      int x,
-                      int z,
-                      int width,
-                      int height,
+                      InventoryLocation first,
+                      InventoryLocation second,
                       FramedIconsHandler iconsHandler,
                       FrameIterationHandler iterationHandler,
                       boolean permanentCached) {
-        super(name, x, z, width, height, iconsHandler, iterationHandler, permanentCached);
+        super(name, first, second, iconsHandler, iterationHandler, permanentCached);
     }
 
     public int getCurrentPage() {
@@ -64,10 +61,6 @@ public class PagedIcons extends FramedIcons {
         }
 
         return change;
-    }
-
-    public int getMaxPage() {
-        return this.maxPage;
     }
 
     private void setMaxPage(int maxPage) {
@@ -202,10 +195,10 @@ public class PagedIcons extends FramedIcons {
 
                     int slotOffset;
                     if (iterationHandler.isReverse()) {
-                        slotOffset = getFirstZ() * type.getWidth() + getFirstX() + z + (x * type.getWidth());
+                        slotOffset = this.first.getZ() * type.getWidth() + this.first.getX() + z + (x * type.getWidth());
                     }
                     else {
-                        slotOffset = getFirstZ() * type.getWidth() + getFirstX() + x + (z * type.getWidth());
+                        slotOffset = this.first.getZ() * type.getWidth() + this.first.getX() + x + (z * type.getWidth());
                     }
 
                     if (i > (maxSize - 1)) {
@@ -229,10 +222,6 @@ public class PagedIcons extends FramedIcons {
         }
 
         activeIcons[slot] = new ItemIcon(slot, iconHandler);
-    }
-
-    public boolean hasChanges() {
-        return this.changes;
     }
 
     public void resetChanges() {
