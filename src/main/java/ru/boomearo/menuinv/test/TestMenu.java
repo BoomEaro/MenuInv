@@ -23,7 +23,7 @@ import ru.boomearo.menuinv.api.icon.IconBuilder;
 import ru.boomearo.menuinv.api.icon.IconHandler;
 import ru.boomearo.menuinv.api.icon.scrolls.ScrollIconBuilder;
 import ru.boomearo.menuinv.api.icon.scrolls.ScrollType;
-import ru.boomearo.menuinv.api.frames.iteration.InverseIterationHandler;
+import ru.boomearo.menuinv.api.frames.iteration.InverseIterationHandlerImpl;
 import ru.boomearo.menuinv.api.session.InventorySessionImpl;
 import ru.boomearo.menuinv.api.frames.PagedIcons;
 
@@ -139,7 +139,7 @@ public class TestMenu {
                                 }
                                 return tmp;
                             })
-                            .setFrameIterationHandler(new InverseIterationHandler()))
+                            .setFrameIterationHandler(InverseIterationHandlerImpl.DEFAULT))
 
                     .setPagedIconsIngredients("test2", '3', '4', new PagedIconsBuilder()
                             .setPagedItemsUpdate((inventoryPage, player) -> {

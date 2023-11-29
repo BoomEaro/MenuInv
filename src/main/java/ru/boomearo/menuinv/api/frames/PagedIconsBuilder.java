@@ -5,7 +5,7 @@ import lombok.Getter;
 import org.bukkit.entity.Player;
 import ru.boomearo.menuinv.api.Delayable;
 import ru.boomearo.menuinv.api.InventoryPage;
-import ru.boomearo.menuinv.api.frames.iteration.DefaultIterationHandler;
+import ru.boomearo.menuinv.api.frames.iteration.DefaultIterationHandlerImpl;
 import ru.boomearo.menuinv.api.frames.iteration.FrameIterationHandler;
 import ru.boomearo.menuinv.api.DefaultUpdateDelay;
 import ru.boomearo.menuinv.api.icon.IconHandler;
@@ -18,7 +18,7 @@ public class PagedIconsBuilder {
 
     private PagedIconsUpdate pagedIconsUpdate = (inventoryPage, player) -> new ArrayList<>();
     private Delayable<InventoryPage> updateDelay = new DefaultUpdateDelay();
-    private FrameIterationHandler frameIterationHandler = new DefaultIterationHandler();
+    private FrameIterationHandler frameIterationHandler = DefaultIterationHandlerImpl.DEFAULT;
     private boolean permanent = false;
 
     public PagedIconsBuilder setPagedItemsUpdate(PagedIconsUpdate pagedIconsUpdate) {
