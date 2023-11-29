@@ -18,15 +18,15 @@ First you need to create your own enum that implements PluginPage to store pages
 Note that getPlugin should return a reference to your plugin.
 
 ```
-    private static enum CustomMenuPage implements PluginPage {
+    public enum MenuPage implements PluginPage {
 
-        MAIN(CustomPlugin.getInstance(), "main"),
-        OTHER(CustomPlugin.getInstance(), "other");
+        MAIN(plugin.getInstance(), "main"),
+        OTHER(plugin.getInstance(), "other");
 
         private final Plugin Plugin;
         private final String page;
 
-        CustomMenuPage(Plugin Plugin, String page) {
+        MenuPage(Plugin Plugin, String page) {
             this.Plugin = Plugin;
             this.page = page;
         }
@@ -40,6 +40,7 @@ Note that getPlugin should return a reference to your plugin.
         public String getPage() {
             return this.page;
         }
+       
     }
 ```
 
@@ -48,44 +49,96 @@ As arguments to registerPages you need to specify your page enum.
 To open the menu, you also need to specify an enum.
 
 ```
-        Menu.registerPages(customPlugin)
-                .createTemplatePage(CustomMenuPage.MAIN)
-                .setInventoryTitle((inventoryPage) -> "Main page")
-                .setInventoryCloseHandler((inventoryPage, player) -> player.sendMessage("Menu was closed!"))
-                .setMenuType(MenuType.CHEST_9X6)
-                .setStructure(
-                        "# # # # # # # # #",
-                        "* . . . . . . . *",
-                        "# . . . 4 . . . #",
-                        "* . . . 4 . . . *",
-                        "# . . . . . . . #",
-                        "* # # # # # # # *")
-                .setIngredient('#', new IconBuilder()
-                        .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.COOKIE, 1))
-                        .setIconClick((inventoryPage, player, clickType) -> {
-                            player.sendMessage("Delicious cookies!");
-                            Menu.open(CustomMenuPage.OTHER, player, inventoryPage.getSession());
-                        }))
-                .setIngredient('*', new IconBuilder()
-                        .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.COMPASS, 1))
-                        .setIconClick((inventoryPage, player, clickType) -> player.sendMessage("COMPASS???")))
-                .setIngredient('4', new IconBuilder()
-                        .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.DIAMOND, 6))
-                        .setIconClick((inventoryPage, player, clickType) -> player.sendMessage("Surprise!")));
+    public class TestMenu {
 
-        Menu.registerPages(customPlugin)
-                .createTemplatePage(CustomMenuPage.OTHER)
-                .setInventoryTitle((inventoryPage) -> "Other page")
-                .setMenuType(MenuType.CHEST_9X1)
-                .setStructure(
-                        "# . # . # . # . #"
-                )
-                .setIngredient('#', new IconBuilder()
-                        .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.PAPER, 1))
-                        .setIconClick((inventoryPage, player, clickType) -> {
-                            player.sendMessage("Returning back");
-                            Menu.open(CustomMenuPage.MAIN, player, inventoryPage.getSession());
-                        }));
+        public static void registerMenu(Plugin plugin) {
+            Menu.registerPages(plugin)
+                    .createTemplatePage(MenuPage.MAIN)
+                    .setInventoryTitle((inventoryPage) -> "Main page")
+                    .setInventoryCloseHandler((inventoryPage, player) -> player.sendMessage("Menu was closed!"))
+                    .setMenuType(MenuType.CHEST_9X6)
+                    .setStructure(
+                            "# # # # # # # # #",
+                            "* . . . 4 . . . *",
+                            "# . . . 4 . . . #",
+                            "* 1 . . . . . . *",
+                            "# . . . . . . 2 #",
+                            "* # # < # > # # *")
+                    .setIngredient('#', new IconBuilder()
+                            .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.COOKIE, 1))
+                            .setIconClick((inventoryPage, player, clickType) -> {
+                                player.sendMessage("Delicious cookies!");
+                                Menu.open(MenuPage.OTHER, player, inventoryPage.getSession());
+                            }))
+                    .setIngredient('*', new IconBuilder()
+                            .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.COMPASS, 1))
+                            .setIconClick((inventoryPage, player, clickType) -> player.sendMessage("COMPASS???")))
+                    .setIngredient('4', new IconBuilder()
+                            .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.DIAMOND, 6))
+                            .setIconClick((inventoryPage, player, clickType) -> player.sendMessage("Surprise!")))
+
+                    .setPagedIconsIngredients("players", '1', '2', new PagedIconsBuilder()
+                            .setPagedItemsUpdate((inventoryPage, player) -> {
+                                List<IconHandler> tmp = new ArrayList<>();
+                                for (Player pl : Bukkit.getOnlinePlayers()) {
+                                    tmp.add(new IconBuilder()
+                                            .setIconClick((inventoryPage2, player2, type) -> player2.sendMessage("Player: " + pl.getName()))
+                                            .setIconUpdate((inventoryPage2, player2) -> {
+                                                ItemStack item = new ItemStack(Material.SKULL_ITEM, 1);
+                                                ItemMeta itemMeta = item.getItemMeta();
+                                                itemMeta.setDisplayName("Player: " + pl.getName());
+                                                item.setItemMeta(itemMeta);
+                                                return item;
+                                            })
+                                            .build()
+                                            .create());
+                                }
+                                return tmp;
+                            }))
+                    .setIngredient('<', new ScrollIconBuilder()
+                            .setName("players")
+                            .setScrollType(ScrollType.PREVIOUSLY)
+                            .setScrollVisibleUpdate((inventoryPage, player, scrollType, currentPage, maxPage) -> createScrollItems(scrollType, currentPage, maxPage)))
+
+                    .setIngredient('>', new ScrollIconBuilder()
+                            .setName("players")
+                            .setScrollType(ScrollType.NEXT)
+                            .setScrollVisibleUpdate((inventoryPage, player, scrollType, currentPage, maxPage) -> createScrollItems(scrollType, currentPage, maxPage)));
+
+
+            Menu.registerPages(plugin)
+                    .createTemplatePage(MenuPage.OTHER)
+                    .setInventoryTitle((inventoryPage) -> "Other page")
+                    .setMenuType(MenuType.CHEST_9X1)
+                    .setStructure(
+                            "# . # . # . # . #"
+                    )
+                    .setIngredient('#', new IconBuilder()
+                            .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.PAPER, 1))
+                            .setIconClick((inventoryPage, player, clickType) -> {
+                                player.sendMessage("Returning back");
+                                Menu.open(MenuPage.MAIN, player, inventoryPage.getSession());
+                            }));
+        }
+
+        private static ItemStack createScrollItems(ScrollType scrollType, int currentPage, int maxPage) {
+            int nextPage = scrollType.getNextPage(currentPage);
+
+            int amount = nextPage;
+            if (amount <= 0) {
+                amount = 1;
+            }
+            if (amount > 64) {
+                amount = 64;
+            }
+            ItemStack item = new ItemStack(Material.PAPER, amount);
+            ItemMeta meta = item.getItemMeta();
+            meta.setDisplayName("§6" + scrollType.name() + " §7[§c" + nextPage + "§7/§c" + maxPage + "§7]");
+            meta.addItemFlags(ItemFlag.values());
+            item.setItemMeta(meta);
+            return item;
+        }
+    }
 ```
 
 

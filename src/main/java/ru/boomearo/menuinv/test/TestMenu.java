@@ -10,7 +10,6 @@ import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -20,7 +19,6 @@ import org.bukkit.plugin.Plugin;
 import ru.boomearo.menuinv.MenuInv;
 import ru.boomearo.menuinv.api.*;
 import ru.boomearo.menuinv.api.frames.PagedIconsBuilder;
-import ru.boomearo.menuinv.api.icon.BottomInventoryClickHandler;
 import ru.boomearo.menuinv.api.icon.IconBuilder;
 import ru.boomearo.menuinv.api.icon.IconHandler;
 import ru.boomearo.menuinv.api.icon.scrolls.ScrollIconBuilder;
@@ -159,7 +157,7 @@ public class TestMenu {
                             }))
 
                     .setImmutableBackground(new IconBuilder()
-                .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.COOKIE, 1)));
+                            .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.COOKIE, 1)));
         }
         {
             Menu.registerPages(menuInv)
