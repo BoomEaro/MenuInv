@@ -7,6 +7,6 @@ import ru.boomearo.menuinv.api.InventoryPage;
 @FunctionalInterface
 public interface BottomInventoryClickHandler {
 
-    boolean canClick(InventoryPage inventoryPage, Player player, ClickType clickType);
+    boolean canClick(InventoryPage inventoryPage, Player player, int slot, ClickType clickType);
 
 }

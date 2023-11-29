@@ -62,7 +62,7 @@ public class InventoryListener implements Listener {
                 e.setCancelled(true);
             }
 
-            if (!page.getBottomInventoryClickHandler().canClick(page, pl, e.getClick())) {
+            if (!page.getBottomInventoryClickHandler().canClick(page, pl, e.getSlot(), e.getClick())) {
                 e.setCancelled(true);
             }
 

@@ -39,7 +39,7 @@ public class TemplatePageImpl implements TemplatePage {
     private InventoryCloseHandler inventoryCloseHandler = (inventoryPage, player) -> {};
     private Delayable<InventoryPage> globalUpdateDelay = new DefaultUpdateDelay();
 
-    private BottomInventoryClickHandler bottomInventoryClickHandler = (inventoryPage, player, clickType) -> true;
+    private BottomInventoryClickHandler bottomInventoryClickHandler = (inventoryPage, player, slot, clickType) -> true;
 
     private StructureHolder[] structure = null;
 
