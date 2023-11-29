@@ -48,6 +48,10 @@ public class InventoryListener implements Listener {
         if (!(e.getWhoClicked() instanceof Player)) {
             return;
         }
+        Player pl = (Player) e.getWhoClicked();
+
+        MenuInventoryHolder menuHolder = (MenuInventoryHolder) holder;
+        InventoryPageImpl page = menuHolder.getPage();
 
         // Allowing the player to modify their inventory
         if (view.getBottomInventory() == clickedInventory) {
@@ -58,15 +62,15 @@ public class InventoryListener implements Listener {
                 e.setCancelled(true);
             }
 
+            if (!page.getBottomInventoryClickHandler().canClick(page, pl, e.getClick())) {
+                e.setCancelled(true);
+            }
+
             return;
         }
 
         // Now we cancel the event if it is a menu
         e.setCancelled(true);
-
-        MenuInventoryHolder menuHolder = (MenuInventoryHolder) holder;
-
-        InventoryPageImpl page = menuHolder.getPage();
 
         page.handleInventoryClick(e.getSlot(), e.getClick());
     }
@@ -140,7 +144,7 @@ public class InventoryListener implements Listener {
         Menu.unregisterPages(e.getPlugin());
     }
 
-    // Copied from newer version for backend compatability
+    // Copied from newer version for backend compatibility
     private static Inventory getInventory(InventoryView view, int rawSlot) {
         // Slot may be -1 if not properly detected due to client bug
         // e.g. dropping an item into part of the enchantment list section of an enchanting table

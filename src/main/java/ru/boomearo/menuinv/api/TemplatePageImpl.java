@@ -39,6 +39,8 @@ public class TemplatePageImpl implements TemplatePage {
     private InventoryCloseHandler inventoryCloseHandler = (inventoryPage, player) -> {};
     private Delayable<InventoryPage> globalUpdateDelay = new DefaultUpdateDelay();
 
+    private BottomInventoryClickHandler bottomInventoryClickHandler = (inventoryPage, player, clickType) -> true;
+
     private StructureHolder[] structure = null;
 
     private final Map<Integer, ItemIconTemplate> itemIcons = new HashMap<>();
@@ -137,6 +139,14 @@ public class TemplatePageImpl implements TemplatePage {
     }
 
     @Override
+    public TemplatePage setBottomInventoryClickHandler(BottomInventoryClickHandler bottomInventoryClickHandler) {
+        Preconditions.checkArgument(bottomInventoryClickHandler != null, "bottomInventoryClickHandler is null!");
+
+        this.bottomInventoryClickHandler = bottomInventoryClickHandler;
+        return this;
+    }
+
+    @Override
     public TemplatePage setIcon(int slot, ElementBuilder elementBuilder) {
         Preconditions.checkArgument(elementBuilder != null, "elementBuilder is null!");
 
@@ -196,8 +206,7 @@ public class TemplatePageImpl implements TemplatePage {
 
         InventoryLocation firstLocation = InventoryLocation.of(0, 0);
         InventoryLocation secondLocation = InventoryLocation.of(0, 0);
-        for (int i = 0; i < this.structure.length; i++) {
-            StructureHolder holder = this.structure[i];
+        for (StructureHolder holder : this.structure) {
             if (holder.getValue() == first) {
                 firstLocation = InventoryLocation.of(holder.getX(), holder.getZ());
             }
@@ -378,6 +387,7 @@ public class TemplatePageImpl implements TemplatePage {
                 this.updateExceptionHandler,
                 this.inventoryCloseHandler,
                 this.globalUpdateDelay,
+                this.bottomInventoryClickHandler,
                 this.background,
                 player,
                 session,

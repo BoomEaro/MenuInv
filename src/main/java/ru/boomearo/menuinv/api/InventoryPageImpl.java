@@ -1,5 +1,6 @@
 package ru.boomearo.menuinv.api;
 
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -8,15 +9,13 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import ru.boomearo.menuinv.MenuInv;
-import ru.boomearo.menuinv.api.icon.ClickExceptionHandler;
-import ru.boomearo.menuinv.api.icon.IconHandlerFactory;
-import ru.boomearo.menuinv.api.icon.ItemIcon;
-import ru.boomearo.menuinv.api.icon.UpdateExceptionHandler;
+import ru.boomearo.menuinv.api.icon.*;
 import ru.boomearo.menuinv.api.session.InventorySession;
 import ru.boomearo.menuinv.api.frames.PagedIcons;
 
 import java.util.*;
 
+@Getter
 public class InventoryPageImpl implements InventoryPage {
 
     private final String name;
@@ -27,6 +26,7 @@ public class InventoryPageImpl implements InventoryPage {
     private final UpdateExceptionHandler updateExceptionHandler;
     private final InventoryCloseHandler inventoryCloseHandler;
     private final Delayable<InventoryPage> globalUpdateDelay;
+    private final BottomInventoryClickHandler bottomInventoryClickHandler;
 
     private final Map<String, PagedIcons> listedIcons;
 
@@ -54,6 +54,7 @@ public class InventoryPageImpl implements InventoryPage {
                              UpdateExceptionHandler updateExceptionHandler,
                              InventoryCloseHandler inventoryCloseHandler,
                              Delayable<InventoryPage> globalUpdateDelay,
+                             BottomInventoryClickHandler bottomInventoryClickHandler,
                              IconHandlerFactory background,
                              Player player,
                              InventorySession session,
@@ -67,6 +68,7 @@ public class InventoryPageImpl implements InventoryPage {
         this.updateExceptionHandler = updateExceptionHandler;
         this.inventoryCloseHandler = inventoryCloseHandler;
         this.globalUpdateDelay = globalUpdateDelay;
+        this.bottomInventoryClickHandler = bottomInventoryClickHandler;
         this.player = player;
         this.session = session;
         this.templatePage = templatePage;
@@ -93,26 +95,6 @@ public class InventoryPageImpl implements InventoryPage {
     }
 
     @Override
-    public String getName() {
-        return this.name;
-    }
-
-    @Override
-    public MenuType getMenuType() {
-        return this.menuType;
-    }
-
-    @Override
-    public Player getPlayer() {
-        return this.player;
-    }
-
-    @Override
-    public InventorySession getSession() {
-        return this.session;
-    }
-
-    @Override
     public void setNeedUpdate() {
         this.changes = true;
     }
@@ -120,16 +102,6 @@ public class InventoryPageImpl implements InventoryPage {
     @Override
     public PagedIcons getListedIconsItems(String name) {
         return this.listedIcons.get(name);
-    }
-
-    @Override
-    public InventoryCloseHandler getInventoryCloseHandler() {
-        return this.inventoryCloseHandler;
-    }
-
-    @Override
-    public Inventory getInventory() {
-        return this.inventory;
     }
 
     public void handleInventoryClick(int slot, ClickType type) {
@@ -143,10 +115,6 @@ public class InventoryPageImpl implements InventoryPage {
                 this.clickExceptionHandler.onException(this, this.player, type, e);
             }
         }
-    }
-
-    public TemplatePageImpl getTemplatePage() {
-        return this.templatePage;
     }
 
     @Override

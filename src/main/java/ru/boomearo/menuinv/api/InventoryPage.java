@@ -3,6 +3,7 @@ package ru.boomearo.menuinv.api;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import ru.boomearo.menuinv.api.frames.PagedIcons;
+import ru.boomearo.menuinv.api.icon.BottomInventoryClickHandler;
 import ru.boomearo.menuinv.api.session.InventorySession;
 
 public interface InventoryPage {
@@ -40,5 +41,7 @@ public interface InventoryPage {
     void close(boolean force);
 
     InventoryCloseHandler getInventoryCloseHandler();
+
+    BottomInventoryClickHandler getBottomInventoryClickHandler();
 
 }

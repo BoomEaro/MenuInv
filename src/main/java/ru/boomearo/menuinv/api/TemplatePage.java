@@ -1,6 +1,7 @@
 package ru.boomearo.menuinv.api;
 
 import ru.boomearo.menuinv.api.frames.PagedIconsBuilder;
+import ru.boomearo.menuinv.api.icon.BottomInventoryClickHandler;
 import ru.boomearo.menuinv.api.icon.ClickExceptionHandler;
 import ru.boomearo.menuinv.api.icon.ElementBuilder;
 import ru.boomearo.menuinv.api.icon.UpdateExceptionHandler;
@@ -34,6 +35,8 @@ public interface TemplatePage {
     InventoryCloseHandler getInventoryCloseHandler();
 
     TemplatePage setInventoryCloseHandler(InventoryCloseHandler inventoryCloseHandler);
+
+    TemplatePage setBottomInventoryClickHandler(BottomInventoryClickHandler bottomInventoryClickHandler);
 
     Delayable<InventoryPage> getGlobalUpdateDelay();
 
