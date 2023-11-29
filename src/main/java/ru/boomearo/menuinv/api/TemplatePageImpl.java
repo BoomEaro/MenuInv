@@ -162,11 +162,10 @@ public class TemplatePageImpl implements TemplatePage {
     @Override
     public TemplatePage setImmutableIcon(int slot, ElementBuilder elementBuilder) {
         if (elementBuilder instanceof ElementBuilderUpdatable) {
-            ElementBuilderUpdatable elementBuilderUpdatable = (ElementBuilderUpdatable) elementBuilder;
+            ElementBuilderUpdatable<?> elementBuilderUpdatable = (ElementBuilderUpdatable<?>) elementBuilder;
             elementBuilderUpdatable.setUpdateDelay((inventoryPage, force) -> Long.MAX_VALUE);
         }
-        setIcon(slot, elementBuilder);
-        return this;
+        return setIcon(slot, elementBuilder);
     }
 
     @Override
@@ -223,8 +222,7 @@ public class TemplatePageImpl implements TemplatePage {
         pagedIconsBuilder.setUpdateDelay((inventoryPage, force) -> Long.MAX_VALUE);
         pagedIconsBuilder.setPermanent(true);
 
-        setPagedIcons(name, first, width, height, pagedIconsBuilder);
-        return this;
+        return setPagedIcons(name, first, width, height, pagedIconsBuilder);
     }
 
     @Override
@@ -232,8 +230,7 @@ public class TemplatePageImpl implements TemplatePage {
         pagedIconsBuilder.setUpdateDelay((inventoryPage, force) -> Long.MAX_VALUE);
         pagedIconsBuilder.setPermanent(true);
 
-        setPagedIcons(name, first, second, pagedIconsBuilder);
-        return this;
+        return setPagedIcons(name, first, second, pagedIconsBuilder);
     }
 
     @Override
@@ -241,8 +238,7 @@ public class TemplatePageImpl implements TemplatePage {
         pagedIconsBuilder.setUpdateDelay((inventoryPage, force) -> Long.MAX_VALUE);
         pagedIconsBuilder.setPermanent(true);
 
-        setPagedIconsIngredients(name, first, second, pagedIconsBuilder);
-        return this;
+        return setPagedIconsIngredients(name, first, second, pagedIconsBuilder);
     }
 
     private void checkPagedItemsBorder(Frame frame) {
@@ -271,12 +267,11 @@ public class TemplatePageImpl implements TemplatePage {
     @Override
     public TemplatePage setImmutableBackground(ElementBuilder elementBuilder) {
         if (elementBuilder instanceof ElementBuilderUpdatable) {
-            ElementBuilderUpdatable elementBuilderUpdatable = (ElementBuilderUpdatable) elementBuilder;
+            ElementBuilderUpdatable<?> elementBuilderUpdatable = (ElementBuilderUpdatable<?>) elementBuilder;
             elementBuilderUpdatable.setUpdateDelay((inventoryPage, force) -> Long.MAX_VALUE);
         }
 
-        setBackground(elementBuilder);
-        return this;
+        return setBackground(elementBuilder);
     }
 
     @Override
@@ -334,12 +329,11 @@ public class TemplatePageImpl implements TemplatePage {
     @Override
     public TemplatePage setImmutableIngredient(char value, ElementBuilder elementBuilder) {
         if (elementBuilder instanceof ElementBuilderUpdatable) {
-            ElementBuilderUpdatable elementBuilderUpdatable = (ElementBuilderUpdatable) elementBuilder;
+            ElementBuilderUpdatable<?> elementBuilderUpdatable = (ElementBuilderUpdatable<?>) elementBuilder;
             elementBuilderUpdatable.setUpdateDelay((inventoryPage, force) -> Long.MAX_VALUE);
         }
 
-        setIngredient(value, elementBuilder);
-        return this;
+        return setIngredient(value, elementBuilder);
     }
 
     private void addItem(ItemIconTemplate icon) {

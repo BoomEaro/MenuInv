@@ -162,9 +162,8 @@ public class PagedIcons extends FramedIcons {
                                   boolean force,
                                   boolean create,
                                   UpdateExceptionHandler updateExceptionHandler) {
-        FramedIconsHandler handler = this.iconsHandler;
 
-        if (handler.canUpdate(page, force, this.updateHandlerCooldown) || create) {
+        if (this.iconsHandler.canUpdate(page, force, this.updateHandlerCooldown) || create) {
             this.updateHandlerCooldown = System.currentTimeMillis();
 
             List<IconHandler> handlers = getCachedHandler(page, updateExceptionHandler);

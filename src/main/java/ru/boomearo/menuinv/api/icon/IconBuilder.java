@@ -42,30 +42,28 @@ public class IconBuilder implements ElementBuilderUpdatable<IconBuilder> {
 
     @Override
     public IconHandlerFactory build() {
-        return () -> {
-            return new IconHandler() {
+        return () -> new IconHandler() {
 
-                @Override
-                public void onClick(InventoryPage page, Player player, ClickType click) {
-                    IconBuilder.this.iconClick.onClick(page, player, click);
-                }
+            @Override
+            public void onClick(InventoryPage page, Player player, ClickType click) {
+                IconBuilder.this.iconClick.onClick(page, player, click);
+            }
 
-                @Override
-                public long getClickTime(InventoryPage page, Player player, ClickType click) {
-                    return IconBuilder.this.iconClickDelay.getClickTime(page, player, click);
-                }
+            @Override
+            public long getClickTime(InventoryPage page, Player player, ClickType click) {
+                return IconBuilder.this.iconClickDelay.getClickTime(page, player, click);
+            }
 
-                @Override
-                public ItemStack onUpdate(InventoryPage consume, Player player) {
-                    return IconBuilder.this.iconUpdate.onUpdate(consume, player);
-                }
+            @Override
+            public ItemStack onUpdate(InventoryPage consume, Player player) {
+                return IconBuilder.this.iconUpdate.onUpdate(consume, player);
+            }
 
-                @Override
-                public long onUpdateTime(InventoryPage page, boolean force) {
-                    return IconBuilder.this.updateDelay.onUpdateTime(page, force);
-                }
+            @Override
+            public long onUpdateTime(InventoryPage page, boolean force) {
+                return IconBuilder.this.updateDelay.onUpdateTime(page, force);
+            }
 
-            };
         };
     }
 

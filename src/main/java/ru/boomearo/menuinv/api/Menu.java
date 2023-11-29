@@ -159,8 +159,8 @@ public class Menu {
         return inventoryPage;
     }
 
-    public static void openNow(PluginPage pluginPage, Player player) {
-        openNow(pluginPage, player, null);
+    public static InventoryPage openNow(PluginPage pluginPage, Player player) {
+        return openNow(pluginPage, player, null);
     }
 
     public static InventoryPage openNow(PluginPage pluginPage, Player player, InventorySession session) {

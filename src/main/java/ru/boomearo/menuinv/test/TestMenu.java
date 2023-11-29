@@ -1,5 +1,6 @@
 package ru.boomearo.menuinv.test;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
@@ -26,10 +27,7 @@ import ru.boomearo.menuinv.api.frames.iteration.InverseIterationHandler;
 import ru.boomearo.menuinv.api.session.InventorySessionImpl;
 import ru.boomearo.menuinv.api.frames.PagedIcons;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Level;
 
@@ -171,7 +169,7 @@ public class TestMenu {
                                 ItemStack item = new ItemStack(MATERIALS.get(ThreadLocalRandom.current().nextInt(MATERIALS.size())), 1);
                                 ItemMeta meta = item.getItemMeta();
                                 meta.setDisplayName("Hello@");
-                                meta.setLore(Arrays.asList("Time: " + System.currentTimeMillis()));
+                                meta.setLore(Collections.singletonList("Time: " + System.currentTimeMillis()));
                                 item.setItemMeta(meta);
                                 return item;
                             })
@@ -182,7 +180,7 @@ public class TestMenu {
                                 ItemStack item = new ItemStack(MATERIALS.get(ThreadLocalRandom.current().nextInt(MATERIALS.size())), 1);
                                 ItemMeta meta = item.getItemMeta();
                                 meta.setDisplayName("Hello!");
-                                meta.setLore(Arrays.asList("Time2: " + System.currentTimeMillis()));
+                                meta.setLore(Collections.singletonList("Time2: " + System.currentTimeMillis()));
                                 item.setItemMeta(meta);
                                 return item;
                             })
@@ -200,7 +198,7 @@ public class TestMenu {
                                 ItemStack item = new ItemStack(Material.BARRIER, 1);
                                 ItemMeta meta = item.getItemMeta();
                                 meta.setDisplayName("Close");
-                                meta.setLore(Arrays.asList("UwU"));
+                                meta.setLore(Collections.singletonList("UwU"));
                                 item.setItemMeta(meta);
                                 return item;
                             }))
@@ -244,13 +242,14 @@ public class TestMenu {
     }
 
     @Value
+    @EqualsAndHashCode(callSuper = true)
     private static class TestSession extends InventorySessionImpl {
-        private final List<ItemStack> items = new ArrayList<>();
+        List<ItemStack> items = new ArrayList<>();
     }
 
     @RequiredArgsConstructor
     @Getter
-    private static enum MenuPage implements PluginPage {
+    private enum MenuPage implements PluginPage {
 
         MAIN(MenuInv.getInstance(), "main"),
         OTHER(MenuInv.getInstance(), "other");

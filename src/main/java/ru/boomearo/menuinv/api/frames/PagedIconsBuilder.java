@@ -1,6 +1,7 @@
 package ru.boomearo.menuinv.api.frames;
 
 import com.google.common.base.Preconditions;
+import lombok.Getter;
 import org.bukkit.entity.Player;
 import ru.boomearo.menuinv.api.Delayable;
 import ru.boomearo.menuinv.api.InventoryPage;
@@ -12,6 +13,7 @@ import ru.boomearo.menuinv.api.icon.IconHandler;
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 public class PagedIconsBuilder {
 
     private PagedIconsUpdate pagedIconsUpdate = (inventoryPage, player) -> new ArrayList<>();
@@ -47,31 +49,17 @@ public class PagedIconsBuilder {
         return this;
     }
 
-    public FrameIterationHandler getFrameIterationHandler() {
-        return this.frameIterationHandler;
-    }
-
-    public boolean isPermanent() {
-        return this.permanent;
-    }
-
     public FramedIconsHandlerFactory build() {
-        return new FramedIconsHandlerFactory() {
+        return () -> new FramedIconsHandler() {
 
             @Override
-            public FramedIconsHandler create() {
-                return new FramedIconsHandler() {
+            public List<IconHandler> onUpdate(InventoryPage inventoryPage, Player player) {
+                return PagedIconsBuilder.this.pagedIconsUpdate.onUpdate(inventoryPage, player);
+            }
 
-                    @Override
-                    public List<IconHandler> onUpdate(InventoryPage inventoryPage, Player player) {
-                        return PagedIconsBuilder.this.pagedIconsUpdate.onUpdate(inventoryPage, player);
-                    }
-
-                    @Override
-                    public long onUpdateTime(InventoryPage inventoryPage, boolean force) {
-                        return PagedIconsBuilder.this.updateDelay.onUpdateTime(inventoryPage, force);
-                    }
-                };
+            @Override
+            public long onUpdateTime(InventoryPage inventoryPage, boolean force) {
+                return PagedIconsBuilder.this.updateDelay.onUpdateTime(inventoryPage, force);
             }
         };
     }

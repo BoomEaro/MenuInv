@@ -68,5 +68,5 @@ public interface TemplatePage {
 
     TemplatePage setIngredient(char value, ElementBuilder elementBuilder);
 
-    TemplatePage setImmutableIngredient(char value, ElementBuilder elementBuilderr);
+    TemplatePage setImmutableIngredient(char value, ElementBuilder elementBuilder);
 }
