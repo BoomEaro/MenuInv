@@ -19,33 +19,33 @@ import java.util.Map;
 
 @RequiredArgsConstructor
 @Getter
-public class TemplatePageImpl implements TemplatePage {
+public class TemplatePageImpl<SESSION extends InventorySession> implements TemplatePage<SESSION> {
 
     private final String name;
     private final PluginTemplatePagesImpl pluginTemplatePages;
 
     private MenuType menuType = MenuType.CHEST_9X6;
-    private InventoryTitleHandler inventoryTitleHandler = (inventoryPage) -> "Default page";
-    private InventoryReopenHandler inventoryReopenHandler = (inventoryPage, force) -> false;
-    private ClickExceptionHandler clickExceptionHandler = (inventoryPage, player, clickType, exception) -> {
+    private InventoryTitleHandler<SESSION> inventoryTitleHandler = (inventoryPage) -> "Default page";
+    private InventoryReopenHandler<SESSION> inventoryReopenHandler = (inventoryPage, force) -> false;
+    private ClickExceptionHandler<SESSION> clickExceptionHandler = (inventoryPage, player, clickType, exception) -> {
         inventoryPage.close(true);
         exception.printStackTrace();
     };
-    private UpdateExceptionHandler updateExceptionHandler = (inventoryPage, player, exception) -> {
+    private UpdateExceptionHandler<SESSION> updateExceptionHandler = (inventoryPage, player, exception) -> {
         inventoryPage.close(true);
         exception.printStackTrace();
     };
 
-    private InventoryCloseHandler inventoryCloseHandler = (inventoryPage, player) -> {};
-    private Delayable<InventoryPage> globalUpdateDelay = new DefaultUpdateDelay();
+    private InventoryCloseHandler<SESSION> inventoryCloseHandler = (inventoryPage, player) -> {};
+    private Delayable<InventoryPage<SESSION>> globalUpdateDelay = new DefaultUpdateDelay<>();
 
-    private BottomInventoryClickHandler bottomInventoryClickHandler = (inventoryPage, player, slot, clickType) -> true;
+    private BottomInventoryClickHandler<SESSION> bottomInventoryClickHandler = (inventoryPage, player, slot, clickType) -> true;
 
-    private StructureHolder[] structure = null;
+    private StructureHolder<SESSION>[] structure = null;
 
-    private final Map<Integer, ItemIconTemplate> itemIcons = new HashMap<>();
-    private final Map<String, FramedIconsTemplate> pagedItems = new HashMap<>();
-    private IconHandlerFactory background = null;
+    private final Map<Integer, ItemIconTemplate<SESSION>> itemIcons = new HashMap<>();
+    private final Map<String, FramedIconsTemplate<SESSION>> pagedItems = new HashMap<>();
+    private IconHandlerFactory<SESSION> background = null;
 
     @Override
     public MenuType getMenuType() {
@@ -53,7 +53,7 @@ public class TemplatePageImpl implements TemplatePage {
     }
 
     @Override
-    public TemplatePage setMenuType(MenuType type) {
+    public TemplatePage<SESSION> setMenuType(MenuType type) {
         Preconditions.checkArgument(type != null, "type is null!");
 
         this.menuType = type;
@@ -61,12 +61,12 @@ public class TemplatePageImpl implements TemplatePage {
     }
 
     @Override
-    public InventoryTitleHandler getInventoryTitle() {
+    public InventoryTitleHandler<SESSION> getInventoryTitle() {
         return this.inventoryTitleHandler;
     }
 
     @Override
-    public TemplatePage setInventoryTitle(InventoryTitleHandler inventoryTitleHandler) {
+    public TemplatePage<SESSION> setInventoryTitle(InventoryTitleHandler<SESSION> inventoryTitleHandler) {
         Preconditions.checkArgument(inventoryTitleHandler != null, "inventoryCreationHandler is null!");
 
         this.inventoryTitleHandler = inventoryTitleHandler;
@@ -74,12 +74,12 @@ public class TemplatePageImpl implements TemplatePage {
     }
 
     @Override
-    public InventoryReopenHandler getInventoryReopen() {
+    public InventoryReopenHandler<SESSION> getInventoryReopen() {
         return this.inventoryReopenHandler;
     }
 
     @Override
-    public TemplatePage setInventoryReopen(InventoryReopenHandler inventoryReopenHandler) {
+    public TemplatePage<SESSION> setInventoryReopen(InventoryReopenHandler<SESSION> inventoryReopenHandler) {
         Preconditions.checkArgument(inventoryReopenHandler != null, "inventoryReopenHandler is null!");
 
         this.inventoryReopenHandler = inventoryReopenHandler;
@@ -87,12 +87,12 @@ public class TemplatePageImpl implements TemplatePage {
     }
 
     @Override
-    public UpdateExceptionHandler getUpdateExceptionHandler() {
+    public UpdateExceptionHandler<SESSION> getUpdateExceptionHandler() {
         return this.updateExceptionHandler;
     }
 
     @Override
-    public TemplatePage setUpdateExceptionHandler(UpdateExceptionHandler updateExceptionHandler) {
+    public TemplatePage<SESSION> setUpdateExceptionHandler(UpdateExceptionHandler<SESSION> updateExceptionHandler) {
         Preconditions.checkArgument(updateExceptionHandler != null, "updateExceptionHandler is null!");
         this.updateExceptionHandler = updateExceptionHandler;
 
@@ -100,12 +100,12 @@ public class TemplatePageImpl implements TemplatePage {
     }
 
     @Override
-    public InventoryCloseHandler getInventoryCloseHandler() {
+    public InventoryCloseHandler<SESSION> getInventoryCloseHandler() {
         return this.inventoryCloseHandler;
     }
 
     @Override
-    public TemplatePage setInventoryCloseHandler(InventoryCloseHandler inventoryCloseHandler) {
+    public TemplatePage<SESSION> setInventoryCloseHandler(InventoryCloseHandler<SESSION> inventoryCloseHandler) {
         Preconditions.checkArgument(inventoryCloseHandler != null, "inventoryCloseHandler is null!");
         this.inventoryCloseHandler = inventoryCloseHandler;
 
@@ -113,12 +113,12 @@ public class TemplatePageImpl implements TemplatePage {
     }
 
     @Override
-    public Delayable<InventoryPage> getGlobalUpdateDelay() {
+    public Delayable<InventoryPage<SESSION>> getGlobalUpdateDelay() {
         return this.globalUpdateDelay;
     }
 
     @Override
-    public TemplatePage setGlobalUpdateDelay(Delayable<InventoryPage> globalUpdateDelay) {
+    public TemplatePage<SESSION> setGlobalUpdateDelay(Delayable<InventoryPage<SESSION>> globalUpdateDelay) {
         Preconditions.checkArgument(globalUpdateDelay != null, "globalUpdateDelay is null!");
         this.globalUpdateDelay = globalUpdateDelay;
 
@@ -126,12 +126,12 @@ public class TemplatePageImpl implements TemplatePage {
     }
 
     @Override
-    public ClickExceptionHandler getClickExceptionHandler() {
+    public ClickExceptionHandler<SESSION> getClickExceptionHandler() {
         return this.clickExceptionHandler;
     }
 
     @Override
-    public TemplatePage setClickExceptionHandler(ClickExceptionHandler clickExceptionHandler) {
+    public TemplatePage<SESSION> setClickExceptionHandler(ClickExceptionHandler<SESSION> clickExceptionHandler) {
         Preconditions.checkArgument(clickExceptionHandler != null, "clickExceptionHandle is null!");
 
         this.clickExceptionHandler = clickExceptionHandler;
@@ -139,7 +139,7 @@ public class TemplatePageImpl implements TemplatePage {
     }
 
     @Override
-    public TemplatePage setBottomInventoryClickHandler(BottomInventoryClickHandler bottomInventoryClickHandler) {
+    public TemplatePage<SESSION> setBottomInventoryClickHandler(BottomInventoryClickHandler<SESSION> bottomInventoryClickHandler) {
         Preconditions.checkArgument(bottomInventoryClickHandler != null, "bottomInventoryClickHandler is null!");
 
         this.bottomInventoryClickHandler = bottomInventoryClickHandler;
@@ -147,34 +147,34 @@ public class TemplatePageImpl implements TemplatePage {
     }
 
     @Override
-    public TemplatePage setIcon(int slot, ElementBuilder elementBuilder) {
+    public TemplatePage<SESSION> setIcon(int slot, ElementBuilder<SESSION> elementBuilder) {
         Preconditions.checkArgument(elementBuilder != null, "elementBuilder is null!");
 
-        ItemIconTemplate tmp = this.itemIcons.get(slot);
+        ItemIconTemplate<SESSION> tmp = this.itemIcons.get(slot);
         if (tmp != null) {
             throw new IllegalStateException("Button on slot '" + slot + "' already added!");
         }
 
-        addItem(new ItemIconTemplate(slot, elementBuilder.build()));
+        addItem(new ItemIconTemplate<>(slot, elementBuilder.build()));
         return this;
     }
 
     @Override
-    public TemplatePage setImmutableIcon(int slot, ElementBuilder elementBuilder) {
+    public TemplatePage<SESSION> setImmutableIcon(int slot, ElementBuilder<SESSION> elementBuilder) {
         if (elementBuilder instanceof ElementBuilderUpdatable) {
-            ElementBuilderUpdatable<?> elementBuilderUpdatable = (ElementBuilderUpdatable<?>) elementBuilder;
+            ElementBuilderUpdatable<?, SESSION> elementBuilderUpdatable = (ElementBuilderUpdatable<?, SESSION>) elementBuilder;
             elementBuilderUpdatable.setUpdateDelay((inventoryPage, force) -> Long.MAX_VALUE);
         }
         return setIcon(slot, elementBuilder);
     }
 
     @Override
-    public TemplatePage setPagedIcons(String name, InventoryLocation first, int width, int height, PagedIconsBuilder pagedIconsBuilder) {
+    public TemplatePage<SESSION> setPagedIcons(String name, InventoryLocation first, int width, int height, PagedIconsBuilder<SESSION> pagedIconsBuilder) {
         Preconditions.checkArgument(name != null, "name is null!");
         Preconditions.checkArgument(first != null, "first is null!");
         Preconditions.checkArgument(pagedIconsBuilder != null, "pagedItemsBuilder is null!");
 
-        FramedIconsTemplate tli = new FramedIconsTemplate(name, first, width, height, pagedIconsBuilder.build(), pagedIconsBuilder.getFrameIterationHandler(), pagedIconsBuilder.isPermanent());
+        FramedIconsTemplate<SESSION> tli = new FramedIconsTemplate<>(name, first, width, height, pagedIconsBuilder.build(), pagedIconsBuilder.getFrameIterationHandler(), pagedIconsBuilder.isPermanent());
 
         checkPagedItemsBorder(tli);
 
@@ -184,13 +184,13 @@ public class TemplatePageImpl implements TemplatePage {
     }
 
     @Override
-    public TemplatePage setPagedIcons(String name, InventoryLocation first, InventoryLocation second, PagedIconsBuilder pagedIconsBuilder) {
+    public TemplatePage<SESSION> setPagedIcons(String name, InventoryLocation first, InventoryLocation second, PagedIconsBuilder<SESSION> pagedIconsBuilder) {
         Preconditions.checkArgument(name != null, "name is null!");
         Preconditions.checkArgument(first != null, "first is null!");
         Preconditions.checkArgument(second != null, "second is null!");
         Preconditions.checkArgument(pagedIconsBuilder != null, "pagedItemsBuilder is null!");
 
-        FramedIconsTemplate tli = new FramedIconsTemplate(name, first, second, pagedIconsBuilder.build(), pagedIconsBuilder.getFrameIterationHandler(), pagedIconsBuilder.isPermanent());
+        FramedIconsTemplate<SESSION> tli = new FramedIconsTemplate<>(name, first, second, pagedIconsBuilder.build(), pagedIconsBuilder.getFrameIterationHandler(), pagedIconsBuilder.isPermanent());
 
         checkPagedItemsBorder(tli);
 
@@ -200,12 +200,12 @@ public class TemplatePageImpl implements TemplatePage {
     }
 
     @Override
-    public TemplatePage setPagedIconsIngredients(String name, char first, char second, PagedIconsBuilder pagedIconsBuilder) {
+    public TemplatePage<SESSION> setPagedIconsIngredients(String name, char first, char second, PagedIconsBuilder<SESSION> pagedIconsBuilder) {
         Preconditions.checkArgument(this.structure != null, "structure is not set!");
 
         InventoryLocation firstLocation = InventoryLocation.of(0, 0);
         InventoryLocation secondLocation = InventoryLocation.of(0, 0);
-        for (StructureHolder holder : this.structure) {
+        for (StructureHolder<SESSION> holder : this.structure) {
             if (holder.getValue() == first) {
                 firstLocation = InventoryLocation.of(holder.getX(), holder.getZ());
             }
@@ -218,7 +218,7 @@ public class TemplatePageImpl implements TemplatePage {
     }
 
     @Override
-    public TemplatePage setImmutablePagedIcons(String name, InventoryLocation first, int width, int height, PagedIconsBuilder pagedIconsBuilder) {
+    public TemplatePage<SESSION> setImmutablePagedIcons(String name, InventoryLocation first, int width, int height, PagedIconsBuilder<SESSION> pagedIconsBuilder) {
         pagedIconsBuilder.setUpdateDelay((inventoryPage, force) -> Long.MAX_VALUE);
         pagedIconsBuilder.setPermanent(true);
 
@@ -226,7 +226,7 @@ public class TemplatePageImpl implements TemplatePage {
     }
 
     @Override
-    public TemplatePage setImmutablePagedIcons(String name, InventoryLocation first, InventoryLocation second, PagedIconsBuilder pagedIconsBuilder) {
+    public TemplatePage<SESSION> setImmutablePagedIcons(String name, InventoryLocation first, InventoryLocation second, PagedIconsBuilder<SESSION> pagedIconsBuilder) {
         pagedIconsBuilder.setUpdateDelay((inventoryPage, force) -> Long.MAX_VALUE);
         pagedIconsBuilder.setPermanent(true);
 
@@ -234,7 +234,7 @@ public class TemplatePageImpl implements TemplatePage {
     }
 
     @Override
-    public TemplatePage setImmutablePagedIconsIngredients(String name, char first, char second, PagedIconsBuilder pagedIconsBuilder) {
+    public TemplatePage<SESSION> setImmutablePagedIconsIngredients(String name, char first, char second, PagedIconsBuilder<SESSION> pagedIconsBuilder) {
         pagedIconsBuilder.setUpdateDelay((inventoryPage, force) -> Long.MAX_VALUE);
         pagedIconsBuilder.setPermanent(true);
 
@@ -256,7 +256,7 @@ public class TemplatePageImpl implements TemplatePage {
     }
 
     @Override
-    public TemplatePage setBackground(ElementBuilder elementBuilder) {
+    public TemplatePage<SESSION> setBackground(ElementBuilder<SESSION> elementBuilder) {
         Preconditions.checkArgument(elementBuilder != null, "elementBuilder is null!");
 
         this.background = elementBuilder.build();
@@ -265,9 +265,9 @@ public class TemplatePageImpl implements TemplatePage {
     }
 
     @Override
-    public TemplatePage setImmutableBackground(ElementBuilder elementBuilder) {
+    public TemplatePage<SESSION> setImmutableBackground(ElementBuilder<SESSION> elementBuilder) {
         if (elementBuilder instanceof ElementBuilderUpdatable) {
-            ElementBuilderUpdatable<?> elementBuilderUpdatable = (ElementBuilderUpdatable<?>) elementBuilder;
+            ElementBuilderUpdatable<?, SESSION> elementBuilderUpdatable = (ElementBuilderUpdatable<?, SESSION>) elementBuilder;
             elementBuilderUpdatable.setUpdateDelay((inventoryPage, force) -> Long.MAX_VALUE);
         }
 
@@ -275,7 +275,7 @@ public class TemplatePageImpl implements TemplatePage {
     }
 
     @Override
-    public TemplatePage setStructure(String... value) {
+    public TemplatePage<SESSION> setStructure(String... value) {
         value = removeEmptyChars(value);
 
         int height = value.length;
@@ -305,20 +305,20 @@ public class TemplatePageImpl implements TemplatePage {
             int x = i % width;
             int z = i / width;
 
-            this.structure[i] = new StructureHolder(i, x, z, c);
+            this.structure[i] = new StructureHolder<>(i, x, z, c);
         }
 
         return this;
     }
 
     @Override
-    public TemplatePage setStructure(List<String> value) {
+    public TemplatePage<SESSION> setStructure(List<String> value) {
         return setStructure(value.toArray(new String[0]));
     }
 
     @Override
-    public TemplatePage setIngredient(char value, ElementBuilder elementBuilder) {
-        for (StructureHolder holder : this.structure) {
+    public TemplatePage<SESSION> setIngredient(char value, ElementBuilder<SESSION> elementBuilder) {
+        for (StructureHolder<SESSION> holder : this.structure) {
             if (holder.getValue() == value) {
                 holder.setElementBuilder(elementBuilder);
             }
@@ -327,16 +327,16 @@ public class TemplatePageImpl implements TemplatePage {
     }
 
     @Override
-    public TemplatePage setImmutableIngredient(char value, ElementBuilder elementBuilder) {
+    public TemplatePage<SESSION> setImmutableIngredient(char value, ElementBuilder<SESSION> elementBuilder) {
         if (elementBuilder instanceof ElementBuilderUpdatable) {
-            ElementBuilderUpdatable<?> elementBuilderUpdatable = (ElementBuilderUpdatable<?>) elementBuilder;
+            ElementBuilderUpdatable<?, SESSION> elementBuilderUpdatable = (ElementBuilderUpdatable<?, SESSION>) elementBuilder;
             elementBuilderUpdatable.setUpdateDelay((inventoryPage, force) -> Long.MAX_VALUE);
         }
 
         return setIngredient(value, elementBuilder);
     }
 
-    private void addItem(ItemIconTemplate icon) {
+    private void addItem(ItemIconTemplate<SESSION> icon) {
         int slot = icon.getSlot();
 
         if (slot < 0) {
@@ -350,28 +350,28 @@ public class TemplatePageImpl implements TemplatePage {
         this.itemIcons.put(icon.getSlot(), icon);
     }
 
-    public InventoryPageImpl createNewInventoryPage(Player player, InventorySession session) {
-        Map<Integer, ItemIcon> itemIconsActive = new HashMap<>();
+    public InventoryPageImpl<SESSION> createNewInventoryPage(Player player, SESSION session) {
+        Map<Integer, ItemIcon<SESSION>> itemIconsActive = new HashMap<>();
 
         if (this.structure != null) {
-            for (StructureHolder holder : this.structure) {
-                ElementBuilder elementBuilder = holder.getElementBuilder();
+            for (StructureHolder<SESSION> holder : this.structure) {
+                ElementBuilder<SESSION> elementBuilder = holder.getElementBuilder();
                 if (elementBuilder != null) {
-                    itemIconsActive.put(holder.getSlot(), new ItemIcon(holder.getSlot(), elementBuilder.build().create()));
+                    itemIconsActive.put(holder.getSlot(), new ItemIcon<>(holder.getSlot(), elementBuilder.build().create()));
                 }
             }
         }
 
-        for (ItemIconTemplate tii : this.itemIcons.values()) {
-            itemIconsActive.put(tii.getSlot(), new ItemIcon(tii.getSlot(), tii.getFactory().create()));
+        for (ItemIconTemplate<SESSION> tii : this.itemIcons.values()) {
+            itemIconsActive.put(tii.getSlot(), new ItemIcon<>(tii.getSlot(), tii.getFactory().create()));
         }
 
-        Map<String, PagedIcons> pagedIconsActive = new HashMap<>();
-        for (FramedIconsTemplate tli : this.pagedItems.values()) {
-            pagedIconsActive.put(tli.getName(), new PagedIcons(tli.getName(), tli.getFirst(), tli.getSecond(), tli.getIconsFactory().create(), tli.getIterationHandler(), tli.isPermanentCached()));
+        Map<String, PagedIcons<SESSION>> pagedIconsActive = new HashMap<>();
+        for (FramedIconsTemplate<SESSION> tli : this.pagedItems.values()) {
+            pagedIconsActive.put(tli.getName(), new PagedIcons<>(tli.getName(), tli.getFirst(), tli.getSecond(), tli.getIconsFactory().create(), tli.getIterationHandler(), tli.isPermanentCached()));
         }
 
-        return new InventoryPageImpl(this.name,
+        return new InventoryPageImpl<SESSION>(this.name,
                 this.menuType,
                 itemIconsActive,
                 pagedIconsActive,
@@ -398,13 +398,13 @@ public class TemplatePageImpl implements TemplatePage {
 
     @Data
     @RequiredArgsConstructor
-    private static class StructureHolder {
+    private static class StructureHolder<SESSION extends InventorySession> {
         private final int slot;
         private final int x;
         private final int z;
         private final char value;
 
-        private ElementBuilder elementBuilder;
+        private ElementBuilder<SESSION> elementBuilder;
 
     }
 }

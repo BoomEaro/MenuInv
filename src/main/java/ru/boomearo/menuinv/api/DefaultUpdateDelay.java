@@ -1,9 +1,11 @@
 package ru.boomearo.menuinv.api;
 
-public class DefaultUpdateDelay implements Delayable<InventoryPage> {
+import ru.boomearo.menuinv.api.session.InventorySession;
+
+public class DefaultUpdateDelay<SESSION extends InventorySession> implements Delayable<InventoryPage<SESSION>> {
 
     @Override
-    public long onUpdateTime(InventoryPage inventoryPage, boolean force) {
+    public long onUpdateTime(InventoryPage<SESSION> inventoryPage, boolean force) {
         // If force then update immediately
         if (force) {
             return 0;

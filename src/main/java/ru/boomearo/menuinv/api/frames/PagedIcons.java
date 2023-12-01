@@ -10,13 +10,14 @@ import ru.boomearo.menuinv.api.icon.IconHandler;
 import ru.boomearo.menuinv.api.icon.ItemIcon;
 import ru.boomearo.menuinv.api.icon.UpdateExceptionHandler;
 import ru.boomearo.menuinv.api.icon.scrolls.ScrollType;
+import ru.boomearo.menuinv.api.session.InventorySession;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 @Getter
-public class PagedIcons extends FramedIcons {
+public class PagedIcons<SESSION extends InventorySession> extends FramedIcons<SESSION> {
 
     private long updateHandlerCooldown = 0;
 
@@ -26,12 +27,12 @@ public class PagedIcons extends FramedIcons {
 
     private boolean changes = false;
 
-    private List<IconHandler> cachedHandler = null;
+    private List<IconHandler<SESSION>> cachedHandler = null;
 
     public PagedIcons(String name,
                       InventoryLocation first,
                       InventoryLocation second,
-                      FramedIconsHandler iconsHandler,
+                      FramedIconsHandler<SESSION> iconsHandler,
                       FrameIterationHandler iterationHandler,
                       boolean permanentCached) {
         super(name, first, second, iconsHandler, iterationHandler, permanentCached);
@@ -128,8 +129,8 @@ public class PagedIcons extends FramedIcons {
         return false;
     }
 
-    private List<IconHandler> getHandlers(InventoryPageImpl page, UpdateExceptionHandler updateExceptionHandler) {
-        List<IconHandler> handlers = null;
+    private List<IconHandler<SESSION>> getHandlers(InventoryPageImpl<SESSION> page, UpdateExceptionHandler<SESSION> updateExceptionHandler) {
+        List<IconHandler<SESSION>> handlers = null;
         try {
             handlers = this.iconsHandler.onUpdate(page, page.getPlayer());
         }
@@ -144,7 +145,7 @@ public class PagedIcons extends FramedIcons {
         return handlers;
     }
 
-    private List<IconHandler> getCachedHandler(InventoryPageImpl page, UpdateExceptionHandler updateExceptionHandler) {
+    private List<IconHandler<SESSION>> getCachedHandler(InventoryPageImpl<SESSION> page, UpdateExceptionHandler<SESSION> updateExceptionHandler) {
         if (this.permanentCached) {
             if (this.cachedHandler != null) {
                 return this.cachedHandler;
@@ -157,16 +158,16 @@ public class PagedIcons extends FramedIcons {
         return getHandlers(page, updateExceptionHandler);
     }
 
-    public void updateActiveIcons(InventoryPageImpl page,
-                                  ItemIcon[] activeIcons,
+    public void updateActiveIcons(InventoryPageImpl<SESSION> page,
+                                  ItemIcon<SESSION>[] activeIcons,
                                   boolean force,
                                   boolean create,
-                                  UpdateExceptionHandler updateExceptionHandler) {
+                                  UpdateExceptionHandler<SESSION> updateExceptionHandler) {
 
         if (this.iconsHandler.canUpdate(page, force, this.updateHandlerCooldown) || create) {
             this.updateHandlerCooldown = System.currentTimeMillis();
 
-            List<IconHandler> handlers = getCachedHandler(page, updateExceptionHandler);
+            List<IconHandler<SESSION>> handlers = getCachedHandler(page, updateExceptionHandler);
 
             Collections.sort(handlers);
 
@@ -201,7 +202,7 @@ public class PagedIcons extends FramedIcons {
                     }
 
                     if (i > (maxSize - 1)) {
-                        setItemIcon(activeIcons, slotOffset, DummyIconHandler.INSTANCE);
+                        setItemIcon(activeIcons, slotOffset, new DummyIconHandler<>());
                     }
                     else {
                         setItemIcon(activeIcons, slotOffset, handlers.get(i));
@@ -213,14 +214,14 @@ public class PagedIcons extends FramedIcons {
         }
     }
 
-    private void setItemIcon(ItemIcon[] activeIcons, int slot, IconHandler iconHandler) {
-        ItemIcon current = activeIcons[slot];
+    private void setItemIcon(ItemIcon<SESSION>[] activeIcons, int slot, IconHandler<SESSION> iconHandler) {
+        ItemIcon<SESSION> current = activeIcons[slot];
         if (current != null) {
             current.setHandler(iconHandler);
             return;
         }
 
-        activeIcons[slot] = new ItemIcon(slot, iconHandler);
+        activeIcons[slot] = new ItemIcon<>(slot, iconHandler);
     }
 
     public void resetChanges() {

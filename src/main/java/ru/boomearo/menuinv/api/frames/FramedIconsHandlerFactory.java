@@ -1,8 +1,10 @@
 package ru.boomearo.menuinv.api.frames;
 
-@FunctionalInterface
-public interface FramedIconsHandlerFactory {
+import ru.boomearo.menuinv.api.session.InventorySession;
 
-    FramedIconsHandler create();
+@FunctionalInterface
+public interface FramedIconsHandlerFactory<SESSION extends InventorySession> {
+
+    FramedIconsHandler<SESSION> create();
 
 }

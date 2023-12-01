@@ -5,27 +5,28 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import ru.boomearo.menuinv.api.InventoryPageImpl;
 import ru.boomearo.menuinv.api.SlotElement;
+import ru.boomearo.menuinv.api.session.InventorySession;
 
 @Getter
-public class ItemIcon extends SlotElement {
+public class ItemIcon<SESSION extends InventorySession> extends SlotElement {
 
     private long updateHandlerCooldown = System.currentTimeMillis();
 
     private boolean forceUpdate = true;
 
-    private IconHandler handler;
+    private IconHandler<SESSION> handler;
 
-    public ItemIcon(int position, IconHandler handler) {
+    public ItemIcon(int position, IconHandler<SESSION> handler) {
         super(position);
         this.handler = handler;
     }
 
-    public void setHandler(IconHandler handler) {
+    public void setHandler(IconHandler<SESSION> handler) {
         this.handler = handler;
         this.forceUpdate = true;
     }
 
-    public ItemStack getItemStack(InventoryPageImpl page, boolean force, boolean create, UpdateExceptionHandler updateExceptionHandler) {
+    public ItemStack getItemStack(InventoryPageImpl<SESSION> page, boolean force, boolean create, UpdateExceptionHandler<SESSION> updateExceptionHandler) {
         /*
          * We check at the very beginning whether the object is being retrieved for the first time
          * If so, get the upgraded item and return it.
@@ -46,7 +47,7 @@ public class ItemIcon extends SlotElement {
         return null;
     }
 
-    private ItemStack getUpdatedItem(InventoryPageImpl page, UpdateExceptionHandler updateExceptionHandler) {
+    private ItemStack getUpdatedItem(InventoryPageImpl<SESSION> page, UpdateExceptionHandler<SESSION> updateExceptionHandler) {
         try {
             ItemStack itemStack = this.handler.onUpdate(page, page.getPlayer());
             if (itemStack != null) {

@@ -4,11 +4,11 @@ import ru.boomearo.menuinv.api.PluginPage;
 
 public interface InventorySession {
 
-    PluginPage getCurrentPage();
+    PluginPage<?> getCurrentPage();
 
-    PluginPage getLastPage();
+    PluginPage<?> getLastPage();
 
-    void setCurrentPage(PluginPage page);
+    void setCurrentPage(PluginPage<?> page);
 
     ConfirmData getConfirmData();
 

@@ -5,21 +5,22 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import ru.boomearo.menuinv.api.InventoryPage;
 import ru.boomearo.menuinv.api.Updatable;
+import ru.boomearo.menuinv.api.session.InventorySession;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class IconHandler implements Updatable<ItemStack, InventoryPage>, Comparable<IconHandler> {
+public abstract class IconHandler<SESSION extends InventorySession> implements Updatable<ItemStack, InventoryPage<SESSION>>, Comparable<IconHandler<SESSION>> {
 
     private static final Map<String, Long> CLICK_COOLDOWN = new HashMap<>();
 
-    public abstract void onClick(InventoryPage page, Player player, ClickType click);
+    public abstract void onClick(InventoryPage<SESSION> page, Player player, ClickType click);
 
-    public long getClickTime(InventoryPage page, Player player, ClickType click) {
+    public long getClickTime(InventoryPage<SESSION> page, Player player, ClickType click) {
         return 250;
     }
 
-    public void handleClick(InventoryPage page, Player player, ClickType click) {
+    public void handleClick(InventoryPage<SESSION> page, Player player, ClickType click) {
         if (hasClicked(player.getName(), getClickTime(page, player, click))) {
             CLICK_COOLDOWN.put(player.getName(), System.currentTimeMillis());
 

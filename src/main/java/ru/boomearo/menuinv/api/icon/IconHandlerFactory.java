@@ -1,8 +1,10 @@
 package ru.boomearo.menuinv.api.icon;
 
-@FunctionalInterface
-public interface IconHandlerFactory {
+import ru.boomearo.menuinv.api.session.InventorySession;
 
-    IconHandler create();
+@FunctionalInterface
+public interface IconHandlerFactory<SESSION extends InventorySession> {
+
+    IconHandler<SESSION> create();
 
 }

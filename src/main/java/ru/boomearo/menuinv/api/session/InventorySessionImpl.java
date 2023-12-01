@@ -10,14 +10,14 @@ import ru.boomearo.menuinv.api.PluginPage;
 @NoArgsConstructor
 public class InventorySessionImpl implements InventorySession {
 
-    private PluginPage currentPage = null;
-    private PluginPage lastPage = null;
+    private PluginPage<?> currentPage = null;
+    private PluginPage<?> lastPage = null;
     private boolean first = true;
 
     private ConfirmData confirmData = null;
 
     @Override
-    public void setCurrentPage(PluginPage page) {
+    public void setCurrentPage(PluginPage<?> page) {
         if (this.first) {
             this.currentPage = page;
             this.lastPage = page;

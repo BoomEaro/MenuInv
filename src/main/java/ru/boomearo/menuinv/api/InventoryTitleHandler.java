@@ -1,8 +1,10 @@
 package ru.boomearo.menuinv.api;
 
-@FunctionalInterface
-public interface InventoryTitleHandler {
+import ru.boomearo.menuinv.api.session.InventorySession;
 
-    String createTitle(InventoryPage page);
+@FunctionalInterface
+public interface InventoryTitleHandler<SESSION extends InventorySession> {
+
+    String createTitle(InventoryPage<SESSION> page);
 
 }

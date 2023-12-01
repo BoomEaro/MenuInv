@@ -9,7 +9,6 @@ import ru.boomearo.menuinv.MenuInv;
 import ru.boomearo.menuinv.api.icon.IconBuilder;
 import ru.boomearo.menuinv.api.session.ConfirmData;
 import ru.boomearo.menuinv.api.session.InventorySession;
-import ru.boomearo.menuinv.api.session.InventorySessionImpl;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,7 +35,7 @@ public class Menu {
 
                     return data.getInventoryName(session);
                 })
-                .setIcon(0, new IconBuilder()
+                .setIcon(0, new IconBuilder<>()
                         .setIconClick((inventoryPage, player, clickType) -> {
                             InventorySession session = inventoryPage.getSession();
 
@@ -67,7 +66,7 @@ public class Menu {
 
                             return confirm.getCancelItem(inventoryPage);
                         }))
-                .setIcon(4, new IconBuilder()
+                .setIcon(4, new IconBuilder<>()
                         .setIconClick((inventoryPage, player, clickType) -> {
                             InventorySession session = inventoryPage.getSession();
 
@@ -127,9 +126,9 @@ public class Menu {
         for (Player player : Bukkit.getOnlinePlayers()) {
             InventoryHolder holder = player.getOpenInventory().getTopInventory().getHolder();
             if (holder instanceof MenuInventoryHolder) {
-                MenuInventoryHolder mih = (MenuInventoryHolder) holder;
+                MenuInventoryHolder<?> mih = (MenuInventoryHolder<?>) holder;
 
-                InventoryPageImpl page = mih.getPage();
+                InventoryPageImpl<?> page = mih.getPage();
 
                 // We will not compare references, because I think that there may be such a situation when the plugin has not been unloaded.
                 // Therefore, we simply compare the names, and then we close the inventories for these players
@@ -141,12 +140,8 @@ public class Menu {
         }
     }
 
-    public static InventoryPage open(PluginPage pluginPage, Player player) {
-        return open(pluginPage, player, null);
-    }
-
-    public static InventoryPage open(PluginPage pluginPage, Player player, InventorySession session) {
-        InventoryPage inventoryPage = create(pluginPage, player, session);
+    public static <SESSION extends InventorySession> InventoryPage<SESSION> open(PluginPage<SESSION> pluginPage, Player player, SESSION session) {
+        InventoryPage<SESSION> inventoryPage = create(pluginPage, player, session);
 
         Bukkit.getScheduler().runTask(MenuInv.getInstance(), () -> {
             try {
@@ -159,22 +154,14 @@ public class Menu {
         return inventoryPage;
     }
 
-    public static InventoryPage openNow(PluginPage pluginPage, Player player) {
-        return openNow(pluginPage, player, null);
-    }
-
-    public static InventoryPage openNow(PluginPage pluginPage, Player player, InventorySession session) {
-        InventoryPage inventoryPage = create(pluginPage, player, session);
+    public static <SESSION extends InventorySession> InventoryPage<SESSION> openNow(PluginPage<SESSION> pluginPage, Player player, SESSION session) {
+        InventoryPage<SESSION> inventoryPage = create(pluginPage, player, session);
 
         player.openInventory(inventoryPage.getInventory());
         return inventoryPage;
     }
 
-    public static InventoryPage create(PluginPage pluginPage, Player player) {
-        return create(pluginPage, player, null);
-    }
-
-    public static InventoryPage create(PluginPage pluginPage, Player player, InventorySession session) {
+    public static <SESSION extends InventorySession> InventoryPage<SESSION> create(PluginPage<SESSION> pluginPage, Player player, SESSION session) {
         Preconditions.checkArgument(pluginPage != null, "pluginPage is null!");
         Preconditions.checkArgument(player != null, "player is null!");
 
@@ -186,18 +173,14 @@ public class Menu {
             throw new IllegalStateException("Plugin '" + plugin.getName() + "' not registered pages yet!");
         }
 
-        TemplatePageImpl templatePage = pp.getTemplatePage(page);
+        TemplatePageImpl<SESSION> templatePage = (TemplatePageImpl<SESSION>) pp.getTemplatePage(page); // TODO Might be a problem
         if (templatePage == null) {
             throw new IllegalStateException("Plugin '" + plugin.getName() + "' not registered '" + page + "' page yet!");
         }
 
-        if (session == null) {
-            session = new InventorySessionImpl();
-        }
-
         session.setCurrentPage(pluginPage);
 
-        InventoryPageImpl newPage = templatePage.createNewInventoryPage(player, session);
+        InventoryPageImpl<SESSION> newPage = templatePage.createNewInventoryPage(player, session);
 
         newPage.updateOnCreate();
 

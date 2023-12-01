@@ -1,6 +1,8 @@
 package ru.boomearo.menuinv.api;
 
-public interface InventoryReopenHandler {
+import ru.boomearo.menuinv.api.session.InventorySession;
 
-    boolean reopenCondition(InventoryPage page, boolean forceUpdate);
+public interface InventoryReopenHandler<SESSION extends InventorySession> {
+
+    boolean reopenCondition(InventoryPage<SESSION> page, boolean forceUpdate);
 }

@@ -10,69 +10,70 @@ import ru.boomearo.menuinv.api.InventoryPage;
 import ru.boomearo.menuinv.api.frames.PagedIcons;
 import ru.boomearo.menuinv.api.icon.*;
 import ru.boomearo.menuinv.api.icon.DefaultIconClickDelay;
+import ru.boomearo.menuinv.api.session.InventorySession;
 
-public class ScrollIconBuilder implements ElementBuilderUpdatable<ScrollIconBuilder> {
+public class ScrollIconBuilder<SESSION extends InventorySession> implements ElementBuilderUpdatable<ScrollIconBuilder<SESSION>, SESSION> {
 
     private ScrollType scrollType = ScrollType.NEXT;
     private String name = "";
 
-    private ScrollUpdate scrollVisibleUpdate = (inventoryPage, player, scrollType, currentPage, maxPage) -> null;
-    private ScrollUpdate scrollHideUpdate = (inventoryPage, player, scrollType, currentPage, maxPage) -> null;
+    private ScrollUpdate<SESSION> scrollVisibleUpdate = (inventoryPage, player, scrollType, currentPage, maxPage) -> null;
+    private ScrollUpdate<SESSION> scrollHideUpdate = (inventoryPage, player, scrollType, currentPage, maxPage) -> null;
 
-    private IconClick iconClick = (inventoryPage, player, clickType) -> {};
-    private IconClickDelay iconClickDelay = new DefaultIconClickDelay();
-    private Delayable<InventoryPage> updateDelay = new DefaultUpdateDelay();
+    private IconClick<SESSION> iconClick = (inventoryPage, player, clickType) -> {};
+    private IconClickDelay<SESSION> iconClickDelay = new DefaultIconClickDelay<>();
+    private Delayable<InventoryPage<SESSION>> updateDelay = new DefaultUpdateDelay<>();
 
-    public ScrollIconBuilder setScrollType(ScrollType scrollType) {
+    public ScrollIconBuilder<SESSION> setScrollType(ScrollType scrollType) {
         Preconditions.checkArgument(scrollType != null, "scrollType is null!");
         this.scrollType = scrollType;
         return this;
     }
 
-    public ScrollIconBuilder setName(String name) {
+    public ScrollIconBuilder<SESSION> setName(String name) {
         Preconditions.checkArgument(name != null, "name is null!");
         this.name = name;
         return this;
     }
 
-    public ScrollIconBuilder setIconClick(IconClick iconClick) {
+    public ScrollIconBuilder<SESSION> setIconClick(IconClick<SESSION> iconClick) {
         Preconditions.checkArgument(iconClick != null, "iconClick is null!");
         this.iconClick = iconClick;
         return this;
     }
 
-    public ScrollIconBuilder setScrollVisibleUpdate(ScrollUpdate scrollUpdate) {
+    public ScrollIconBuilder<SESSION> setScrollVisibleUpdate(ScrollUpdate<SESSION> scrollUpdate) {
         Preconditions.checkArgument(scrollUpdate != null, "scrollUpdate is null!");
         this.scrollVisibleUpdate = scrollUpdate;
         return this;
     }
 
-    public ScrollIconBuilder setScrollHideUpdate(ScrollUpdate scrollUpdate) {
+    public ScrollIconBuilder<SESSION> setScrollHideUpdate(ScrollUpdate<SESSION> scrollUpdate) {
         Preconditions.checkArgument(scrollUpdate != null, "scrollUpdate is null!");
         this.scrollHideUpdate = scrollUpdate;
         return this;
     }
 
     @Override
-    public ScrollIconBuilder setUpdateDelay(Delayable<InventoryPage> updateDelay) {
+    public ScrollIconBuilder<SESSION> setUpdateDelay(Delayable<InventoryPage<SESSION>> updateDelay) {
         Preconditions.checkArgument(updateDelay != null, "updateDelay is null!");
         this.updateDelay = updateDelay;
         return this;
     }
 
-    public ScrollIconBuilder setIconClickDelay(IconClickDelay iconClickDelay) {
+    public ScrollIconBuilder<SESSION> setIconClickDelay(IconClickDelay<SESSION> iconClickDelay) {
         Preconditions.checkArgument(iconClickDelay != null, "iconClickDelay is null!");
         this.iconClickDelay = iconClickDelay;
         return this;
     }
 
     @Override
-    public IconHandlerFactory build() {
-        return () -> new IconHandler() {
+    public IconHandlerFactory<SESSION> build() {
+        return () -> new IconHandler<SESSION>() {
 
             @Override
-            public void onClick(InventoryPage page, Player player, ClickType clickType) {
-                PagedIcons pagedIcons = page.getListedIconsItems(ScrollIconBuilder.this.name);
+            public void onClick(InventoryPage<SESSION> page, Player player, ClickType clickType) {
+                PagedIcons<SESSION> pagedIcons = page.getListedIconsItems(ScrollIconBuilder.this.name);
                 if (pagedIcons == null) {
                     return;
                 }
@@ -85,8 +86,8 @@ public class ScrollIconBuilder implements ElementBuilderUpdatable<ScrollIconBuil
             }
 
             @Override
-            public ItemStack onUpdate(InventoryPage page, Player player) {
-                PagedIcons pagedIcons = page.getListedIconsItems(ScrollIconBuilder.this.name);
+            public ItemStack onUpdate(InventoryPage<SESSION> page, Player player) {
+                PagedIcons<SESSION> pagedIcons = page.getListedIconsItems(ScrollIconBuilder.this.name);
                 if (pagedIcons == null) {
                     return null;
                 }
@@ -108,12 +109,12 @@ public class ScrollIconBuilder implements ElementBuilderUpdatable<ScrollIconBuil
             }
 
             @Override
-            public long getClickTime(InventoryPage page, Player player, ClickType click) {
+            public long getClickTime(InventoryPage<SESSION> page, Player player, ClickType click) {
                 return ScrollIconBuilder.this.iconClickDelay.getClickTime(page, player, click);
             }
 
             @Override
-            public long onUpdateTime(InventoryPage page, boolean force) {
+            public long onUpdateTime(InventoryPage<SESSION> page, boolean force) {
                 return ScrollIconBuilder.this.updateDelay.onUpdateTime(page, force);
             }
 

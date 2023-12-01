@@ -3,18 +3,19 @@ package ru.boomearo.menuinv.api.frames;
 import lombok.Getter;
 import ru.boomearo.menuinv.api.InventoryLocation;
 import ru.boomearo.menuinv.api.frames.iteration.FrameIterationHandler;
+import ru.boomearo.menuinv.api.session.InventorySession;
 
 @Getter
-public class FramedIconsTemplate extends Frame {
+public class FramedIconsTemplate<SESSION extends InventorySession> extends Frame {
 
-    protected final FramedIconsHandlerFactory iconsFactory;
+    protected final FramedIconsHandlerFactory<SESSION> iconsFactory;
     protected final FrameIterationHandler iterationHandler;
     protected final boolean permanentCached;
 
     public FramedIconsTemplate(String name,
                                InventoryLocation first,
                                InventoryLocation second,
-                               FramedIconsHandlerFactory iconsFactory,
+                               FramedIconsHandlerFactory<SESSION> iconsFactory,
                                FrameIterationHandler iterationHandler,
                                boolean permanentCached) {
         super(name, first, second);
@@ -27,7 +28,7 @@ public class FramedIconsTemplate extends Frame {
                                InventoryLocation first,
                                int width,
                                int height,
-                               FramedIconsHandlerFactory iconsFactory,
+                               FramedIconsHandlerFactory<SESSION> iconsFactory,
                                FrameIterationHandler iterationHandler,
                                boolean permanentCached) {
         super(name, first, width, height);

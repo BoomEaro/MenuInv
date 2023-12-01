@@ -1,7 +1,9 @@
 package ru.boomearo.menuinv.api.icon;
 
-public interface ElementBuilder {
+import ru.boomearo.menuinv.api.session.InventorySession;
 
-    IconHandlerFactory build();
+public interface ElementBuilder<SESSION extends InventorySession> {
+
+    IconHandlerFactory<SESSION> build();
 
 }

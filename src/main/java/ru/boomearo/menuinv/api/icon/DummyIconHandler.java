@@ -4,13 +4,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import ru.boomearo.menuinv.api.InventoryPage;
+import ru.boomearo.menuinv.api.session.InventorySession;
 
-public class DummyIconHandler extends IconHandler {
-
-    public static final DummyIconHandler INSTANCE = new DummyIconHandler();
+public class DummyIconHandler<SESSION extends InventorySession> extends IconHandler<SESSION> {
 
     @Override
-    public long onUpdateTime(InventoryPage data, boolean force) {
+    public long onUpdateTime(InventoryPage<SESSION> data, boolean force) {
         if (force) {
             return 0;
         }
@@ -18,12 +17,12 @@ public class DummyIconHandler extends IconHandler {
     }
 
     @Override
-    public ItemStack onUpdate(InventoryPage consume, Player player) {
+    public ItemStack onUpdate(InventoryPage<SESSION> consume, Player player) {
         return null;
     }
 
     @Override
-    public void onClick(InventoryPage page, Player player, ClickType click) {
+    public void onClick(InventoryPage<SESSION> page, Player player, ClickType click) {
 
     }
 }

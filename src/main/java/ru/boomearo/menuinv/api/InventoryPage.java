@@ -6,7 +6,7 @@ import ru.boomearo.menuinv.api.frames.PagedIcons;
 import ru.boomearo.menuinv.api.icon.BottomInventoryClickHandler;
 import ru.boomearo.menuinv.api.session.InventorySession;
 
-public interface InventoryPage {
+public interface InventoryPage<SESSION extends InventorySession> {
 
     String getName();
 
@@ -16,9 +16,9 @@ public interface InventoryPage {
 
     Player getPlayer();
 
-    PagedIcons getListedIconsItems(String name);
+    PagedIcons<SESSION> getListedIconsItems(String name);
 
-    InventorySession getSession();
+    SESSION getSession();
 
     void setNeedUpdate();
 
@@ -40,8 +40,8 @@ public interface InventoryPage {
 
     void close(boolean force);
 
-    InventoryCloseHandler getInventoryCloseHandler();
+    InventoryCloseHandler<SESSION> getInventoryCloseHandler();
 
-    BottomInventoryClickHandler getBottomInventoryClickHandler();
+    BottomInventoryClickHandler<SESSION> getBottomInventoryClickHandler();
 
 }

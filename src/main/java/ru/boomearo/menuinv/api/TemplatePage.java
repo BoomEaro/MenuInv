@@ -5,68 +5,69 @@ import ru.boomearo.menuinv.api.icon.BottomInventoryClickHandler;
 import ru.boomearo.menuinv.api.icon.ClickExceptionHandler;
 import ru.boomearo.menuinv.api.icon.ElementBuilder;
 import ru.boomearo.menuinv.api.icon.UpdateExceptionHandler;
+import ru.boomearo.menuinv.api.session.InventorySession;
 
 import java.util.List;
 
-public interface TemplatePage {
+public interface TemplatePage<SESSION extends InventorySession> {
 
     String getName();
 
     MenuType getMenuType();
 
-    TemplatePage setMenuType(MenuType type);
+    TemplatePage<SESSION> setMenuType(MenuType type);
 
-    InventoryTitleHandler getInventoryTitle();
+    InventoryTitleHandler<SESSION> getInventoryTitle();
 
-    TemplatePage setInventoryTitle(InventoryTitleHandler inventoryTitleHandler);
+    TemplatePage<SESSION> setInventoryTitle(InventoryTitleHandler<SESSION> inventoryTitleHandler);
 
-    InventoryReopenHandler getInventoryReopen();
+    InventoryReopenHandler<SESSION> getInventoryReopen();
 
-    TemplatePage setInventoryReopen(InventoryReopenHandler inventoryReopenHandler);
+    TemplatePage<SESSION> setInventoryReopen(InventoryReopenHandler<SESSION> inventoryReopenHandler);
 
-    ClickExceptionHandler getClickExceptionHandler();
+    ClickExceptionHandler<SESSION> getClickExceptionHandler();
 
-    TemplatePage setClickExceptionHandler(ClickExceptionHandler clickExceptionHandler);
+    TemplatePage<SESSION> setClickExceptionHandler(ClickExceptionHandler<SESSION> clickExceptionHandler);
 
-    UpdateExceptionHandler getUpdateExceptionHandler();
+    UpdateExceptionHandler<SESSION> getUpdateExceptionHandler();
 
-    TemplatePage setUpdateExceptionHandler(UpdateExceptionHandler updateExceptionHandler);
+    TemplatePage<SESSION> setUpdateExceptionHandler(UpdateExceptionHandler<SESSION> updateExceptionHandler);
 
-    InventoryCloseHandler getInventoryCloseHandler();
+    InventoryCloseHandler<SESSION> getInventoryCloseHandler();
 
-    TemplatePage setInventoryCloseHandler(InventoryCloseHandler inventoryCloseHandler);
+    TemplatePage<SESSION> setInventoryCloseHandler(InventoryCloseHandler<SESSION> inventoryCloseHandler);
 
-    TemplatePage setBottomInventoryClickHandler(BottomInventoryClickHandler bottomInventoryClickHandler);
+    TemplatePage<SESSION> setBottomInventoryClickHandler(BottomInventoryClickHandler<SESSION> bottomInventoryClickHandler);
 
-    Delayable<InventoryPage> getGlobalUpdateDelay();
+    Delayable<InventoryPage<SESSION>> getGlobalUpdateDelay();
 
-    TemplatePage setGlobalUpdateDelay(Delayable<InventoryPage> updateDelay);
+    TemplatePage<SESSION> setGlobalUpdateDelay(Delayable<InventoryPage<SESSION>> updateDelay);
 
-    TemplatePage setIcon(int slot, ElementBuilder elementBuilder);
+    TemplatePage<SESSION> setIcon(int slot, ElementBuilder<SESSION> elementBuilder);
 
-    TemplatePage setImmutableIcon(int slot, ElementBuilder elementBuilder);
+    TemplatePage<SESSION> setImmutableIcon(int slot, ElementBuilder<SESSION> elementBuilder);
 
-    TemplatePage setPagedIcons(String name, InventoryLocation first, int width, int height, PagedIconsBuilder pagedIconsBuilder);
+    TemplatePage<SESSION> setPagedIcons(String name, InventoryLocation first, int width, int height, PagedIconsBuilder<SESSION> pagedIconsBuilder);
 
-    TemplatePage setPagedIcons(String name, InventoryLocation first, InventoryLocation second, PagedIconsBuilder pagedIconsBuilder);
+    TemplatePage<SESSION> setPagedIcons(String name, InventoryLocation first, InventoryLocation second, PagedIconsBuilder<SESSION> pagedIconsBuilder);
 
-    TemplatePage setPagedIconsIngredients(String name, char first, char second, PagedIconsBuilder pagedIconsBuilder);
+    TemplatePage<SESSION> setPagedIconsIngredients(String name, char first, char second, PagedIconsBuilder<SESSION> pagedIconsBuilder);
 
-    TemplatePage setImmutablePagedIcons(String name, InventoryLocation first, int width, int height, PagedIconsBuilder pagedIconsBuilder);
+    TemplatePage<SESSION> setImmutablePagedIcons(String name, InventoryLocation first, int width, int height, PagedIconsBuilder<SESSION> pagedIconsBuilder);
 
-    TemplatePage setImmutablePagedIcons(String name, InventoryLocation first, InventoryLocation second, PagedIconsBuilder pagedIconsBuilder);
+    TemplatePage<SESSION> setImmutablePagedIcons(String name, InventoryLocation first, InventoryLocation second, PagedIconsBuilder<SESSION> pagedIconsBuilder);
 
-    TemplatePage setImmutablePagedIconsIngredients(String name, char first, char second, PagedIconsBuilder pagedIconsBuilder);
+    TemplatePage<SESSION> setImmutablePagedIconsIngredients(String name, char first, char second, PagedIconsBuilder<SESSION> pagedIconsBuilder);
 
-    TemplatePage setBackground(ElementBuilder elementBuilder);
+    TemplatePage<SESSION> setBackground(ElementBuilder<SESSION> elementBuilder);
 
-    TemplatePage setImmutableBackground(ElementBuilder elementBuilder);
+    TemplatePage<SESSION> setImmutableBackground(ElementBuilder<SESSION> elementBuilder);
 
-    TemplatePage setStructure(String... value);
+    TemplatePage<SESSION> setStructure(String... value);
 
-    TemplatePage setStructure(List<String> value);
+    TemplatePage<SESSION> setStructure(List<String> value);
 
-    TemplatePage setIngredient(char value, ElementBuilder elementBuilder);
+    TemplatePage<SESSION> setIngredient(char value, ElementBuilder<SESSION> elementBuilder);
 
-    TemplatePage setImmutableIngredient(char value, ElementBuilder elementBuilder);
+    TemplatePage<SESSION> setImmutableIngredient(char value, ElementBuilder<SESSION> elementBuilder);
 }

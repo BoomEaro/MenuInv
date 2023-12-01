@@ -48,7 +48,6 @@ public class TestMenu {
         MATERIALS = tmp;
     }
 
-
     public static void setupTest(MenuInv menuInv) {
         try {
             if (menuInv.getConfig().getBoolean("debug")) {
@@ -69,20 +68,18 @@ public class TestMenu {
                     .setMenuType(MenuType.CHEST_9X6)
                     .setInventoryCloseHandler((inventoryPage, player) -> player.sendMessage("Inventory closed!"))
                     .setInventoryTitle((inventoryPage) -> {
-                        PagedIcons piTest = inventoryPage.getListedIconsItems("test");
-                        PagedIcons piTest2 = inventoryPage.getListedIconsItems("test2");
+                        PagedIcons<TestSession> piTest = inventoryPage.getListedIconsItems("test");
+                        PagedIcons<TestSession> piTest2 = inventoryPage.getListedIconsItems("test2");
 
                         return "Test: " + piTest.getCurrentPage() + "/" + piTest.getMaxPage() + " ||| " + piTest2.getCurrentPage() + "/" + piTest2.getMaxPage();
                     })
-                    .setIcon(1, new IconBuilder()
+                    .setIcon(1, new IconBuilder<TestSession>()
                             .setIconClick((inventoryPage, player, type) -> Menu.open(MenuPage.OTHER, player, inventoryPage.getSession()))
                             .setIconUpdate((consume, player) -> new ItemStack(Material.STONE, 1)))
 
-                    .setIcon(3, new IconBuilder()
+                    .setIcon(3, new IconBuilder<TestSession>()
                             .setIconClick((inventoryPage, player, type) -> {
-                                TestSession ts = (TestSession) inventoryPage.getSession();
-
-                                List<ItemStack> items = ts.getItems();
+                                List<ItemStack> items = inventoryPage.getSession().getItems();
                                 if (items.isEmpty()) {
                                     return;
                                 }
@@ -93,11 +90,9 @@ public class TestMenu {
                             })
                             .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.REDSTONE_ORE, 1)))
 
-                    .setIcon(4, new IconBuilder()
+                    .setIcon(4, new IconBuilder<TestSession>()
                             .setIconClick((inventoryPage, player, type) -> {
-                                TestSession ts = (TestSession) inventoryPage.getSession();
-
-                                ts.getItems().add(new ItemStack(Material.DIAMOND, 1));
+                                inventoryPage.getSession().getItems().add(new ItemStack(Material.DIAMOND, 1));
 
                                 inventoryPage.update(true);
                             })
@@ -111,28 +106,28 @@ public class TestMenu {
                             "# . . . . . . . 4",
                             "# # 2 # # # # # #")
 
-                    .setIngredient('#', new IconBuilder()
+                    .setIngredient('#', new IconBuilder<TestSession>()
                             .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.TNT, 1)))
-                    .setIngredient('?', new IconBuilder()
+                    .setIngredient('?', new IconBuilder<TestSession>()
                             .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.CACTUS, 1))
                             .setIconClick((inventoryPage, player, clickType) -> player.sendMessage("It is a cactus?")))
 
-                    .setIngredient('<', new ScrollIconBuilder()
+                    .setIngredient('<', new ScrollIconBuilder<TestSession>()
                             .setName("test")
                             .setScrollType(ScrollType.PREVIOUSLY)
                             .setScrollVisibleUpdate((inventoryPage, player, scrollType, currentPage, maxPage) -> createScrollItems(scrollType, currentPage, maxPage)))
 
-                    .setIngredient('>', new ScrollIconBuilder()
+                    .setIngredient('>', new ScrollIconBuilder<TestSession>()
                             .setName("test")
                             .setScrollType(ScrollType.NEXT)
                             .setScrollVisibleUpdate((inventoryPage, player, scrollType, currentPage, maxPage) -> createScrollItems(scrollType, currentPage, maxPage)))
 
-                    .setPagedIconsIngredients("test", '1', '2', new PagedIconsBuilder()
+                    .setPagedIconsIngredients("test", '1', '2', new PagedIconsBuilder<TestSession>()
                             .setPagedItemsUpdate((inventoryPage, player) -> {
-                                List<IconHandler> tmp = new ArrayList<>();
+                                List<IconHandler<TestSession>> tmp = new ArrayList<>();
                                 for (int i = 1; i <= new Random().nextInt(5000); i++) {
                                     int t = i;
-                                    tmp.add(new IconBuilder()
+                                    tmp.add(new IconBuilder<TestSession>()
                                             .setIconClick((inventoryPage2, player2, type) -> player2.sendMessage("Diamond: " + t))
                                             .setIconUpdate((inventoryPage2, player2) -> new ItemStack(Material.DIAMOND, t))
                                             .build()
@@ -142,12 +137,12 @@ public class TestMenu {
                             })
                             .setFrameIterationHandler(InverseIterationHandlerImpl.DEFAULT))
 
-                    .setPagedIconsIngredients("test2", '3', '4', new PagedIconsBuilder()
+                    .setPagedIconsIngredients("test2", '3', '4', new PagedIconsBuilder<TestSession>()
                             .setPagedItemsUpdate((inventoryPage, player) -> {
-                                List<IconHandler> tmp = new ArrayList<>();
+                                List<IconHandler<TestSession>> tmp = new ArrayList<>();
                                 for (int i = 1; i <= new Random().nextInt(20); i++) {
                                     int t = i;
-                                    tmp.add(new IconBuilder()
+                                    tmp.add(new IconBuilder<TestSession>()
                                             .setIconClick((inventoryPage2, player2, clickType) -> player2.sendMessage("Resdstone: " + t))
                                             .setIconUpdate((inventoryPage2, player2) -> new ItemStack(Material.REDSTONE_ORE, t))
                                             .build()
@@ -156,7 +151,7 @@ public class TestMenu {
                                 return tmp;
                             }))
 
-                    .setImmutableBackground(new IconBuilder()
+                    .setImmutableBackground(new IconBuilder<TestSession>()
                             .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.COOKIE, 1)));
         }
         {
@@ -164,7 +159,7 @@ public class TestMenu {
                     .createTemplatePage(MenuPage.OTHER)
                     .setMenuType(MenuType.WORKBENCH)
                     .setInventoryTitle((inventoryPage) -> "Hello2")
-                    .setIcon(9, new IconBuilder()
+                    .setIcon(9, new IconBuilder<TestSession>()
                             .setIconClick((inventoryPage, player, click) -> Menu.open(MenuPage.MAIN, player, inventoryPage.getSession()))
                             .setIconUpdate((inventoryPage, player) -> {
                                 ItemStack item = new ItemStack(MATERIALS.get(ThreadLocalRandom.current().nextInt(MATERIALS.size())), 1);
@@ -174,9 +169,9 @@ public class TestMenu {
                                 item.setItemMeta(meta);
                                 return item;
                             })
-                            .setUpdateDelay((inventortPage, force) -> 0))
+                            .setUpdateDelay((inventoryPage, force) -> 0))
 
-                    .setIcon(0, new IconBuilder()
+                    .setIcon(0, new IconBuilder<TestSession>()
                             .setIconUpdate((inventoryPage, player) -> {
                                 ItemStack item = new ItemStack(MATERIALS.get(ThreadLocalRandom.current().nextInt(MATERIALS.size())), 1);
                                 ItemMeta meta = item.getItemMeta();
@@ -193,7 +188,7 @@ public class TestMenu {
                                 return 500;
                             }))
 
-                    .setIcon(1, new IconBuilder()
+                    .setIcon(1, new IconBuilder<TestSession>()
                             .setIconClick((inventoryPage, player, clickType) -> inventoryPage.close())
                             .setIconUpdate((inventoryPage, player) -> {
                                 ItemStack item = new ItemStack(Material.BARRIER, 1);
@@ -204,7 +199,7 @@ public class TestMenu {
                                 return item;
                             }))
 
-                    .setImmutableBackground(new IconBuilder()
+                    .setImmutableBackground(new IconBuilder<TestSession>()
                             .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.COOKIE, 1)));
         }
     }
@@ -250,7 +245,7 @@ public class TestMenu {
 
     @RequiredArgsConstructor
     @Getter
-    private enum MenuPage implements PluginPage {
+    private enum MenuPage implements PluginPage<TestSession> {
 
         MAIN(MenuInv.getInstance(), "main"),
         OTHER(MenuInv.getInstance(), "other");

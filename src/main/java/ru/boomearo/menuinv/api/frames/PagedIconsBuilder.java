@@ -9,56 +9,57 @@ import ru.boomearo.menuinv.api.frames.iteration.DefaultIterationHandlerImpl;
 import ru.boomearo.menuinv.api.frames.iteration.FrameIterationHandler;
 import ru.boomearo.menuinv.api.DefaultUpdateDelay;
 import ru.boomearo.menuinv.api.icon.IconHandler;
+import ru.boomearo.menuinv.api.session.InventorySession;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-public class PagedIconsBuilder {
+public class PagedIconsBuilder<SESSION extends InventorySession> {
 
-    private PagedIconsUpdate pagedIconsUpdate = (inventoryPage, player) -> new ArrayList<>();
-    private Delayable<InventoryPage> updateDelay = new DefaultUpdateDelay();
+    private PagedIconsUpdate<SESSION> pagedIconsUpdate = (inventoryPage, player) -> new ArrayList<>();
+    private Delayable<InventoryPage<SESSION>> updateDelay = new DefaultUpdateDelay<>();
     private FrameIterationHandler frameIterationHandler = DefaultIterationHandlerImpl.DEFAULT;
     private boolean permanent = false;
 
-    public PagedIconsBuilder setPagedItemsUpdate(PagedIconsUpdate pagedIconsUpdate) {
+    public PagedIconsBuilder<SESSION> setPagedItemsUpdate(PagedIconsUpdate<SESSION> pagedIconsUpdate) {
         Preconditions.checkArgument(pagedIconsUpdate != null, "pagedItemsUpdate is null!");
         this.pagedIconsUpdate = pagedIconsUpdate;
         return this;
     }
 
-    public PagedIconsBuilder setUpdateDelay(Delayable<InventoryPage> updateDelay) {
+    public PagedIconsBuilder<SESSION> setUpdateDelay(Delayable<InventoryPage<SESSION>> updateDelay) {
         Preconditions.checkArgument(updateDelay != null, "updateDelay is null!");
         this.updateDelay = updateDelay;
         return this;
     }
 
-    public PagedIconsBuilder setFrameIterationHandler(FrameIterationHandler frameIterationHandler) {
+    public PagedIconsBuilder<SESSION> setFrameIterationHandler(FrameIterationHandler frameIterationHandler) {
         Preconditions.checkArgument(frameIterationHandler != null, "frameIterationHandler is null!");
         this.frameIterationHandler = frameIterationHandler;
         return this;
     }
 
-    public PagedIconsBuilder setPermanent(boolean permanent) {
+    public PagedIconsBuilder<SESSION> setPermanent(boolean permanent) {
         this.permanent = permanent;
         return this;
     }
 
-    public PagedIconsBuilder permanent() {
+    public PagedIconsBuilder<SESSION> permanent() {
         this.permanent = true;
         return this;
     }
 
-    public FramedIconsHandlerFactory build() {
-        return () -> new FramedIconsHandler() {
+    public FramedIconsHandlerFactory<SESSION> build() {
+        return () -> new FramedIconsHandler<SESSION>() {
 
             @Override
-            public List<IconHandler> onUpdate(InventoryPage inventoryPage, Player player) {
+            public List<IconHandler<SESSION>> onUpdate(InventoryPage<SESSION> inventoryPage, Player player) {
                 return PagedIconsBuilder.this.pagedIconsUpdate.onUpdate(inventoryPage, player);
             }
 
             @Override
-            public long onUpdateTime(InventoryPage inventoryPage, boolean force) {
+            public long onUpdateTime(InventoryPage<SESSION> inventoryPage, boolean force) {
                 return PagedIconsBuilder.this.updateDelay.onUpdateTime(inventoryPage, force);
             }
         };
