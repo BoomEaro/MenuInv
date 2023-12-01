@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 
 import ru.boomearo.menuinv.api.frames.Frame;
-import ru.boomearo.menuinv.api.frames.PagedIcons;
+import ru.boomearo.menuinv.api.frames.PagedIconsImpl;
 import ru.boomearo.menuinv.api.frames.PagedIconsBuilder;
 import ru.boomearo.menuinv.api.icon.*;
 import ru.boomearo.menuinv.api.frames.FramedIconsTemplate;
@@ -366,12 +366,12 @@ public class TemplatePageImpl<SESSION extends InventorySession> implements Templ
             itemIconsActive.put(tii.getSlot(), new ItemIcon<>(tii.getSlot(), tii.getFactory().create()));
         }
 
-        Map<String, PagedIcons<SESSION>> pagedIconsActive = new HashMap<>();
+        Map<String, PagedIconsImpl<SESSION>> pagedIconsActive = new HashMap<>();
         for (FramedIconsTemplate<SESSION> tli : this.pagedItems.values()) {
-            pagedIconsActive.put(tli.getName(), new PagedIcons<>(tli.getName(), tli.getFirst(), tli.getSecond(), tli.getIconsFactory().create(), tli.getIterationHandler(), tli.isPermanentCached()));
+            pagedIconsActive.put(tli.getName(), new PagedIconsImpl<>(tli.getName(), tli.getFirst(), tli.getSecond(), tli.getIconsFactory().create(), tli.getIterationHandler(), tli.isPermanentCached()));
         }
 
-        return new InventoryPageImpl<SESSION>(this.name,
+        return new InventoryPageImpl<>(this.name,
                 this.menuType,
                 itemIconsActive,
                 pagedIconsActive,

@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import ru.boomearo.menuinv.MenuInv;
 import ru.boomearo.menuinv.api.icon.*;
 import ru.boomearo.menuinv.api.session.InventorySession;
-import ru.boomearo.menuinv.api.frames.PagedIcons;
+import ru.boomearo.menuinv.api.frames.PagedIconsImpl;
 
 import java.util.*;
 
@@ -28,7 +28,7 @@ public class InventoryPageImpl<SESSION extends InventorySession> implements Inve
     private final Delayable<InventoryPage<SESSION>> globalUpdateDelay;
     private final BottomInventoryClickHandler<SESSION> bottomInventoryClickHandler;
 
-    private final Map<String, PagedIcons<SESSION>> listedIcons;
+    private final Map<String, PagedIconsImpl<SESSION>> listedIcons;
 
     private final ItemIcon<SESSION>[] activeIcons;
 
@@ -47,7 +47,7 @@ public class InventoryPageImpl<SESSION extends InventorySession> implements Inve
     public InventoryPageImpl(String name,
                              MenuType menuType,
                              Map<Integer, ItemIcon<SESSION>> iconsPosition,
-                             Map<String, PagedIcons<SESSION>> listedIcons,
+                             Map<String, PagedIconsImpl<SESSION>> listedIcons,
                              InventoryTitleHandler<SESSION> inventoryTitleHandler,
                              InventoryReopenHandler<SESSION> inventoryReopenHandler,
                              ClickExceptionHandler<SESSION> clickExceptionHandler,
@@ -100,7 +100,7 @@ public class InventoryPageImpl<SESSION extends InventorySession> implements Inve
     }
 
     @Override
-    public PagedIcons<SESSION> getListedIconsItems(String name) {
+    public PagedIconsImpl<SESSION> getListedIconsItems(String name) {
         return this.listedIcons.get(name);
     }
 
@@ -149,7 +149,7 @@ public class InventoryPageImpl<SESSION extends InventorySession> implements Inve
             }
 
             // Update the current array of active items using frame items.
-            for (PagedIcons<SESSION> lii : this.listedIcons.values()) {
+            for (PagedIconsImpl<SESSION> lii : this.listedIcons.values()) {
                 lii.updateActiveIcons(this, this.activeIcons, forceUpdate, create, this.updateExceptionHandler);
             }
 
@@ -187,7 +187,7 @@ public class InventoryPageImpl<SESSION extends InventorySession> implements Inve
         // First, create a new instance of bukkit's inventory
         this.inventory = this.menuType.createInventory(new MenuInventoryHolder<>(this), this.inventoryTitleHandler.createTitle(this));
         // Clear page scroll changes
-        for (PagedIcons<SESSION> pi : this.listedIcons.values()) {
+        for (PagedIconsImpl<SESSION> pi : this.listedIcons.values()) {
             pi.resetChanges();
         }
         // Filling inventory

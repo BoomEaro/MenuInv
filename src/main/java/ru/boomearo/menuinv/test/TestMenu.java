@@ -18,6 +18,7 @@ import org.bukkit.plugin.Plugin;
 
 import ru.boomearo.menuinv.MenuInv;
 import ru.boomearo.menuinv.api.*;
+import ru.boomearo.menuinv.api.frames.PagedIcons;
 import ru.boomearo.menuinv.api.frames.PagedIconsBuilder;
 import ru.boomearo.menuinv.api.icon.IconBuilder;
 import ru.boomearo.menuinv.api.icon.IconHandler;
@@ -25,7 +26,6 @@ import ru.boomearo.menuinv.api.icon.scrolls.ScrollIconBuilder;
 import ru.boomearo.menuinv.api.icon.scrolls.ScrollType;
 import ru.boomearo.menuinv.api.frames.iteration.InverseIterationHandlerImpl;
 import ru.boomearo.menuinv.api.session.InventorySessionImpl;
-import ru.boomearo.menuinv.api.frames.PagedIcons;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
