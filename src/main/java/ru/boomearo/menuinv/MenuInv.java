@@ -45,8 +45,8 @@ public final class MenuInv extends JavaPlugin {
         for (Player player : Bukkit.getOnlinePlayers()) {
             InventoryHolder holder = player.getOpenInventory().getTopInventory().getHolder();
             if (holder instanceof MenuInventoryHolder) {
-                MenuInventoryHolder mih = (MenuInventoryHolder) holder;
-                InventoryPageImpl page = mih.getPage();
+                MenuInventoryHolder<?> mih = (MenuInventoryHolder<?>) holder;
+                InventoryPageImpl<?> page = mih.getPage();
 
                 page.close(true);
             }
