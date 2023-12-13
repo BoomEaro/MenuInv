@@ -1,6 +1,7 @@
 package ru.boomearo.menuinv.api;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -43,6 +44,9 @@ public class InventoryPageImpl implements InventoryPage {
     private long cooldown = 0;
 
     private boolean changes = false;
+
+    @Setter
+    private boolean closed = false;
 
     public InventoryPageImpl(String name,
                              MenuType menuType,
@@ -204,6 +208,11 @@ public class InventoryPageImpl implements InventoryPage {
         }
 
         Bukkit.getScheduler().runTask(MenuInv.getInstance(), this.player::closeInventory);
+    }
+
+    @Override
+    public boolean isClosed() {
+        return this.closed;
     }
 
 }

@@ -40,6 +40,8 @@ public interface InventoryPage {
 
     void close(boolean force);
 
+    boolean isClosed();
+
     InventoryCloseHandler getInventoryCloseHandler();
 
     BottomInventoryClickHandler getBottomInventoryClickHandler();

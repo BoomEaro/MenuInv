@@ -14,7 +14,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
 import org.bukkit.inventory.InventoryView;
-import ru.boomearo.menuinv.api.InventoryPage;
 import ru.boomearo.menuinv.api.InventoryPageImpl;
 import ru.boomearo.menuinv.api.Menu;
 import ru.boomearo.menuinv.api.MenuInventoryHolder;
@@ -134,9 +133,10 @@ public class InventoryListener implements Listener {
 
         MenuInventoryHolder menuInventoryHolder = (MenuInventoryHolder) topInventory.getHolder();
 
-        InventoryPage inventoryPage = menuInventoryHolder.getPage();
+        InventoryPageImpl inventoryPage = menuInventoryHolder.getPage();
 
         inventoryPage.getInventoryCloseHandler().onClose(inventoryPage, pl);
+        inventoryPage.setClosed(true);
     }
 
     @EventHandler(priority = EventPriority.MONITOR)

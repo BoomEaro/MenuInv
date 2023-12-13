@@ -19,6 +19,7 @@ import org.bukkit.plugin.Plugin;
 import ru.boomearo.menuinv.MenuInv;
 import ru.boomearo.menuinv.api.*;
 import ru.boomearo.menuinv.api.frames.PagedIconsBuilder;
+import ru.boomearo.menuinv.api.icon.AsyncIconBuilder;
 import ru.boomearo.menuinv.api.icon.IconBuilder;
 import ru.boomearo.menuinv.api.icon.IconHandler;
 import ru.boomearo.menuinv.api.icon.scrolls.ScrollIconBuilder;
@@ -113,9 +114,21 @@ public class TestMenu {
 
                     .setIngredient('#', new IconBuilder()
                             .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.TNT, 1)))
-                    .setIngredient('?', new IconBuilder()
-                            .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.CACTUS, 1))
-                            .setIconClick((inventoryPage, player, clickType) -> player.sendMessage("It is a cactus?")))
+                    .setIngredient('?', new AsyncIconBuilder()
+                            .setImmutableLoadedIconBuilder(new IconBuilder()
+                                    .setIconUpdate((inventoryPage, player) -> {
+                                        try {
+                                            Thread.sleep(5000);
+                                        } catch (InterruptedException e) {
+                                            throw new RuntimeException(e);
+                                        }
+
+                                        return new ItemStack(Material.CACTUS, new Random().nextInt(63) + 1);
+                                    })
+                                    .setIconClick((inventoryPage, player, clickType) -> player.sendMessage("Cactus was loaded!")))
+                            .setImmutableLoadingIconBuilder(new IconBuilder()
+                                    .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.SKULL_ITEM, new Random().nextInt(63) + 1))
+                                    .setIconClick((inventoryPage, player, clickType) -> player.sendMessage("Cactus is loading..."))))
 
                     .setIngredient('<', new ScrollIconBuilder()
                             .setName("test")
