@@ -172,6 +172,7 @@ public class TestMenu {
                                 }
                                 return tmp;
                             })
+                            .setCacheHandler(page -> true)
                             .setUpdateDelay((data, force) -> {
                                 if (force) {
                                     return 0;
