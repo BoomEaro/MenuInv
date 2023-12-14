@@ -1,10 +1,14 @@
 ## Plugin
+
 MenuInv - Is a plugin that allows you to create a simple menu based on API.
 
 ## Why a plugin and not a standalone api?
-The plugin allows you to register a menu, allowing other plugins to open it without worrying about implementation details.
+
+The plugin allows you to register a menu, allowing other plugins to open it without worrying about implementation
+details.
 
 ## Features
+
 - Create a menu with any chest size or other type of inventory
 - Flexible change of the item in the slot, which can depend on events
 - Supports all kinds of interaction with inventory slots (LMB, RMB, Shift, etc.)
@@ -14,6 +18,7 @@ The plugin allows you to register a menu, allowing other plugins to open it with
 - Opening other menus registered by other plugins
 
 ## EXAMPLE
+
 First you need to create your own enum that implements PluginPage to store pages.
 Note that getPlugin should return a reference to your plugin.
 
@@ -106,19 +111,45 @@ To open the menu, you also need to specify an enum.
                             .setScrollVisibleUpdate((inventoryPage, player, scrollType, currentPage, maxPage) -> createScrollItems(scrollType, currentPage, maxPage)));
 
 
-            Menu.registerPages(plugin)
-                    .createTemplatePage(MenuPage.OTHER)
-                    .setInventoryTitle((inventoryPage) -> "Other page")
-                    .setMenuType(MenuType.CHEST_9X1)
-                    .setStructure(
-                            "# . # . # . # . #"
-                    )
-                    .setIngredient('#', new IconBuilder()
-                            .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.PAPER, 1))
-                            .setIconClick((inventoryPage, player, clickType) -> {
-                                player.sendMessage("Returning back");
-                                Menu.open(MenuPage.MAIN, player, inventoryPage.getSession());
-                            }));
+        TemplatePage templatePage = Menu.registerPages(plugin)
+                .createTemplatePage(MenuPage.OTHER)
+                .setInventoryTitle((inventoryPage) -> "Other page")
+                .setMenuType(MenuType.CHEST_9X1)
+                .setStructure(
+                        "1 . 2 . 3 . 4 . 5"
+                );
+
+        // Async icons
+        for (int i = 1; i <= 5; i++) {
+            final int finalI = i;
+            char character = ("" + i).charAt(0);
+            templatePage.setIngredient(character, new AsyncIconBuilder()
+                    .setLoadedIconBuilder(new IconBuilder()
+                            .setUpdateDelay((data, force) -> 1000)
+                            .setIconUpdate((inventoryPage2, player2) -> {
+                                try {
+                                    Thread.sleep(150);
+                                } catch (InterruptedException e) {
+                                    throw new RuntimeException(e);
+                                }
+
+                                ItemStack itemStack = new ItemStack(Material.SIGN, finalI);
+                                ItemMeta itemMeta = itemStack.getItemMeta();
+                                itemMeta.setDisplayName("Loaded data " + new Random().nextInt(64) + " for data type #" + finalI);
+                                itemStack.setItemMeta(itemMeta);
+
+                                return itemStack;
+                            })
+                            .setIconClick((inventoryPage2, player2, clickType) -> player2.sendMessage("Data type #" + finalI + " was loaded!")))
+                    .setLoadingIconBuilder(new IconBuilder()
+                            .setIconUpdate((inventoryPage2, player2) -> {
+                                ItemStack itemStack = new ItemStack(Material.PAPER, finalI);
+                                ItemMeta itemMeta = itemStack.getItemMeta();
+                                itemMeta.setDisplayName("TIME: " + System.currentTimeMillis() + ". Loading data with type #" + finalI + "...");
+                                itemStack.setItemMeta(itemMeta);
+                                return itemStack;
+                            })
+                            .setIconClick((inventoryPage2, player2, clickType) -> player2.sendMessage("Data type #" + finalI + " is loading..."))));
         }
 
         private static ItemStack createScrollItems(ScrollType scrollType, int currentPage, int maxPage) {
