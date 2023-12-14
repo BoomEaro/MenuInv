@@ -13,16 +13,22 @@ public abstract class AsyncIconHandler extends IconHandler {
     private final ExecutorService executorService;
     private final IconHandler onLoadedHandler;
     private final IconHandler onLoadingHandler;
+    private final AsyncIconResetHandler asyncIconResetHandler;
 
     private IconHandler currentHandler;
     private ItemStack result = null;
     private Future<?> task = null;
     private boolean forceUpdate = false;
 
-    public AsyncIconHandler(ExecutorService executorService, IconHandler onLoadedHandler, IconHandler onLoadingHandler) {
+    public AsyncIconHandler(ExecutorService executorService,
+                            IconHandler onLoadedHandler,
+                            IconHandler onLoadingHandler,
+                            AsyncIconResetHandler asyncIconResetHandler
+    ) {
         this.executorService = executorService;
         this.onLoadedHandler = onLoadedHandler;
         this.onLoadingHandler = onLoadingHandler;
+        this.asyncIconResetHandler = asyncIconResetHandler;
 
         this.currentHandler = this.onLoadingHandler;
     }
@@ -70,7 +76,7 @@ public abstract class AsyncIconHandler extends IconHandler {
 
     @Override
     public long onUpdateTime(InventoryPage page, boolean force) {
-        if (force) {
+        if (this.asyncIconResetHandler.onIconReset(page, force)) {
             this.currentHandler = this.onLoadingHandler;
             this.result = null;
 

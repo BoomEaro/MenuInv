@@ -11,6 +11,7 @@ public class AsyncIconBuilder implements ElementBuilder {
 
     private ElementBuilder loadedIconBuilder = new IconBuilder();
     private ElementBuilder loadingIconBuilder = new IconBuilder();
+    private AsyncIconResetHandler asyncIconResetHandler = (page, force) -> force;
 
     public AsyncIconBuilder setExecutorService(ExecutorService executorService) {
         Preconditions.checkArgument(executorService != null, "executorService is null!");
@@ -48,11 +49,18 @@ public class AsyncIconBuilder implements ElementBuilder {
         return setLoadingIconBuilder(elementBuilder);
     }
 
+    public AsyncIconBuilder setAsyncIconResetHandler(AsyncIconResetHandler asyncIconResetHandler) {
+        Preconditions.checkArgument(asyncIconResetHandler != null, "asyncIconResetHandler is null!");
+        this.asyncIconResetHandler = asyncIconResetHandler;
+        return this;
+    }
+
     @Override
     public IconHandlerFactory build() {
         return () -> new AsyncIconHandler(this.executorService,
                 this.loadedIconBuilder.build().create(),
-                this.loadingIconBuilder.build().create()) {
+                this.loadingIconBuilder.build().create(),
+                this.asyncIconResetHandler) {
         };
     }
 

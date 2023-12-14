@@ -1,5 +1,6 @@
 package ru.boomearo.menuinv.test;
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,6 @@ import ru.boomearo.menuinv.api.MenuType;
 import ru.boomearo.menuinv.api.PluginPage;
 import ru.boomearo.menuinv.api.frames.PagedIcons;
 import ru.boomearo.menuinv.api.frames.PagedIconsBuilder;
-import ru.boomearo.menuinv.api.frames.iteration.InverseIterationHandlerImpl;
 import ru.boomearo.menuinv.api.icon.AsyncIconBuilder;
 import ru.boomearo.menuinv.api.icon.IconBuilder;
 import ru.boomearo.menuinv.api.icon.IconHandler;
@@ -70,7 +70,9 @@ public class TestMenu {
     }
 
     private static void setupMenu(MenuInv menuInv) {
-        ExecutorService executorService = Executors.newFixedThreadPool(1);
+        ExecutorService executorService = Executors.newFixedThreadPool(1, new ThreadFactoryBuilder()
+                .setNameFormat("TestMenu-%d")
+                .build());
         {
             Menu.registerPages(menuInv)
                     .createTemplatePage(MenuPage.MAIN)
@@ -149,12 +151,23 @@ public class TestMenu {
                                                             throw new RuntimeException(e);
                                                         }
 
-                                                        return new ItemStack(Material.CACTUS, t);
+                                                        ItemStack itemStack = new ItemStack(Material.SIGN, t);
+                                                        ItemMeta itemMeta = itemStack.getItemMeta();
+                                                        itemMeta.setDisplayName("Loaded data " + new Random().nextInt(64) + " for data type #" + t);
+                                                        itemStack.setItemMeta(itemMeta);
+
+                                                        return itemStack;
                                                     })
-                                                    .setIconClick((inventoryPage2, player2, clickType) -> player2.sendMessage("Cactus was loaded!")))
-                                            .setImmutableLoadingIconBuilder(new IconBuilder()
-                                                    .setIconUpdate((inventoryPage2, player2) -> new ItemStack(Material.SKULL_ITEM, t))
-                                                    .setIconClick((inventoryPage2, player2, clickType) -> player2.sendMessage("Cactus is loading...")))
+                                                    .setIconClick((inventoryPage2, player2, clickType) -> player2.sendMessage("Data type #" + t + " + was loaded!")))
+                                            .setLoadingIconBuilder(new IconBuilder()
+                                                    .setIconUpdate((inventoryPage2, player2) -> {
+                                                        ItemStack itemStack = new ItemStack(Material.PAPER, t);
+                                                        ItemMeta itemMeta = itemStack.getItemMeta();
+                                                        itemMeta.setDisplayName("TIME: " + System.currentTimeMillis() + ". Loading data with type #" + t + "...");
+                                                        itemStack.setItemMeta(itemMeta);
+                                                        return itemStack;
+                                                    })
+                                                    .setIconClick((inventoryPage2, player2, clickType) -> player2.sendMessage("Data type #" + t + " is loading...")))
                                             .build()
                                             .create());
                                 }
@@ -165,8 +178,7 @@ public class TestMenu {
                                     return 0;
                                 }
                                 return Long.MAX_VALUE;
-                            })
-                            .setFrameIterationHandler(InverseIterationHandlerImpl.DEFAULT))
+                            }))
 
                     .setPagedIconsIngredients("test2", '3', '4', new PagedIconsBuilder()
                             .setPagedItemsUpdate((inventoryPage, player) -> {
