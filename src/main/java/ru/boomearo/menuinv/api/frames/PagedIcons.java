@@ -2,6 +2,7 @@ package ru.boomearo.menuinv.api.frames;
 
 import lombok.Getter;
 import ru.boomearo.menuinv.api.InventoryLocation;
+import ru.boomearo.menuinv.api.InventoryPage;
 import ru.boomearo.menuinv.api.MenuType;
 import ru.boomearo.menuinv.api.frames.iteration.FrameIterationHandler;
 import ru.boomearo.menuinv.api.InventoryPageImpl;
@@ -14,6 +15,7 @@ import ru.boomearo.menuinv.api.icon.scrolls.ScrollType;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Predicate;
 
 @Getter
 public class PagedIcons extends FramedIcons {
@@ -33,8 +35,8 @@ public class PagedIcons extends FramedIcons {
                       InventoryLocation second,
                       FramedIconsHandler iconsHandler,
                       FrameIterationHandler iterationHandler,
-                      boolean permanentCached) {
-        super(name, first, second, iconsHandler, iterationHandler, permanentCached);
+                      Predicate<InventoryPage> cacheHandler) {
+        super(name, first, second, iconsHandler, iterationHandler, cacheHandler);
     }
 
     public int getCurrentPage() {
@@ -145,7 +147,7 @@ public class PagedIcons extends FramedIcons {
     }
 
     private List<IconHandler> getCachedHandler(InventoryPageImpl page, UpdateExceptionHandler updateExceptionHandler) {
-        if (this.permanentCached) {
+        if (this.cacheHandler.test(page)) {
             if (this.cachedHandler != null) {
                 return this.cachedHandler;
             }

@@ -174,7 +174,7 @@ public class TemplatePageImpl implements TemplatePage {
         Preconditions.checkArgument(first != null, "first is null!");
         Preconditions.checkArgument(pagedIconsBuilder != null, "pagedItemsBuilder is null!");
 
-        FramedIconsTemplate tli = new FramedIconsTemplate(name, first, width, height, pagedIconsBuilder.build(), pagedIconsBuilder.getFrameIterationHandler(), pagedIconsBuilder.isPermanent());
+        FramedIconsTemplate tli = new FramedIconsTemplate(name, first, width, height, pagedIconsBuilder.build(), pagedIconsBuilder.getFrameIterationHandler(), pagedIconsBuilder.getCacheHandler());
 
         checkPagedItemsBorder(tli);
 
@@ -190,7 +190,7 @@ public class TemplatePageImpl implements TemplatePage {
         Preconditions.checkArgument(second != null, "second is null!");
         Preconditions.checkArgument(pagedIconsBuilder != null, "pagedItemsBuilder is null!");
 
-        FramedIconsTemplate tli = new FramedIconsTemplate(name, first, second, pagedIconsBuilder.build(), pagedIconsBuilder.getFrameIterationHandler(), pagedIconsBuilder.isPermanent());
+        FramedIconsTemplate tli = new FramedIconsTemplate(name, first, second, pagedIconsBuilder.build(), pagedIconsBuilder.getFrameIterationHandler(), pagedIconsBuilder.getCacheHandler());
 
         checkPagedItemsBorder(tli);
 
@@ -220,7 +220,7 @@ public class TemplatePageImpl implements TemplatePage {
     @Override
     public TemplatePage setImmutablePagedIcons(String name, InventoryLocation first, int width, int height, PagedIconsBuilder pagedIconsBuilder) {
         pagedIconsBuilder.setUpdateDelay((inventoryPage, force) -> Long.MAX_VALUE);
-        pagedIconsBuilder.setPermanent(true);
+        pagedIconsBuilder.setCacheHandler(page -> true);
 
         return setPagedIcons(name, first, width, height, pagedIconsBuilder);
     }
@@ -228,7 +228,7 @@ public class TemplatePageImpl implements TemplatePage {
     @Override
     public TemplatePage setImmutablePagedIcons(String name, InventoryLocation first, InventoryLocation second, PagedIconsBuilder pagedIconsBuilder) {
         pagedIconsBuilder.setUpdateDelay((inventoryPage, force) -> Long.MAX_VALUE);
-        pagedIconsBuilder.setPermanent(true);
+        pagedIconsBuilder.setCacheHandler(page -> true);
 
         return setPagedIcons(name, first, second, pagedIconsBuilder);
     }
@@ -236,7 +236,7 @@ public class TemplatePageImpl implements TemplatePage {
     @Override
     public TemplatePage setImmutablePagedIconsIngredients(String name, char first, char second, PagedIconsBuilder pagedIconsBuilder) {
         pagedIconsBuilder.setUpdateDelay((inventoryPage, force) -> Long.MAX_VALUE);
-        pagedIconsBuilder.setPermanent(true);
+        pagedIconsBuilder.setCacheHandler(page -> true);
 
         return setPagedIconsIngredients(name, first, second, pagedIconsBuilder);
     }
@@ -368,7 +368,7 @@ public class TemplatePageImpl implements TemplatePage {
 
         Map<String, PagedIcons> pagedIconsActive = new HashMap<>();
         for (FramedIconsTemplate tli : this.pagedItems.values()) {
-            pagedIconsActive.put(tli.getName(), new PagedIcons(tli.getName(), tli.getFirst(), tli.getSecond(), tli.getIconsFactory().create(), tli.getIterationHandler(), tli.isPermanentCached()));
+            pagedIconsActive.put(tli.getName(), new PagedIcons(tli.getName(), tli.getFirst(), tli.getSecond(), tli.getIconsFactory().create(), tli.getIterationHandler(), tli.getCacheHandler()));
         }
 
         return new InventoryPageImpl(this.name,
