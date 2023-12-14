@@ -1,11 +1,8 @@
 package ru.boomearo.menuinv.api.frames;
 
 import lombok.Getter;
-import ru.boomearo.menuinv.api.InventoryLocation;
-import ru.boomearo.menuinv.api.InventoryPage;
-import ru.boomearo.menuinv.api.MenuType;
+import ru.boomearo.menuinv.api.*;
 import ru.boomearo.menuinv.api.frames.iteration.FrameIterationHandler;
-import ru.boomearo.menuinv.api.InventoryPageImpl;
 import ru.boomearo.menuinv.api.icon.DummyIconHandler;
 import ru.boomearo.menuinv.api.icon.IconHandler;
 import ru.boomearo.menuinv.api.icon.ItemIcon;
@@ -15,7 +12,6 @@ import ru.boomearo.menuinv.api.icon.scrolls.ScrollType;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Predicate;
 
 @Getter
 public class PagedIcons extends FramedIcons {
@@ -28,14 +24,15 @@ public class PagedIcons extends FramedIcons {
 
     private boolean changes = false;
 
-    private List<IconHandler> cachedHandler = null;
+    private List<IconHandler> cachedHandlers = null;
+    private long cacheTime = 0;
 
     public PagedIcons(String name,
                       InventoryLocation first,
                       InventoryLocation second,
                       FramedIconsHandler iconsHandler,
                       FrameIterationHandler iterationHandler,
-                      Predicate<InventoryPage> cacheHandler) {
+                      Delayable<InventoryPage> cacheHandler) {
         super(name, first, second, iconsHandler, iterationHandler, cacheHandler);
     }
 
@@ -146,17 +143,14 @@ public class PagedIcons extends FramedIcons {
         return handlers;
     }
 
-    private List<IconHandler> getCachedHandler(InventoryPageImpl page, UpdateExceptionHandler updateExceptionHandler) {
-        if (this.cacheHandler.test(page)) {
-            if (this.cachedHandler != null) {
-                return this.cachedHandler;
-            }
+    private List<IconHandler> getCachedHandlers(InventoryPageImpl page, boolean force, UpdateExceptionHandler updateExceptionHandler) {
+        if (this.cachedHandlers == null || this.cacheHandler.canUpdate(page, force, this.cacheTime)) {
+            this.cacheTime = System.currentTimeMillis();
 
-            this.cachedHandler = getHandlers(page, updateExceptionHandler);
-            return this.cachedHandler;
+            this.cachedHandlers = getHandlers(page, updateExceptionHandler);
         }
 
-        return getHandlers(page, updateExceptionHandler);
+        return this.cachedHandlers;
     }
 
     public void updateActiveIcons(InventoryPageImpl page,
@@ -168,7 +162,7 @@ public class PagedIcons extends FramedIcons {
         if (this.iconsHandler.canUpdate(page, force, this.updateHandlerCooldown) || create) {
             this.updateHandlerCooldown = System.currentTimeMillis();
 
-            List<IconHandler> handlers = getCachedHandler(page, updateExceptionHandler);
+            List<IconHandler> handlers = getCachedHandlers(page, force, updateExceptionHandler);
 
             Collections.sort(handlers);
 

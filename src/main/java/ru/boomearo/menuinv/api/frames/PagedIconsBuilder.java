@@ -12,7 +12,6 @@ import ru.boomearo.menuinv.api.icon.IconHandler;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Predicate;
 
 @Getter
 public class PagedIconsBuilder {
@@ -20,7 +19,7 @@ public class PagedIconsBuilder {
     private PagedIconsUpdate pagedIconsUpdate = (inventoryPage, player) -> new ArrayList<>();
     private Delayable<InventoryPage> updateDelay = new DefaultUpdateDelay();
     private FrameIterationHandler frameIterationHandler = DefaultIterationHandlerImpl.DEFAULT;
-    private Predicate<InventoryPage> cacheHandler = page -> false;
+    private Delayable<InventoryPage> cacheHandler = (page, force) -> 0;
 
     public PagedIconsBuilder setPagedItemsUpdate(PagedIconsUpdate pagedIconsUpdate) {
         Preconditions.checkArgument(pagedIconsUpdate != null, "pagedItemsUpdate is null!");
@@ -40,7 +39,7 @@ public class PagedIconsBuilder {
         return this;
     }
 
-    public PagedIconsBuilder setCacheHandler(Predicate<InventoryPage> cacheHandler) {
+    public PagedIconsBuilder setCacheHandler(Delayable<InventoryPage> cacheHandler) {
         Preconditions.checkArgument(cacheHandler != null, "cacheHandler is null!");
         this.cacheHandler = cacheHandler;
         return this;

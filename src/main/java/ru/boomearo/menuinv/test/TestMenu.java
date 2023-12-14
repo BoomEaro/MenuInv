@@ -172,7 +172,7 @@ public class TestMenu {
                                 }
                                 return tmp;
                             })
-                            .setCacheHandler(page -> true)
+                            .setCacheHandler((page, force) -> 5000)
                             .setUpdateDelay((data, force) -> {
                                 if (force) {
                                     return 0;
@@ -186,7 +186,7 @@ public class TestMenu {
                                 for (int i = 1; i <= new Random().nextInt(20); i++) {
                                     int t = i;
                                     tmp.add(new IconBuilder()
-                                            .setIconClick((inventoryPage2, player2, clickType) -> player2.sendMessage("Resdstone: " + t))
+                                            .setIconClick((inventoryPage2, player2, clickType) -> player2.sendMessage("REDSTONE: " + t))
                                             .setIconUpdate((inventoryPage2, player2) -> new ItemStack(Material.REDSTONE_ORE, t))
                                             .build()
                                             .create());

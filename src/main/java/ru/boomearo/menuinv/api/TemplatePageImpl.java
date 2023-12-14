@@ -220,7 +220,7 @@ public class TemplatePageImpl implements TemplatePage {
     @Override
     public TemplatePage setImmutablePagedIcons(String name, InventoryLocation first, int width, int height, PagedIconsBuilder pagedIconsBuilder) {
         pagedIconsBuilder.setUpdateDelay((inventoryPage, force) -> Long.MAX_VALUE);
-        pagedIconsBuilder.setCacheHandler(page -> true);
+        pagedIconsBuilder.setCacheHandler((page, force) -> Long.MAX_VALUE);
 
         return setPagedIcons(name, first, width, height, pagedIconsBuilder);
     }
@@ -228,7 +228,7 @@ public class TemplatePageImpl implements TemplatePage {
     @Override
     public TemplatePage setImmutablePagedIcons(String name, InventoryLocation first, InventoryLocation second, PagedIconsBuilder pagedIconsBuilder) {
         pagedIconsBuilder.setUpdateDelay((inventoryPage, force) -> Long.MAX_VALUE);
-        pagedIconsBuilder.setCacheHandler(page -> true);
+        pagedIconsBuilder.setCacheHandler((page, force) -> Long.MAX_VALUE);
 
         return setPagedIcons(name, first, second, pagedIconsBuilder);
     }
@@ -236,7 +236,7 @@ public class TemplatePageImpl implements TemplatePage {
     @Override
     public TemplatePage setImmutablePagedIconsIngredients(String name, char first, char second, PagedIconsBuilder pagedIconsBuilder) {
         pagedIconsBuilder.setUpdateDelay((inventoryPage, force) -> Long.MAX_VALUE);
-        pagedIconsBuilder.setCacheHandler(page -> true);
+        pagedIconsBuilder.setCacheHandler((page, force) -> Long.MAX_VALUE);
 
         return setPagedIconsIngredients(name, first, second, pagedIconsBuilder);
     }
