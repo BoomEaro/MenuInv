@@ -36,7 +36,7 @@ public abstract class AsyncIconHandler extends IconHandler {
         }
         else {
             this.task = this.executorService.submit(() -> {
-                if (page.isClosed()) {
+                if (page.isClosed() || !page.isHandlerExists(this)) {
                     return;
                 }
 

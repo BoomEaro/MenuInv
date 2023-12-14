@@ -15,20 +15,24 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
-
 import ru.boomearo.menuinv.MenuInv;
-import ru.boomearo.menuinv.api.*;
+import ru.boomearo.menuinv.api.Menu;
+import ru.boomearo.menuinv.api.MenuType;
+import ru.boomearo.menuinv.api.PluginPage;
+import ru.boomearo.menuinv.api.frames.PagedIcons;
 import ru.boomearo.menuinv.api.frames.PagedIconsBuilder;
+import ru.boomearo.menuinv.api.frames.iteration.InverseIterationHandlerImpl;
 import ru.boomearo.menuinv.api.icon.AsyncIconBuilder;
 import ru.boomearo.menuinv.api.icon.IconBuilder;
 import ru.boomearo.menuinv.api.icon.IconHandler;
 import ru.boomearo.menuinv.api.icon.scrolls.ScrollIconBuilder;
 import ru.boomearo.menuinv.api.icon.scrolls.ScrollType;
-import ru.boomearo.menuinv.api.frames.iteration.InverseIterationHandlerImpl;
 import ru.boomearo.menuinv.api.session.InventorySessionImpl;
-import ru.boomearo.menuinv.api.frames.PagedIcons;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Level;
 
@@ -114,21 +118,8 @@ public class TestMenu {
 
                     .setIngredient('#', new IconBuilder()
                             .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.TNT, 1)))
-                    .setIngredient('?', new AsyncIconBuilder()
-                            .setImmutableLoadedIconBuilder(new IconBuilder()
-                                    .setIconUpdate((inventoryPage, player) -> {
-                                        try {
-                                            Thread.sleep(5000);
-                                        } catch (InterruptedException e) {
-                                            throw new RuntimeException(e);
-                                        }
-
-                                        return new ItemStack(Material.CACTUS, new Random().nextInt(63) + 1);
-                                    })
-                                    .setIconClick((inventoryPage, player, clickType) -> player.sendMessage("Cactus was loaded!")))
-                            .setImmutableLoadingIconBuilder(new IconBuilder()
-                                    .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.SKULL_ITEM, new Random().nextInt(63) + 1))
-                                    .setIconClick((inventoryPage, player, clickType) -> player.sendMessage("Cactus is loading..."))))
+                    .setIngredient('?', new IconBuilder()
+                            .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.TNT, 1)))
 
                     .setIngredient('<', new ScrollIconBuilder()
                             .setName("test")
@@ -143,15 +134,32 @@ public class TestMenu {
                     .setPagedIconsIngredients("test", '1', '2', new PagedIconsBuilder()
                             .setPagedItemsUpdate((inventoryPage, player) -> {
                                 List<IconHandler> tmp = new ArrayList<>();
-                                for (int i = 1; i <= new Random().nextInt(5000); i++) {
-                                    int t = i;
-                                    tmp.add(new IconBuilder()
-                                            .setIconClick((inventoryPage2, player2, type) -> player2.sendMessage("Diamond: " + t))
-                                            .setIconUpdate((inventoryPage2, player2) -> new ItemStack(Material.DIAMOND, t))
+                                for (int i = 1; i <= new Random().nextInt(1000); i++) {
+                                    tmp.add(new AsyncIconBuilder()
+                                            .setImmutableLoadedIconBuilder(new IconBuilder()
+                                                    .setIconUpdate((inventoryPage2, player2) -> {
+                                                        try {
+                                                            Thread.sleep(1000);
+                                                        } catch (InterruptedException e) {
+                                                            throw new RuntimeException(e);
+                                                        }
+
+                                                        return new ItemStack(Material.CACTUS, new Random().nextInt(63) + 1);
+                                                    })
+                                                    .setIconClick((inventoryPage2, player2, clickType) -> player2.sendMessage("Cactus was loaded!")))
+                                            .setImmutableLoadingIconBuilder(new IconBuilder()
+                                                    .setIconUpdate((inventoryPage2, player2) -> new ItemStack(Material.SKULL_ITEM, new Random().nextInt(63) + 1))
+                                                    .setIconClick((inventoryPage2, player2, clickType) -> player2.sendMessage("Cactus is loading...")))
                                             .build()
                                             .create());
                                 }
                                 return tmp;
+                            })
+                            .setUpdateDelay((data, force) -> {
+                                if (force) {
+                                    return 0;
+                                }
+                                return Long.MAX_VALUE;
                             })
                             .setFrameIterationHandler(InverseIterationHandlerImpl.DEFAULT))
 

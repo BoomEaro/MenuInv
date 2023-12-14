@@ -4,6 +4,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import ru.boomearo.menuinv.api.frames.PagedIcons;
 import ru.boomearo.menuinv.api.icon.BottomInventoryClickHandler;
+import ru.boomearo.menuinv.api.icon.IconHandler;
 import ru.boomearo.menuinv.api.session.InventorySession;
 
 public interface InventoryPage {
@@ -45,5 +46,7 @@ public interface InventoryPage {
     InventoryCloseHandler getInventoryCloseHandler();
 
     BottomInventoryClickHandler getBottomInventoryClickHandler();
+
+    boolean isHandlerExists(IconHandler iconHandler);
 
 }
