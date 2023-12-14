@@ -33,6 +33,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Level;
 
@@ -68,6 +70,7 @@ public class TestMenu {
     }
 
     private static void setupMenu(MenuInv menuInv) {
+        ExecutorService executorService = Executors.newFixedThreadPool(1);
         {
             Menu.registerPages(menuInv)
                     .createTemplatePage(MenuPage.MAIN)
@@ -135,20 +138,22 @@ public class TestMenu {
                             .setPagedItemsUpdate((inventoryPage, player) -> {
                                 List<IconHandler> tmp = new ArrayList<>();
                                 for (int i = 1; i <= new Random().nextInt(1000); i++) {
+                                    int t = i;
                                     tmp.add(new AsyncIconBuilder()
+                                            .setExecutorService(executorService)
                                             .setImmutableLoadedIconBuilder(new IconBuilder()
                                                     .setIconUpdate((inventoryPage2, player2) -> {
                                                         try {
-                                                            Thread.sleep(1000);
+                                                            Thread.sleep(250);
                                                         } catch (InterruptedException e) {
                                                             throw new RuntimeException(e);
                                                         }
 
-                                                        return new ItemStack(Material.CACTUS, new Random().nextInt(63) + 1);
+                                                        return new ItemStack(Material.CACTUS, t);
                                                     })
                                                     .setIconClick((inventoryPage2, player2, clickType) -> player2.sendMessage("Cactus was loaded!")))
                                             .setImmutableLoadingIconBuilder(new IconBuilder()
-                                                    .setIconUpdate((inventoryPage2, player2) -> new ItemStack(Material.SKULL_ITEM, new Random().nextInt(63) + 1))
+                                                    .setIconUpdate((inventoryPage2, player2) -> new ItemStack(Material.SKULL_ITEM, t))
                                                     .setIconClick((inventoryPage2, player2, clickType) -> player2.sendMessage("Cactus is loading...")))
                                             .build()
                                             .create());
