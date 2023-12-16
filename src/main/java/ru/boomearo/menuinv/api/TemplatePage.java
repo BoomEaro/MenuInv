@@ -12,6 +12,8 @@ public interface TemplatePage {
 
     String getName();
 
+    PluginTemplatePages getPluginTemplatePages();
+
     MenuType getMenuType();
 
     TemplatePage setMenuType(MenuType type);

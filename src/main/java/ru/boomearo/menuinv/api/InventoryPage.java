@@ -43,6 +43,8 @@ public interface InventoryPage {
 
     boolean isClosed();
 
+    TemplatePage getTemplatePage();
+
     InventoryCloseHandler getInventoryCloseHandler();
 
     BottomInventoryClickHandler getBottomInventoryClickHandler();

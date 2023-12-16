@@ -17,6 +17,7 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 @RequiredArgsConstructor
 @Getter
@@ -30,11 +31,13 @@ public class TemplatePageImpl implements TemplatePage {
     private InventoryReopenHandler inventoryReopenHandler = (inventoryPage, force) -> false;
     private ClickExceptionHandler clickExceptionHandler = (inventoryPage, player, clickType, exception) -> {
         inventoryPage.close(true);
-        exception.printStackTrace();
+        inventoryPage.getTemplatePage().getPluginTemplatePages().getPlugin().getLogger().log(Level.SEVERE,
+                "Exception on icon click. Player: " + player.getName() + ". ClickType: " + clickType + ". Closing menu now.", exception);
     };
     private UpdateExceptionHandler updateExceptionHandler = (inventoryPage, player, exception) -> {
         inventoryPage.close(true);
-        exception.printStackTrace();
+        inventoryPage.getTemplatePage().getPluginTemplatePages().getPlugin().getLogger().log(Level.SEVERE,
+                "Exception on icon update. Player: " + player.getName() + ". Closing menu now.", exception);
     };
 
     private InventoryCloseHandler inventoryCloseHandler = (inventoryPage, player) -> {};
