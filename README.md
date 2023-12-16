@@ -124,7 +124,7 @@ To open the menu, you also need to specify an enum.
             final int finalI = i;
             char character = ("" + i).charAt(0);
             templatePage.setIngredient(character, new AsyncIconBuilder()
-                    .setLoadedIconBuilder(new IconBuilder()
+                    .setLoadedIcon(new IconBuilder()
                             .setUpdateDelay((data, force) -> 1000)
                             .setIconUpdate((inventoryPage2, player2) -> {
                                 try {
@@ -141,7 +141,7 @@ To open the menu, you also need to specify an enum.
                                 return itemStack;
                             })
                             .setIconClick((inventoryPage2, player2, clickType) -> player2.sendMessage("Data type #" + finalI + " was loaded!")))
-                    .setLoadingIconBuilder(new IconBuilder()
+                    .setLoadingIcon(new IconBuilder()
                             .setIconUpdate((inventoryPage2, player2) -> {
                                 ItemStack itemStack = new ItemStack(Material.PAPER, finalI);
                                 ItemMeta itemMeta = itemStack.getItemMeta();

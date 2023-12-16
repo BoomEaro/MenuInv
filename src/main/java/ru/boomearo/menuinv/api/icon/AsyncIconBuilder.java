@@ -19,34 +19,34 @@ public class AsyncIconBuilder implements ElementBuilder {
         return this;
     }
 
-    public AsyncIconBuilder setLoadedIconBuilder(ElementBuilder elementBuilder) {
+    public AsyncIconBuilder setLoadedIcon(ElementBuilder elementBuilder) {
         Preconditions.checkArgument(elementBuilder != null, "ElementBuilder is null!");
         this.loadedIconBuilder = elementBuilder;
         return this;
     }
 
-    public AsyncIconBuilder setImmutableLoadedIconBuilder(ElementBuilder elementBuilder) {
+    public AsyncIconBuilder setImmutableLoadedIcon(ElementBuilder elementBuilder) {
         if (elementBuilder instanceof ElementBuilderUpdatable) {
             ElementBuilderUpdatable<?> elementBuilderUpdatable = (ElementBuilderUpdatable<?>) elementBuilder;
             elementBuilderUpdatable.setUpdateDelay((inventoryPage, force) -> Long.MAX_VALUE);
         }
 
-        return setLoadedIconBuilder(elementBuilder);
+        return setLoadedIcon(elementBuilder);
     }
 
-    public AsyncIconBuilder setLoadingIconBuilder(ElementBuilder elementBuilder) {
+    public AsyncIconBuilder setLoadingIcon(ElementBuilder elementBuilder) {
         Preconditions.checkArgument(elementBuilder != null, "iconBuilder is null!");
         this.loadingIconBuilder = elementBuilder;
         return this;
     }
 
-    public AsyncIconBuilder setImmutableLoadingIconBuilder(ElementBuilder elementBuilder) {
+    public AsyncIconBuilder setImmutableLoadingIcon(ElementBuilder elementBuilder) {
         if (elementBuilder instanceof ElementBuilderUpdatable) {
             ElementBuilderUpdatable<?> elementBuilderUpdatable = (ElementBuilderUpdatable<?>) elementBuilder;
             elementBuilderUpdatable.setUpdateDelay((inventoryPage, force) -> Long.MAX_VALUE);
         }
 
-        return setLoadingIconBuilder(elementBuilder);
+        return setLoadingIcon(elementBuilder);
     }
 
     public AsyncIconBuilder setAsyncIconResetHandler(AsyncIconResetHandler asyncIconResetHandler) {

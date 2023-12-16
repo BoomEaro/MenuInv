@@ -143,7 +143,7 @@ public class TestMenu {
                                     int t = i;
                                     tmp.add(new AsyncIconBuilder()
                                             .setExecutorService(executorService)
-                                            .setLoadedIconBuilder(new IconBuilder()
+                                            .setLoadedIcon(new IconBuilder()
                                                     .setUpdateDelay((data, force) -> 1000)
                                                     .setIconUpdate((inventoryPage2, player2) -> {
                                                         try {
@@ -160,7 +160,7 @@ public class TestMenu {
                                                         return itemStack;
                                                     })
                                                     .setIconClick((inventoryPage2, player2, clickType) -> player2.sendMessage("Data type #" + t + " was loaded!")))
-                                            .setLoadingIconBuilder(new IconBuilder()
+                                            .setLoadingIcon(new IconBuilder()
                                                     .setIconUpdate((inventoryPage2, player2) -> {
                                                         ItemStack itemStack = new ItemStack(Material.PAPER, t);
                                                         ItemMeta itemMeta = itemStack.getItemMeta();
