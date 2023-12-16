@@ -10,6 +10,7 @@ import ru.boomearo.menuinv.api.frames.iteration.FrameIterationHandler;
 import ru.boomearo.menuinv.api.DefaultUpdateDelay;
 import ru.boomearo.menuinv.api.icon.IconHandler;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +20,7 @@ public class PagedIconsBuilder {
     private PagedIconsUpdate pagedIconsUpdate = (inventoryPage, player) -> new ArrayList<>();
     private Delayable<InventoryPage> updateDelay = new DefaultUpdateDelay();
     private FrameIterationHandler frameIterationHandler = DefaultIterationHandlerImpl.DEFAULT;
-    private Delayable<InventoryPage> cacheHandler = (page, force) -> 0;
+    private Delayable<InventoryPage> cacheHandler = (page, force) -> Duration.ZERO;
 
     public PagedIconsBuilder setPagedItemsUpdate(PagedIconsUpdate pagedIconsUpdate) {
         Preconditions.checkArgument(pagedIconsUpdate != null, "pagedItemsUpdate is null!");
@@ -54,7 +55,7 @@ public class PagedIconsBuilder {
             }
 
             @Override
-            public long onUpdateTime(InventoryPage inventoryPage, boolean force) {
+            public Duration onUpdateTime(InventoryPage inventoryPage, boolean force) {
                 return PagedIconsBuilder.this.updateDelay.onUpdateTime(inventoryPage, force);
             }
         };

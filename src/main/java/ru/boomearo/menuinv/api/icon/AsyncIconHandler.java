@@ -5,6 +5,7 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import ru.boomearo.menuinv.api.InventoryPage;
 
+import java.time.Duration;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
@@ -89,7 +90,7 @@ public abstract class AsyncIconHandler extends IconHandler {
     }
 
     @Override
-    public long onUpdateTime(InventoryPage page, boolean force) {
+    public Duration onUpdateTime(InventoryPage page, boolean force) {
         if (this.asyncIconResetHandler.onIconReset(page, force)) {
             this.currentHandler = this.onLoadingHandler;
             this.itemResult = null;
@@ -103,7 +104,7 @@ public abstract class AsyncIconHandler extends IconHandler {
 
         if (this.forceUpdate) {
             this.forceUpdate = false;
-            return 0;
+            return Duration.ZERO;
         }
 
         return this.currentHandler.onUpdateTime(page, force);

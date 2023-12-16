@@ -1,14 +1,16 @@
 package ru.boomearo.menuinv.api;
 
+import java.time.Duration;
+
 public class DefaultUpdateDelay implements Delayable<InventoryPage> {
 
     @Override
-    public long onUpdateTime(InventoryPage inventoryPage, boolean force) {
+    public Duration onUpdateTime(InventoryPage inventoryPage, boolean force) {
         // If force then update immediately
         if (force) {
-            return 0;
+            return Duration.ZERO;
         }
 
-        return 250;
+        return Duration.ofMillis(250);
     }
 }

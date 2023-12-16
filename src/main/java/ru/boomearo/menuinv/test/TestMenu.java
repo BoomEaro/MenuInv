@@ -17,9 +17,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 import ru.boomearo.menuinv.MenuInv;
-import ru.boomearo.menuinv.api.Menu;
-import ru.boomearo.menuinv.api.MenuType;
-import ru.boomearo.menuinv.api.PluginPage;
+import ru.boomearo.menuinv.api.*;
 import ru.boomearo.menuinv.api.frames.PagedIcons;
 import ru.boomearo.menuinv.api.frames.PagedIconsBuilder;
 import ru.boomearo.menuinv.api.icon.AsyncIconBuilder;
@@ -29,6 +27,7 @@ import ru.boomearo.menuinv.api.icon.scrolls.ScrollIconBuilder;
 import ru.boomearo.menuinv.api.icon.scrolls.ScrollType;
 import ru.boomearo.menuinv.api.session.InventorySessionImpl;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -144,7 +143,7 @@ public class TestMenu {
                                     tmp.add(new AsyncIconBuilder()
                                             .setExecutorService(executorService)
                                             .setLoadedIcon(new IconBuilder()
-                                                    .setUpdateDelay((data, force) -> 1000)
+                                                    .setUpdateDelay((data, force) -> Duration.ofSeconds(1))
                                                     .setIconUpdate((inventoryPage2, player2) -> {
                                                         try {
                                                             Thread.sleep(250);
@@ -174,12 +173,12 @@ public class TestMenu {
                                 }
                                 return tmp;
                             })
-                            .setCacheHandler((page, force) -> 5000)
+                            .setCacheHandler((page, force) -> Duration.ofSeconds(5))
                             .setUpdateDelay((data, force) -> {
                                 if (force) {
-                                    return 0;
+                                    return Duration.ZERO;
                                 }
-                                return Long.MAX_VALUE;
+                                return Duration.ofMillis(Long.MAX_VALUE);
                             }))
 
                     .setPagedIconsIngredients("test2", '3', '4', new PagedIconsBuilder()
@@ -214,7 +213,7 @@ public class TestMenu {
                                 item.setItemMeta(meta);
                                 return item;
                             })
-                            .setUpdateDelay((inventortPage, force) -> 0))
+                            .setUpdateDelay((inventoryPage, force) -> Duration.ZERO))
 
                     .setIcon(0, new IconBuilder()
                             .setIconUpdate((inventoryPage, player) -> {
@@ -227,10 +226,10 @@ public class TestMenu {
                             })
                             .setUpdateDelay((inventoryPage, force) -> {
                                 if (force) {
-                                    return 0;
+                                    return Duration.ZERO;
                                 }
 
-                                return 500;
+                                return Duration.ofMillis(500);
                             }))
 
                     .setIcon(1, new IconBuilder()

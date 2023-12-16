@@ -13,6 +13,7 @@ import ru.boomearo.menuinv.api.icon.*;
 import ru.boomearo.menuinv.api.frames.FramedIconsTemplate;
 import ru.boomearo.menuinv.api.session.InventorySession;
 
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -163,7 +164,7 @@ public class TemplatePageImpl implements TemplatePage {
     public TemplatePage setImmutableIcon(int slot, ElementBuilder elementBuilder) {
         if (elementBuilder instanceof ElementBuilderUpdatable) {
             ElementBuilderUpdatable<?> elementBuilderUpdatable = (ElementBuilderUpdatable<?>) elementBuilder;
-            elementBuilderUpdatable.setUpdateDelay((inventoryPage, force) -> Long.MAX_VALUE);
+            elementBuilderUpdatable.setUpdateDelay((inventoryPage, force) -> Duration.ofMillis(Long.MAX_VALUE));
         }
         return setIcon(slot, elementBuilder);
     }
@@ -219,24 +220,24 @@ public class TemplatePageImpl implements TemplatePage {
 
     @Override
     public TemplatePage setImmutablePagedIcons(String name, InventoryLocation first, int width, int height, PagedIconsBuilder pagedIconsBuilder) {
-        pagedIconsBuilder.setUpdateDelay((inventoryPage, force) -> Long.MAX_VALUE);
-        pagedIconsBuilder.setCacheHandler((page, force) -> Long.MAX_VALUE);
+        pagedIconsBuilder.setUpdateDelay((inventoryPage, force) -> Duration.ofMillis(Long.MAX_VALUE));
+        pagedIconsBuilder.setCacheHandler((page, force) -> Duration.ofMillis(Long.MAX_VALUE));
 
         return setPagedIcons(name, first, width, height, pagedIconsBuilder);
     }
 
     @Override
     public TemplatePage setImmutablePagedIcons(String name, InventoryLocation first, InventoryLocation second, PagedIconsBuilder pagedIconsBuilder) {
-        pagedIconsBuilder.setUpdateDelay((inventoryPage, force) -> Long.MAX_VALUE);
-        pagedIconsBuilder.setCacheHandler((page, force) -> Long.MAX_VALUE);
+        pagedIconsBuilder.setUpdateDelay((inventoryPage, force) -> Duration.ofMillis(Long.MAX_VALUE));
+        pagedIconsBuilder.setCacheHandler((page, force) -> Duration.ofMillis(Long.MAX_VALUE));
 
         return setPagedIcons(name, first, second, pagedIconsBuilder);
     }
 
     @Override
     public TemplatePage setImmutablePagedIconsIngredients(String name, char first, char second, PagedIconsBuilder pagedIconsBuilder) {
-        pagedIconsBuilder.setUpdateDelay((inventoryPage, force) -> Long.MAX_VALUE);
-        pagedIconsBuilder.setCacheHandler((page, force) -> Long.MAX_VALUE);
+        pagedIconsBuilder.setUpdateDelay((inventoryPage, force) -> Duration.ofMillis(Long.MAX_VALUE));
+        pagedIconsBuilder.setCacheHandler((page, force) -> Duration.ofMillis(Long.MAX_VALUE));
 
         return setPagedIconsIngredients(name, first, second, pagedIconsBuilder);
     }
@@ -268,7 +269,7 @@ public class TemplatePageImpl implements TemplatePage {
     public TemplatePage setImmutableBackground(ElementBuilder elementBuilder) {
         if (elementBuilder instanceof ElementBuilderUpdatable) {
             ElementBuilderUpdatable<?> elementBuilderUpdatable = (ElementBuilderUpdatable<?>) elementBuilder;
-            elementBuilderUpdatable.setUpdateDelay((inventoryPage, force) -> Long.MAX_VALUE);
+            elementBuilderUpdatable.setUpdateDelay((inventoryPage, force) -> Duration.ofMillis(Long.MAX_VALUE));
         }
 
         return setBackground(elementBuilder);
@@ -330,7 +331,7 @@ public class TemplatePageImpl implements TemplatePage {
     public TemplatePage setImmutableIngredient(char value, ElementBuilder elementBuilder) {
         if (elementBuilder instanceof ElementBuilderUpdatable) {
             ElementBuilderUpdatable<?> elementBuilderUpdatable = (ElementBuilderUpdatable<?>) elementBuilder;
-            elementBuilderUpdatable.setUpdateDelay((inventoryPage, force) -> Long.MAX_VALUE);
+            elementBuilderUpdatable.setUpdateDelay((inventoryPage, force) -> Duration.ofMillis(Long.MAX_VALUE));
         }
 
         return setIngredient(value, elementBuilder);

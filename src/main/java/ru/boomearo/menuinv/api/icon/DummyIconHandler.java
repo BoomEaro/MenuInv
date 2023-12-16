@@ -5,16 +5,18 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import ru.boomearo.menuinv.api.InventoryPage;
 
+import java.time.Duration;
+
 public class DummyIconHandler extends IconHandler {
 
     public static final DummyIconHandler INSTANCE = new DummyIconHandler();
 
     @Override
-    public long onUpdateTime(InventoryPage data, boolean force) {
+    public Duration onUpdateTime(InventoryPage data, boolean force) {
         if (force) {
-            return 0;
+            return Duration.ZERO;
         }
-        return 250;
+        return Duration.ofMillis(250);
     }
 
     @Override

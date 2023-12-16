@@ -125,7 +125,7 @@ To open the menu, you also need to specify an enum.
             char character = ("" + i).charAt(0);
             templatePage.setIngredient(character, new AsyncIconBuilder()
                     .setLoadedIcon(new IconBuilder()
-                            .setUpdateDelay((data, force) -> 1000)
+                            .setUpdateDelay((data, force) -> Duration.ofSeconds(1))
                             .setIconUpdate((inventoryPage2, player2) -> {
                                 try {
                                     Thread.sleep(150);

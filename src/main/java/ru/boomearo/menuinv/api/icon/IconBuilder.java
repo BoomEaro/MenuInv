@@ -8,6 +8,8 @@ import ru.boomearo.menuinv.api.DefaultUpdateDelay;
 import ru.boomearo.menuinv.api.Delayable;
 import ru.boomearo.menuinv.api.InventoryPage;
 
+import java.time.Duration;
+
 public class IconBuilder implements ElementBuilderUpdatable<IconBuilder> {
 
     private IconClick iconClick = (inventoryPage, player, clickType) -> {};
@@ -60,7 +62,7 @@ public class IconBuilder implements ElementBuilderUpdatable<IconBuilder> {
             }
 
             @Override
-            public long onUpdateTime(InventoryPage page, boolean force) {
+            public Duration onUpdateTime(InventoryPage page, boolean force) {
                 return IconBuilder.this.updateDelay.onUpdateTime(page, force);
             }
 

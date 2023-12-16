@@ -11,6 +11,8 @@ import ru.boomearo.menuinv.api.frames.PagedIcons;
 import ru.boomearo.menuinv.api.icon.*;
 import ru.boomearo.menuinv.api.icon.DefaultIconClickDelay;
 
+import java.time.Duration;
+
 public class ScrollIconBuilder implements ElementBuilderUpdatable<ScrollIconBuilder> {
 
     private ScrollType scrollType = ScrollType.NEXT;
@@ -113,7 +115,7 @@ public class ScrollIconBuilder implements ElementBuilderUpdatable<ScrollIconBuil
             }
 
             @Override
-            public long onUpdateTime(InventoryPage page, boolean force) {
+            public Duration onUpdateTime(InventoryPage page, boolean force) {
                 return ScrollIconBuilder.this.updateDelay.onUpdateTime(page, force);
             }
 

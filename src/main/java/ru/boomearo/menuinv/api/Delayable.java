@@ -1,22 +1,25 @@
 package ru.boomearo.menuinv.api;
 
+import java.time.Duration;
+
 @FunctionalInterface
 public interface Delayable<T>{
 
-    long onUpdateTime(T data, boolean force);
+    Duration onUpdateTime(T data, boolean force);
 
     default boolean canUpdate(T data, boolean force, long time) {
-        long result = onUpdateTime(data, force);
+        Duration duration = onUpdateTime(data, force);
+        long miliseconds = duration.toMillis();
 
-        if (result == Long.MAX_VALUE) {
+        if (miliseconds == Long.MAX_VALUE) {
             return false;
         }
 
-        if (result <= 0) {
+        if (miliseconds <= 0) {
             return true;
         }
 
-        return (System.currentTimeMillis() - time) > result;
+        return (System.currentTimeMillis() - time) > miliseconds;
     }
 
 }
