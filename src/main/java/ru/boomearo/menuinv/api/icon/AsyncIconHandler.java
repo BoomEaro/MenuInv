@@ -16,7 +16,10 @@ public abstract class AsyncIconHandler extends IconHandler {
     private final AsyncIconResetHandler asyncIconResetHandler;
 
     private IconHandler currentHandler;
-    private ItemStack result = null;
+
+    private ItemStack itemResult = null;
+    private Exception exceptionResult = null;
+
     private Future<?> task = null;
     private boolean forceUpdate = false;
 
@@ -34,7 +37,7 @@ public abstract class AsyncIconHandler extends IconHandler {
     }
 
     @Override
-    public ItemStack onUpdate(InventoryPage page, Player player) {
+    public ItemStack onUpdate(InventoryPage page, Player player) throws Exception {
         if (this.task != null) {
             if (this.task.isDone()) {
                 this.task = null;
@@ -42,18 +45,29 @@ public abstract class AsyncIconHandler extends IconHandler {
         }
         else {
             this.task = this.executorService.submit(() -> {
-                if (page.isClosed() || !page.isHandlerExists(this)) {
-                    return;
-                }
+                try {
+                    if (page.isClosed() || !page.isHandlerExists(this)) {
+                        return;
+                    }
 
-                this.result = this.onLoadedHandler.onUpdate(page, player);
-                this.currentHandler = this.onLoadedHandler;
-                this.forceUpdate = true;
+                    this.itemResult = this.onLoadedHandler.onUpdate(page, player);
+                }
+                catch (Exception e) {
+                    this.exceptionResult = e;
+                }
+                finally {
+                    this.currentHandler = this.onLoadedHandler;
+                    this.forceUpdate = true;
+                }
             });
         }
 
-        if (this.result != null) {
-            return this.result;
+        if (this.itemResult != null) {
+            return this.itemResult;
+        }
+
+        if (this.exceptionResult != null) {
+            throw exceptionResult;
         }
 
         return this.onLoadingHandler.onUpdate(page, player);
@@ -78,7 +92,8 @@ public abstract class AsyncIconHandler extends IconHandler {
     public long onUpdateTime(InventoryPage page, boolean force) {
         if (this.asyncIconResetHandler.onIconReset(page, force)) {
             this.currentHandler = this.onLoadingHandler;
-            this.result = null;
+            this.itemResult = null;
+            this.exceptionResult = null;
 
             if (this.task != null) {
                 this.task.cancel(true);

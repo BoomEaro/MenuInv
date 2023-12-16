@@ -218,6 +218,10 @@ public class InventoryPageImpl implements InventoryPage {
     @Override
     public boolean isHandlerExists(IconHandler iconHandler) {
         for (ItemIcon icon : this.activeIcons) {
+            if (icon == null) {
+                continue;
+            }
+
             if (icon.getHandler() == iconHandler) {
                 return true;
             }
