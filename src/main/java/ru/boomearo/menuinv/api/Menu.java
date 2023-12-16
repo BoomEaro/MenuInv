@@ -111,6 +111,8 @@ public class Menu {
         PluginTemplatePagesImpl pages = new PluginTemplatePagesImpl(plugin);
 
         MENU_BY_PLUGIN.put(plugin.getClass(), pages);
+
+        MenuInv.getInstance().getLogger().info("Registered PluginTemplatePages for " + plugin.getName());
         return pages;
     }
 
@@ -139,6 +141,8 @@ public class Menu {
                 }
             }
         }
+
+        MenuInv.getInstance().getLogger().info("Unregistered PluginTemplatePages for " + plugin.getName());
     }
 
     public static InventoryPage open(PluginPage pluginPage, Player player) {
