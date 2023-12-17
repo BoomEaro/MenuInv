@@ -9,6 +9,10 @@ public interface Delayable<T>{
 
     default boolean canUpdate(T data, boolean force, long time) {
         Duration duration = onUpdateTime(data, force);
+        if (duration == null) {
+            duration = Duration.ZERO;
+        }
+
         long miliseconds = duration.toMillis();
 
         if (miliseconds == Long.MAX_VALUE) {

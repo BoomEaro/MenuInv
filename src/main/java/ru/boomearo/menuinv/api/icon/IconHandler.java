@@ -21,7 +21,12 @@ public abstract class IconHandler implements Updatable<ItemStack, InventoryPage>
     }
 
     public void handleClick(InventoryPage page, Player player, ClickType click) {
-        if (hasClicked(player.getName(), getClickTime(page, player, click).toMillis())) {
+        Duration duration = getClickTime(page, player, click);
+        if (duration == null) {
+            duration = Duration.ZERO;
+        }
+
+        if (hasClicked(player.getName(), duration.toMillis())) {
             CLICK_COOLDOWN.put(player.getName(), System.currentTimeMillis());
 
             onClick(page, player, click);
