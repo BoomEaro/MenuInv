@@ -110,7 +110,7 @@ public class ScrollIconBuilder implements ElementBuilderUpdatable<ScrollIconBuil
             }
 
             @Override
-            public long getClickTime(InventoryPage page, Player player, ClickType click) {
+            public Duration getClickTime(InventoryPage page, Player player, ClickType click) {
                 return ScrollIconBuilder.this.iconClickDelay.getClickTime(page, player, click);
             }
 

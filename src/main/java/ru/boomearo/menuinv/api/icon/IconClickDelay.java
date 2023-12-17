@@ -4,9 +4,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import ru.boomearo.menuinv.api.InventoryPage;
 
+import java.time.Duration;
+
 @FunctionalInterface
 public interface IconClickDelay {
 
-   long getClickTime(InventoryPage page, Player player, ClickType click);
+   Duration getClickTime(InventoryPage page, Player player, ClickType click);
 
 }

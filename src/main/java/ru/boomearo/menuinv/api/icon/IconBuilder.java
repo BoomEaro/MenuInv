@@ -52,7 +52,7 @@ public class IconBuilder implements ElementBuilderUpdatable<IconBuilder> {
             }
 
             @Override
-            public long getClickTime(InventoryPage page, Player player, ClickType click) {
+            public Duration getClickTime(InventoryPage page, Player player, ClickType click) {
                 return IconBuilder.this.iconClickDelay.getClickTime(page, player, click);
             }
 

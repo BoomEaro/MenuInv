@@ -6,6 +6,7 @@ import org.bukkit.inventory.ItemStack;
 import ru.boomearo.menuinv.api.InventoryPage;
 import ru.boomearo.menuinv.api.Updatable;
 
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,12 +16,12 @@ public abstract class IconHandler implements Updatable<ItemStack, InventoryPage>
 
     public abstract void onClick(InventoryPage page, Player player, ClickType click);
 
-    public long getClickTime(InventoryPage page, Player player, ClickType click) {
-        return 250;
+    public Duration getClickTime(InventoryPage page, Player player, ClickType click) {
+        return Duration.ofMillis(250);
     }
 
     public void handleClick(InventoryPage page, Player player, ClickType click) {
-        if (hasClicked(player.getName(), getClickTime(page, player, click))) {
+        if (hasClicked(player.getName(), getClickTime(page, player, click).toMillis())) {
             CLICK_COOLDOWN.put(player.getName(), System.currentTimeMillis());
 
             onClick(page, player, click);

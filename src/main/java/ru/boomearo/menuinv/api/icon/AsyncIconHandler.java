@@ -80,7 +80,7 @@ public abstract class AsyncIconHandler extends IconHandler {
     }
 
     @Override
-    public long getClickTime(InventoryPage page, Player player, ClickType click) {
+    public Duration getClickTime(InventoryPage page, Player player, ClickType click) {
         return this.currentHandler.getClickTime(page, player, click);
     }
 

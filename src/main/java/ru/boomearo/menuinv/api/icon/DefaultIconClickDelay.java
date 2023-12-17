@@ -4,11 +4,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import ru.boomearo.menuinv.api.InventoryPage;
 
+import java.time.Duration;
+
 public class DefaultIconClickDelay implements IconClickDelay {
 
     @Override
-    public long getClickTime(InventoryPage page, Player player, ClickType click) {
-        return 250;
+    public Duration getClickTime(InventoryPage page, Player player, ClickType click) {
+        return Duration.ofMillis(250);
     }
 
 }
