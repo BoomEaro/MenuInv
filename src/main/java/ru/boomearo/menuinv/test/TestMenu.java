@@ -202,6 +202,7 @@ public class TestMenu {
             Menu.registerPages(menuInv)
                     .createTemplatePage(MenuPage.OTHER)
                     .setMenuType(MenuType.WORKBENCH)
+                    .setGlobalUpdateDelay((data, force) -> Duration.ZERO)
                     .setInventoryTitle((inventoryPage) -> "Hello2")
                     .setIcon(9, new IconBuilder()
                             .setIconClick((inventoryPage, player, click) -> Menu.open(MenuPage.MAIN, player, inventoryPage.getSession()))
