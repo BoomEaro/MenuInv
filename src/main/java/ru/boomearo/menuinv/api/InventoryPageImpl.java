@@ -157,7 +157,8 @@ public class InventoryPageImpl implements InventoryPage {
                 lii.updateActiveIcons(this, this.activeIcons, forceUpdate, create, this.updateExceptionHandler);
             }
 
-            // Using an array of active items, we fill the array of Bukkit items
+            // Using an array of active items, we fill the array with Bukkit items
+            boolean shouldUpdateInventory = false;
             for (ItemIcon ii : this.activeIcons) {
                 if (ii == null) {
                     continue;
@@ -169,6 +170,11 @@ public class InventoryPageImpl implements InventoryPage {
                 }
 
                 this.inventory.setItem(ii.getSlot(), itemStack);
+                shouldUpdateInventory = true;
+            }
+
+            if (shouldUpdateInventory) {
+                this.player.updateInventory();
             }
 
             this.changes = false;
