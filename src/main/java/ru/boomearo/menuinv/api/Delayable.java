@@ -3,7 +3,7 @@ package ru.boomearo.menuinv.api;
 import java.time.Duration;
 
 @FunctionalInterface
-public interface Delayable<T>{
+public interface Delayable<T> {
 
     Duration onUpdateTime(T data, boolean force);
 

@@ -16,7 +16,7 @@ public class DummyIconHandler extends IconHandler {
         if (force) {
             return Duration.ZERO;
         }
-        return Duration.ofMillis(250);
+        return Duration.ofMillis(Long.MAX_VALUE);
     }
 
     @Override
