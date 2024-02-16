@@ -7,6 +7,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public abstract class SlotElement {
 
-    private final int slot;
+    protected final int slot;
 
 }

@@ -3,7 +3,6 @@ package ru.boomearo.menuinv.api.icon;
 import com.google.common.base.Preconditions;
 import ru.boomearo.menuinv.api.InfinityUpdateDelay;
 
-import java.time.Duration;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ForkJoinPool;
 

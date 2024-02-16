@@ -21,7 +21,7 @@ public class ScrollIconBuilder implements ElementBuilderUpdatable<ScrollIconBuil
     private ScrollUpdate scrollVisibleUpdate = (inventoryPage, player, scrollType, currentPage, maxPage) -> null;
     private ScrollUpdate scrollHideUpdate = (inventoryPage, player, scrollType, currentPage, maxPage) -> null;
 
-    private IconClick iconClick = (inventoryPage, player, clickType) -> {};
+    private IconClick iconClick = (inventoryPage, icon, player, clickType) -> {};
     private IconClickDelay iconClickDelay = new DefaultIconClickDelay();
     private Delayable<InventoryPage> updateDelay = new DefaultUpdateDelay<>();
 
@@ -73,7 +73,7 @@ public class ScrollIconBuilder implements ElementBuilderUpdatable<ScrollIconBuil
         return () -> new IconHandler() {
 
             @Override
-            public void onClick(InventoryPage page, Player player, ClickType clickType) {
+            public void onClick(InventoryPage page, ItemIcon icon, Player player, ClickType clickType) {
                 PagedIcons pagedIcons = page.getListedIconsItems(ScrollIconBuilder.this.name);
                 if (pagedIcons == null) {
                     return;
@@ -82,7 +82,7 @@ public class ScrollIconBuilder implements ElementBuilderUpdatable<ScrollIconBuil
                 boolean change = pagedIcons.scrollPage(ScrollIconBuilder.this.scrollType);
                 if (change) {
                     page.update(true);
-                    ScrollIconBuilder.this.iconClick.onClick(page, player, clickType);
+                    ScrollIconBuilder.this.iconClick.onClick(page, icon, player, clickType);
                 }
             }
 

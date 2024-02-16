@@ -26,7 +26,7 @@ public class DummyIconHandler extends IconHandler {
     }
 
     @Override
-    public void onClick(InventoryPage page, Player player, ClickType click) {
+    public void onClick(InventoryPage page, ItemIcon icon, Player player, ClickType click) {
 
     }
 }

@@ -84,11 +84,11 @@ public class TestMenu {
                         return "Test: " + piTest.getCurrentPage() + "/" + piTest.getMaxPage() + " ||| " + piTest2.getCurrentPage() + "/" + piTest2.getMaxPage();
                     })
                     .setIcon(1, new IconBuilder()
-                            .setIconClick((inventoryPage, player, type) -> Menu.open(MenuPage.OTHER, player, inventoryPage.getSession()))
+                            .setIconClick((inventoryPage, icon, player, type) -> Menu.open(MenuPage.OTHER, player, inventoryPage.getSession()))
                             .setIconUpdate((consume, player) -> new ItemStack(Material.STONE, 1)))
 
                     .setIcon(3, new IconBuilder()
-                            .setIconClick((inventoryPage, player, type) -> {
+                            .setIconClick((inventoryPage, icon, player, type) -> {
                                 TestSession ts = (TestSession) inventoryPage.getSession();
 
                                 List<ItemStack> items = ts.getItems();
@@ -103,7 +103,7 @@ public class TestMenu {
                             .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.REDSTONE_ORE, 1)))
 
                     .setIcon(4, new IconBuilder()
-                            .setIconClick((inventoryPage, player, type) -> {
+                            .setIconClick((inventoryPage, icon, player, type) -> {
                                 TestSession ts = (TestSession) inventoryPage.getSession();
 
                                 ts.getItems().add(new ItemStack(Material.DIAMOND, 1));
@@ -158,7 +158,7 @@ public class TestMenu {
 
                                                         return itemStack;
                                                     })
-                                                    .setIconClick((inventoryPage2, player2, clickType) -> player2.sendMessage("Data type #" + t + " was loaded!")))
+                                                    .setIconClick((inventoryPage2, icon, player2, clickType) -> player2.sendMessage("Data type #" + t + " was loaded!")))
                                             .setLoadingIcon(new IconBuilder()
                                                     .setIconUpdate((inventoryPage2, player2) -> {
                                                         ItemStack itemStack = new ItemStack(Material.PAPER, t);
@@ -167,7 +167,7 @@ public class TestMenu {
                                                         itemStack.setItemMeta(itemMeta);
                                                         return itemStack;
                                                     })
-                                                    .setIconClick((inventoryPage2, player2, clickType) -> player2.sendMessage("Data type #" + t + " is loading...")))
+                                                    .setIconClick((inventoryPage2, icon, player2, clickType) -> player2.sendMessage("Data type #" + t + " is loading...")))
                                             .build()
                                             .create());
                                 }
@@ -182,7 +182,7 @@ public class TestMenu {
                                 for (int i = 1; i <= new Random().nextInt(20); i++) {
                                     int t = i;
                                     tmp.add(new IconBuilder()
-                                            .setIconClick((inventoryPage2, player2, clickType) -> player2.sendMessage("REDSTONE: " + t))
+                                            .setIconClick((inventoryPage2, icon, player2, clickType) -> player2.sendMessage("REDSTONE: " + t))
                                             .setIconUpdate((inventoryPage2, player2) -> new ItemStack(Material.REDSTONE_ORE, t))
                                             .build()
                                             .create());
@@ -200,7 +200,7 @@ public class TestMenu {
                     .setGlobalUpdateDelay((data, force) -> Duration.ZERO)
                     .setInventoryTitle((inventoryPage) -> "Hello2")
                     .setIcon(9, new IconBuilder()
-                            .setIconClick((inventoryPage, player, click) -> Menu.open(MenuPage.MAIN, player, inventoryPage.getSession()))
+                            .setIconClick((inventoryPage, icon, player, click) -> Menu.open(MenuPage.MAIN, player, inventoryPage.getSession()))
                             .setIconUpdate((inventoryPage, player) -> {
                                 ItemStack item = new ItemStack(MATERIALS.get(ThreadLocalRandom.current().nextInt(MATERIALS.size())), 1);
                                 ItemMeta meta = item.getItemMeta();
@@ -229,7 +229,7 @@ public class TestMenu {
                             }))
 
                     .setIcon(1, new IconBuilder()
-                            .setIconClick((inventoryPage, player, clickType) -> inventoryPage.close())
+                            .setIconClick((inventoryPage, icon, player, clickType) -> inventoryPage.close())
                             .setIconUpdate((inventoryPage, player) -> {
                                 ItemStack item = new ItemStack(Material.BARRIER, 1);
                                 ItemMeta meta = item.getItemMeta();

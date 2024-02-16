@@ -5,7 +5,7 @@ import ru.boomearo.menuinv.api.*;
 import ru.boomearo.menuinv.api.frames.iteration.FrameIterationHandler;
 import ru.boomearo.menuinv.api.icon.DummyIconHandler;
 import ru.boomearo.menuinv.api.icon.IconHandler;
-import ru.boomearo.menuinv.api.icon.ItemIcon;
+import ru.boomearo.menuinv.api.icon.ItemIconImpl;
 import ru.boomearo.menuinv.api.icon.UpdateExceptionHandler;
 import ru.boomearo.menuinv.api.icon.scrolls.ScrollType;
 
@@ -154,7 +154,7 @@ public class PagedIcons extends FramedIcons {
     }
 
     public void updateActiveIcons(InventoryPageImpl page,
-                                  ItemIcon[] activeIcons,
+                                  ItemIconImpl[] activeIcons,
                                   boolean force,
                                   boolean create,
                                   UpdateExceptionHandler updateExceptionHandler) {
@@ -209,14 +209,14 @@ public class PagedIcons extends FramedIcons {
         }
     }
 
-    private void setItemIcon(ItemIcon[] activeIcons, int slot, IconHandler iconHandler) {
-        ItemIcon current = activeIcons[slot];
+    private void setItemIcon(ItemIconImpl[] activeIcons, int slot, IconHandler iconHandler) {
+        ItemIconImpl current = activeIcons[slot];
         if (current != null) {
-            current.setHandler(iconHandler);
+            current.setIconHandler(iconHandler);
             return;
         }
 
-        activeIcons[slot] = new ItemIcon(slot, iconHandler);
+        activeIcons[slot] = new ItemIconImpl(slot, iconHandler);
     }
 
     public void resetChanges() {

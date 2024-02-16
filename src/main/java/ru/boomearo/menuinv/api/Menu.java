@@ -37,7 +37,7 @@ public class Menu {
                     return data.getInventoryName(session);
                 })
                 .setIcon(0, new IconBuilder()
-                        .setIconClick((inventoryPage, player, clickType) -> {
+                        .setIconClick((inventoryPage, icon, player, clickType) -> {
                             InventorySession session = inventoryPage.getSession();
 
                             if (session == null) {
@@ -68,7 +68,7 @@ public class Menu {
                             return confirm.getCancelItem(inventoryPage);
                         }))
                 .setIcon(4, new IconBuilder()
-                        .setIconClick((inventoryPage, player, clickType) -> {
+                        .setIconClick((inventoryPage, icon, player, clickType) -> {
                             InventorySession session = inventoryPage.getSession();
 
                             if (session == null) {

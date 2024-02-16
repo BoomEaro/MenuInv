@@ -14,13 +14,13 @@ public abstract class IconHandler implements Updatable<ItemStack, InventoryPage>
 
     private static final Map<String, Long> CLICK_COOLDOWN = new HashMap<>();
 
-    public abstract void onClick(InventoryPage page, Player player, ClickType click);
+    public abstract void onClick(InventoryPage page, ItemIcon icon, Player player, ClickType click);
 
     public Duration getClickTime(InventoryPage page, Player player, ClickType click) {
         return Duration.ofMillis(250);
     }
 
-    public void handleClick(InventoryPage page, Player player, ClickType click) {
+    public void handleClick(InventoryPage page, ItemIcon icon, Player player, ClickType click) {
         Duration duration = getClickTime(page, player, click);
         if (duration == null) {
             duration = Duration.ZERO;
@@ -29,7 +29,7 @@ public abstract class IconHandler implements Updatable<ItemStack, InventoryPage>
         if (hasClicked(player.getName(), duration.toMillis())) {
             CLICK_COOLDOWN.put(player.getName(), System.currentTimeMillis());
 
-            onClick(page, player, click);
+            onClick(page, icon, player, click);
         }
     }
 

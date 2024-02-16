@@ -31,7 +31,7 @@ public class InventoryPageImpl implements InventoryPage {
 
     private final Map<String, PagedIcons> listedIcons;
 
-    private final ItemIcon[] activeIcons;
+    private final ItemIconImpl[] activeIcons;
 
     private Inventory inventory;
 
@@ -50,7 +50,7 @@ public class InventoryPageImpl implements InventoryPage {
 
     public InventoryPageImpl(String name,
                              MenuType menuType,
-                             Map<Integer, ItemIcon> iconsPosition,
+                             Map<Integer, ItemIconImpl> iconsPosition,
                              Map<String, PagedIcons> listedIcons,
                              InventoryTitleHandler inventoryTitleHandler,
                              InventoryReopenHandler inventoryReopenHandler,
@@ -81,19 +81,19 @@ public class InventoryPageImpl implements InventoryPage {
         this.inventory = this.menuType.createInventory(new MenuInventoryHolder(this), this.inventoryTitleHandler.createTitle(this));
 
         // Create an array of active size items in the current inventory
-        this.activeIcons = new ItemIcon[this.menuType.getSize()];
+        this.activeIcons = new ItemIconImpl[this.menuType.getSize()];
         // Filling the array with nulls
         Arrays.fill(this.activeIcons, null);
 
         // First, we fill the array of active objects with the background.
         if (background != null) {
             for (int i = 0; i < this.menuType.getSize(); i++) {
-                this.activeIcons[i] = new ItemIcon(i, background.create());
+                this.activeIcons[i] = new ItemIconImpl(i, background.create());
             }
         }
 
         // Then we fill the array of active objects with independent objects.
-        for (ItemIcon ii : iconsPosition.values()) {
+        for (ItemIconImpl ii : iconsPosition.values()) {
             this.activeIcons[ii.getSlot()] = ii;
         }
     }
@@ -109,11 +109,11 @@ public class InventoryPageImpl implements InventoryPage {
     }
 
     public void handleInventoryClick(int slot, ClickType type) {
-        ItemIcon ii = this.activeIcons[slot];
+        ItemIconImpl ii = this.activeIcons[slot];
         if (ii != null) {
 
             try {
-                ii.getHandler().handleClick(this, this.player, type);
+                ii.getIconHandler().handleClick(this, ii, this.player, type);
             }
             catch (Exception e) {
                 this.clickExceptionHandler.onException(this, this.player, type, e);
@@ -159,7 +159,7 @@ public class InventoryPageImpl implements InventoryPage {
 
             // Using an array of active items, we fill the array with Bukkit items
             boolean shouldUpdateInventory = false;
-            for (ItemIcon ii : this.activeIcons) {
+            for (ItemIconImpl ii : this.activeIcons) {
                 if (ii == null) {
                     continue;
                 }
@@ -223,12 +223,12 @@ public class InventoryPageImpl implements InventoryPage {
 
     @Override
     public boolean isHandlerExists(IconHandler iconHandler) {
-        for (ItemIcon icon : this.activeIcons) {
+        for (ItemIconImpl icon : this.activeIcons) {
             if (icon == null) {
                 continue;
             }
 
-            if (icon.getHandler() == iconHandler) {
+            if (icon.getIconHandler() == iconHandler) {
                 return true;
             }
         }

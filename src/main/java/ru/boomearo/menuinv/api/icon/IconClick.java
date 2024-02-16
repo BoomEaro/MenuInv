@@ -7,6 +7,6 @@ import ru.boomearo.menuinv.api.InventoryPage;
 @FunctionalInterface
 public interface IconClick {
 
-    void onClick(InventoryPage page, Player player, ClickType click);
+    void onClick(InventoryPage page, ItemIcon icon, Player player, ClickType click);
 
 }

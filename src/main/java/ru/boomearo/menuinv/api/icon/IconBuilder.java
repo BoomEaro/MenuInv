@@ -12,7 +12,7 @@ import java.time.Duration;
 
 public class IconBuilder implements ElementBuilderUpdatable<IconBuilder> {
 
-    private IconClick iconClick = (inventoryPage, player, clickType) -> {};
+    private IconClick iconClick = (inventoryPage, icon, player, clickType) -> {};
     private IconClickDelay iconClickDelay = new DefaultIconClickDelay();
     private IconUpdate iconUpdate = (inventoryPage, player) -> null;
     private Delayable<InventoryPage> updateDelay = new DefaultUpdateDelay<>();
@@ -47,8 +47,8 @@ public class IconBuilder implements ElementBuilderUpdatable<IconBuilder> {
         return () -> new IconHandler() {
 
             @Override
-            public void onClick(InventoryPage page, Player player, ClickType click) {
-                IconBuilder.this.iconClick.onClick(page, player, click);
+            public void onClick(InventoryPage page, ItemIcon icon, Player player, ClickType click) {
+                IconBuilder.this.iconClick.onClick(page, icon, player, click);
             }
 
             @Override

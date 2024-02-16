@@ -13,7 +13,6 @@ import ru.boomearo.menuinv.api.icon.*;
 import ru.boomearo.menuinv.api.frames.FramedIconsTemplate;
 import ru.boomearo.menuinv.api.session.InventorySession;
 
-import java.time.Duration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -355,19 +354,19 @@ public class TemplatePageImpl implements TemplatePage {
     }
 
     public InventoryPageImpl createNewInventoryPage(Player player, InventorySession session) {
-        Map<Integer, ItemIcon> itemIconsActive = new HashMap<>();
+        Map<Integer, ItemIconImpl> itemIconsActive = new HashMap<>();
 
         if (this.structure != null) {
             for (StructureHolder holder : this.structure) {
                 ElementBuilder elementBuilder = holder.getElementBuilder();
                 if (elementBuilder != null) {
-                    itemIconsActive.put(holder.getSlot(), new ItemIcon(holder.getSlot(), elementBuilder.build().create()));
+                    itemIconsActive.put(holder.getSlot(), new ItemIconImpl(holder.getSlot(), elementBuilder.build().create()));
                 }
             }
         }
 
         for (ItemIconTemplate tii : this.itemIcons.values()) {
-            itemIconsActive.put(tii.getSlot(), new ItemIcon(tii.getSlot(), tii.getFactory().create()));
+            itemIconsActive.put(tii.getSlot(), new ItemIconImpl(tii.getSlot(), tii.getFactory().create()));
         }
 
         Map<String, PagedIcons> pagedIconsActive = new HashMap<>();
