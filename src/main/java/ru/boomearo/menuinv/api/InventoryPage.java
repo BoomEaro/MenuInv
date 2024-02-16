@@ -5,6 +5,7 @@ import org.bukkit.inventory.Inventory;
 import ru.boomearo.menuinv.api.frames.PagedIcons;
 import ru.boomearo.menuinv.api.icon.BottomInventoryClickHandler;
 import ru.boomearo.menuinv.api.icon.IconHandler;
+import ru.boomearo.menuinv.api.icon.ItemIcon;
 import ru.boomearo.menuinv.api.session.InventorySession;
 
 public interface InventoryPage {
@@ -50,5 +51,7 @@ public interface InventoryPage {
     BottomInventoryClickHandler getBottomInventoryClickHandler();
 
     boolean isHandlerExists(IconHandler iconHandler);
+
+    ItemIcon getItemIconBySlot(int slot);
 
 }

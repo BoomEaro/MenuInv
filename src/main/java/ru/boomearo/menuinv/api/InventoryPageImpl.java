@@ -235,4 +235,9 @@ public class InventoryPageImpl implements InventoryPage {
         return false;
     }
 
+    @Override
+    public ItemIcon getItemIconBySlot(int slot) {
+        return this.activeIcons[slot];
+    }
+
 }
