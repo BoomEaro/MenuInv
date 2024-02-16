@@ -23,7 +23,7 @@ public class ScrollIconBuilder implements ElementBuilderUpdatable<ScrollIconBuil
 
     private IconClick iconClick = (inventoryPage, player, clickType) -> {};
     private IconClickDelay iconClickDelay = new DefaultIconClickDelay();
-    private Delayable<InventoryPage> updateDelay = new DefaultUpdateDelay();
+    private Delayable<InventoryPage> updateDelay = new DefaultUpdateDelay<>();
 
     public ScrollIconBuilder setScrollType(ScrollType scrollType) {
         Preconditions.checkArgument(scrollType != null, "scrollType is null!");

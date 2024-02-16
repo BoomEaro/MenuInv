@@ -15,7 +15,7 @@ public class IconBuilder implements ElementBuilderUpdatable<IconBuilder> {
     private IconClick iconClick = (inventoryPage, player, clickType) -> {};
     private IconClickDelay iconClickDelay = new DefaultIconClickDelay();
     private IconUpdate iconUpdate = (inventoryPage, player) -> null;
-    private Delayable<InventoryPage> updateDelay = new DefaultUpdateDelay();
+    private Delayable<InventoryPage> updateDelay = new DefaultUpdateDelay<>();
 
     public IconBuilder setIconClick(IconClick iconClick) {
         Preconditions.checkArgument(iconClick != null, "iconClick is null!");

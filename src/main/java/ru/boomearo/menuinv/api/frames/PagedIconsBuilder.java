@@ -18,7 +18,7 @@ import java.util.List;
 public class PagedIconsBuilder {
 
     private PagedIconsUpdate pagedIconsUpdate = (inventoryPage, player) -> new ArrayList<>();
-    private Delayable<InventoryPage> updateDelay = new DefaultUpdateDelay();
+    private Delayable<InventoryPage> updateDelay = new DefaultUpdateDelay<>();
     private FrameIterationHandler frameIterationHandler = DefaultIterationHandlerImpl.DEFAULT;
     private Delayable<InventoryPage> cacheHandler = (page, force) -> Duration.ZERO;
 

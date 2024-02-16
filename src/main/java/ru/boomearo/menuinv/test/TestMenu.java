@@ -174,12 +174,7 @@ public class TestMenu {
                                 return tmp;
                             })
                             .setCacheHandler((page, force) -> Duration.ofSeconds(5))
-                            .setUpdateDelay((data, force) -> {
-                                if (force) {
-                                    return Duration.ZERO;
-                                }
-                                return Duration.ofMillis(Long.MAX_VALUE);
-                            }))
+                            .setUpdateDelay(new InfinityUpdateDelay<>()))
 
                     .setPagedIconsIngredients("test2", '3', '4', new PagedIconsBuilder()
                             .setPagedItemsUpdate((inventoryPage, player) -> {

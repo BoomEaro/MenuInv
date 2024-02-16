@@ -2,10 +2,10 @@ package ru.boomearo.menuinv.api;
 
 import java.time.Duration;
 
-public class DefaultUpdateDelay implements Delayable<InventoryPage> {
+public class DefaultUpdateDelay<T> implements Delayable<T> {
 
     @Override
-    public Duration onUpdateTime(InventoryPage inventoryPage, boolean force) {
+    public Duration onUpdateTime(T inventoryPage, boolean force) {
         // If force then update immediately
         if (force) {
             return Duration.ZERO;

@@ -41,7 +41,7 @@ public class TemplatePageImpl implements TemplatePage {
     };
 
     private InventoryCloseHandler inventoryCloseHandler = (inventoryPage, player) -> {};
-    private Delayable<InventoryPage> globalUpdateDelay = new DefaultUpdateDelay();
+    private Delayable<InventoryPage> globalUpdateDelay = new DefaultUpdateDelay<>();
 
     private BottomInventoryClickHandler bottomInventoryClickHandler = (inventoryPage, player, slot, clickType) -> true;
 
@@ -167,7 +167,7 @@ public class TemplatePageImpl implements TemplatePage {
     public TemplatePage setImmutableIcon(int slot, ElementBuilder elementBuilder) {
         if (elementBuilder instanceof ElementBuilderUpdatable) {
             ElementBuilderUpdatable<?> elementBuilderUpdatable = (ElementBuilderUpdatable<?>) elementBuilder;
-            elementBuilderUpdatable.setUpdateDelay((inventoryPage, force) -> Duration.ofMillis(Long.MAX_VALUE));
+            elementBuilderUpdatable.setUpdateDelay(new InfinityUpdateDelay<>(true));
         }
         return setIcon(slot, elementBuilder);
     }
@@ -223,24 +223,24 @@ public class TemplatePageImpl implements TemplatePage {
 
     @Override
     public TemplatePage setImmutablePagedIcons(String name, InventoryLocation first, int width, int height, PagedIconsBuilder pagedIconsBuilder) {
-        pagedIconsBuilder.setUpdateDelay((inventoryPage, force) -> Duration.ofMillis(Long.MAX_VALUE));
-        pagedIconsBuilder.setCacheHandler((page, force) -> Duration.ofMillis(Long.MAX_VALUE));
+        pagedIconsBuilder.setUpdateDelay(new InfinityUpdateDelay<>(true));
+        pagedIconsBuilder.setCacheHandler(new InfinityUpdateDelay<>(true));
 
         return setPagedIcons(name, first, width, height, pagedIconsBuilder);
     }
 
     @Override
     public TemplatePage setImmutablePagedIcons(String name, InventoryLocation first, InventoryLocation second, PagedIconsBuilder pagedIconsBuilder) {
-        pagedIconsBuilder.setUpdateDelay((inventoryPage, force) -> Duration.ofMillis(Long.MAX_VALUE));
-        pagedIconsBuilder.setCacheHandler((page, force) -> Duration.ofMillis(Long.MAX_VALUE));
+        pagedIconsBuilder.setUpdateDelay(new InfinityUpdateDelay<>(true));
+        pagedIconsBuilder.setCacheHandler(new InfinityUpdateDelay<>(true));
 
         return setPagedIcons(name, first, second, pagedIconsBuilder);
     }
 
     @Override
     public TemplatePage setImmutablePagedIconsIngredients(String name, char first, char second, PagedIconsBuilder pagedIconsBuilder) {
-        pagedIconsBuilder.setUpdateDelay((inventoryPage, force) -> Duration.ofMillis(Long.MAX_VALUE));
-        pagedIconsBuilder.setCacheHandler((page, force) -> Duration.ofMillis(Long.MAX_VALUE));
+        pagedIconsBuilder.setUpdateDelay(new InfinityUpdateDelay<>(true));
+        pagedIconsBuilder.setCacheHandler(new InfinityUpdateDelay<>(true));
 
         return setPagedIconsIngredients(name, first, second, pagedIconsBuilder);
     }
@@ -272,7 +272,7 @@ public class TemplatePageImpl implements TemplatePage {
     public TemplatePage setImmutableBackground(ElementBuilder elementBuilder) {
         if (elementBuilder instanceof ElementBuilderUpdatable) {
             ElementBuilderUpdatable<?> elementBuilderUpdatable = (ElementBuilderUpdatable<?>) elementBuilder;
-            elementBuilderUpdatable.setUpdateDelay((inventoryPage, force) -> Duration.ofMillis(Long.MAX_VALUE));
+            elementBuilderUpdatable.setUpdateDelay(new InfinityUpdateDelay<>(true));
         }
 
         return setBackground(elementBuilder);
@@ -334,7 +334,7 @@ public class TemplatePageImpl implements TemplatePage {
     public TemplatePage setImmutableIngredient(char value, ElementBuilder elementBuilder) {
         if (elementBuilder instanceof ElementBuilderUpdatable) {
             ElementBuilderUpdatable<?> elementBuilderUpdatable = (ElementBuilderUpdatable<?>) elementBuilder;
-            elementBuilderUpdatable.setUpdateDelay((inventoryPage, force) -> Duration.ofMillis(Long.MAX_VALUE));
+            elementBuilderUpdatable.setUpdateDelay(new InfinityUpdateDelay<>(true));
         }
 
         return setIngredient(value, elementBuilder);

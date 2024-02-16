@@ -1,6 +1,7 @@
 package ru.boomearo.menuinv.api.icon;
 
 import com.google.common.base.Preconditions;
+import ru.boomearo.menuinv.api.InfinityUpdateDelay;
 
 import java.time.Duration;
 import java.util.concurrent.ExecutorService;
@@ -29,7 +30,7 @@ public class AsyncIconBuilder implements ElementBuilder {
     public AsyncIconBuilder setImmutableLoadedIcon(ElementBuilder elementBuilder) {
         if (elementBuilder instanceof ElementBuilderUpdatable) {
             ElementBuilderUpdatable<?> elementBuilderUpdatable = (ElementBuilderUpdatable<?>) elementBuilder;
-            elementBuilderUpdatable.setUpdateDelay((inventoryPage, force) -> Duration.ofMillis(Long.MAX_VALUE));
+            elementBuilderUpdatable.setUpdateDelay(new InfinityUpdateDelay<>(true));
         }
 
         return setLoadedIcon(elementBuilder);
@@ -44,7 +45,7 @@ public class AsyncIconBuilder implements ElementBuilder {
     public AsyncIconBuilder setImmutableLoadingIcon(ElementBuilder elementBuilder) {
         if (elementBuilder instanceof ElementBuilderUpdatable) {
             ElementBuilderUpdatable<?> elementBuilderUpdatable = (ElementBuilderUpdatable<?>) elementBuilder;
-            elementBuilderUpdatable.setUpdateDelay((inventoryPage, force) -> Duration.ofMillis(Long.MAX_VALUE));
+            elementBuilderUpdatable.setUpdateDelay(new InfinityUpdateDelay<>(true));
         }
 
         return setLoadingIcon(elementBuilder);
