@@ -10,9 +10,10 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import ru.boomearo.menuinv.MenuInv;
+import ru.boomearo.menuinv.api.frames.PagedIcons;
 import ru.boomearo.menuinv.api.icon.*;
 import ru.boomearo.menuinv.api.session.InventorySession;
-import ru.boomearo.menuinv.api.frames.PagedIcons;
+import ru.boomearo.menuinv.api.frames.PagedIconsImpl;
 
 import java.util.*;
 
@@ -29,7 +30,7 @@ public class InventoryPageImpl implements InventoryPage {
     private final Delayable<InventoryPage> globalUpdateDelay;
     private final BottomInventoryClickHandler bottomInventoryClickHandler;
 
-    private final Map<String, PagedIcons> listedIcons;
+    private final Map<String, PagedIconsImpl> listedIcons;
 
     private final ItemIconImpl[] activeIcons;
 
@@ -51,7 +52,7 @@ public class InventoryPageImpl implements InventoryPage {
     public InventoryPageImpl(String name,
                              MenuType menuType,
                              Map<Integer, ItemIconImpl> iconsPosition,
-                             Map<String, PagedIcons> listedIcons,
+                             Map<String, PagedIconsImpl> listedIcons,
                              InventoryTitleHandler inventoryTitleHandler,
                              InventoryReopenHandler inventoryReopenHandler,
                              ClickExceptionHandler clickExceptionHandler,
@@ -153,7 +154,7 @@ public class InventoryPageImpl implements InventoryPage {
             }
 
             // Update the current array of active items using frame items.
-            for (PagedIcons lii : this.listedIcons.values()) {
+            for (PagedIconsImpl lii : this.listedIcons.values()) {
                 lii.updateActiveIcons(this, this.activeIcons, forceUpdate, create, this.updateExceptionHandler);
             }
 
@@ -197,7 +198,7 @@ public class InventoryPageImpl implements InventoryPage {
         // First, create a new instance of bukkit's inventory
         this.inventory = this.menuType.createInventory(new MenuInventoryHolder(this), this.inventoryTitleHandler.createTitle(this));
         // Clear page scroll changes
-        for (PagedIcons pi : this.listedIcons.values()) {
+        for (PagedIconsImpl pi : this.listedIcons.values()) {
             pi.resetChanges();
         }
         // Filling inventory

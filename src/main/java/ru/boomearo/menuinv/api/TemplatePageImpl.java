@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 
 import ru.boomearo.menuinv.api.frames.Frame;
-import ru.boomearo.menuinv.api.frames.PagedIcons;
+import ru.boomearo.menuinv.api.frames.PagedIconsImpl;
 import ru.boomearo.menuinv.api.frames.PagedIconsBuilder;
 import ru.boomearo.menuinv.api.icon.*;
 import ru.boomearo.menuinv.api.frames.FramedIconsTemplate;
@@ -369,9 +369,9 @@ public class TemplatePageImpl implements TemplatePage {
             itemIconsActive.put(tii.getSlot(), new ItemIconImpl(tii.getSlot(), tii.getFactory().create()));
         }
 
-        Map<String, PagedIcons> pagedIconsActive = new HashMap<>();
+        Map<String, PagedIconsImpl> pagedIconsActive = new HashMap<>();
         for (FramedIconsTemplate tli : this.pagedItems.values()) {
-            pagedIconsActive.put(tli.getName(), new PagedIcons(tli.getName(), tli.getFirst(), tli.getSecond(), tli.getIconsFactory().create(), tli.getIterationHandler(), tli.getCacheHandler()));
+            pagedIconsActive.put(tli.getName(), new PagedIconsImpl(tli.getName(), tli.getFirst(), tli.getSecond(), tli.getIconsFactory().create(), tli.getIterationHandler(), tli.getCacheHandler()));
         }
 
         return new InventoryPageImpl(this.name,

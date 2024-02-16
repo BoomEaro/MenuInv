@@ -19,6 +19,7 @@ import org.bukkit.plugin.Plugin;
 import ru.boomearo.menuinv.MenuInv;
 import ru.boomearo.menuinv.api.*;
 import ru.boomearo.menuinv.api.frames.PagedIcons;
+import ru.boomearo.menuinv.api.frames.PagedIconsImpl;
 import ru.boomearo.menuinv.api.frames.PagedIconsBuilder;
 import ru.boomearo.menuinv.api.icon.AsyncIconBuilder;
 import ru.boomearo.menuinv.api.icon.IconBuilder;
