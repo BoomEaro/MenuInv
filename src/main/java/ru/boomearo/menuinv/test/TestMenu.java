@@ -18,8 +18,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 import ru.boomearo.menuinv.MenuInv;
 import ru.boomearo.menuinv.api.*;
+import ru.boomearo.menuinv.api.frames.AsyncPagedIconsBuilder;
 import ru.boomearo.menuinv.api.frames.PagedIcons;
-import ru.boomearo.menuinv.api.frames.PagedIconsImpl;
 import ru.boomearo.menuinv.api.frames.PagedIconsBuilder;
 import ru.boomearo.menuinv.api.icon.AsyncIconBuilder;
 import ru.boomearo.menuinv.api.icon.IconBuilder;
@@ -70,7 +70,7 @@ public class TestMenu {
     }
 
     private static void setupMenu(MenuInv menuInv) {
-        ExecutorService executorService = Executors.newFixedThreadPool(1, new ThreadFactoryBuilder()
+        ExecutorService executorService = Executors.newFixedThreadPool(2, new ThreadFactoryBuilder()
                 .setNameFormat("TestMenu-%d")
                 .build());
         {
@@ -177,7 +177,7 @@ public class TestMenu {
                             .setCacheHandler((page, force) -> Duration.ofSeconds(5))
                             .setUpdateDelay(new InfinityUpdateDelay<>()))
 
-                    .setPagedIconsIngredients("test2", '3', '4', new PagedIconsBuilder()
+                    /*.setPagedIconsIngredients("test2", '3', '4', new PagedIconsBuilder()
                             .setPagedItemsUpdate((inventoryPage, player) -> {
                                 List<IconHandler> tmp = new ArrayList<>();
                                 for (int i = 1; i <= new Random().nextInt(20); i++) {
@@ -189,7 +189,53 @@ public class TestMenu {
                                             .create());
                                 }
                                 return tmp;
-                            }))
+                            }))*/
+
+                    .setPagedIconsIngredients("test2", '3', '4', new AsyncPagedIconsBuilder()
+                            .setExecutorService(executorService)
+                            .setLoadedPagedIcons(new PagedIconsBuilder()
+                                    .setPagedItemsUpdate((inventoryPage, player) -> {
+                                        List<IconHandler> tmp = new ArrayList<>();
+                                        for (int i = 1; i < 20; i++) {
+                                            int finalI = i;
+                                            tmp.add(new IconBuilder()
+                                                    .setIconUpdate((inventoryPage2, player2) -> {
+                                                        ItemStack itemStack = new ItemStack(Material.SIGN, finalI);
+                                                        ItemMeta itemMeta = itemStack.getItemMeta();
+                                                        itemMeta.setDisplayName("Loaded data " + new Random().nextInt(64) + " for data type #" + finalI);
+                                                        itemStack.setItemMeta(itemMeta);
+
+                                                        return itemStack;
+                                                    })
+                                                    .build()
+                                                    .create());
+                                        }
+
+                                        try {
+                                            Thread.sleep(2000);
+                                        } catch (InterruptedException e) {
+                                            throw new RuntimeException(e);
+                                        }
+
+                                        return tmp;
+                                    }))
+                            .setLoadingPagedIcons(new PagedIconsBuilder()
+                                    .setPagedItemsUpdate((inventoryPage, player) -> {
+                                        List<IconHandler> tmp = new ArrayList<>();
+                                        tmp.add(new IconBuilder()
+                                                .setIconUpdate((inventoryPage2, player2) -> {
+                                                    ItemStack itemStack = new ItemStack(Material.PAPER, 1);
+                                                    ItemMeta itemMeta = itemStack.getItemMeta();
+                                                    itemMeta.setDisplayName("Just loading holder!");
+                                                    itemStack.setItemMeta(itemMeta);
+
+                                                    return itemStack;
+                                                })
+                                                .build()
+                                                .create());
+                                        return tmp;
+                                    }))
+                    )
 
                     .setImmutableBackground(new IconBuilder()
                             .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.COOKIE, 1)));

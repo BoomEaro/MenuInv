@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-public class PagedIconsBuilder {
+public class PagedIconsBuilder implements PagedElementBuilderUpdatable<PagedIconsBuilder > {
 
     private PagedIconsUpdate pagedIconsUpdate = (inventoryPage, player) -> new ArrayList<>();
     private Delayable<InventoryPage> updateDelay = new DefaultUpdateDelay<>();
@@ -28,24 +28,28 @@ public class PagedIconsBuilder {
         return this;
     }
 
+    @Override
     public PagedIconsBuilder setUpdateDelay(Delayable<InventoryPage> updateDelay) {
         Preconditions.checkArgument(updateDelay != null, "updateDelay is null!");
         this.updateDelay = updateDelay;
         return this;
     }
 
+    @Override
     public PagedIconsBuilder setFrameIterationHandler(FrameIterationHandler frameIterationHandler) {
         Preconditions.checkArgument(frameIterationHandler != null, "frameIterationHandler is null!");
         this.frameIterationHandler = frameIterationHandler;
         return this;
     }
 
+    @Override
     public PagedIconsBuilder setCacheHandler(Delayable<InventoryPage> cacheHandler) {
         Preconditions.checkArgument(cacheHandler != null, "cacheHandler is null!");
         this.cacheHandler = cacheHandler;
         return this;
     }
 
+    @Override
     public FramedIconsHandlerFactory build() {
         return () -> new FramedIconsHandler() {
 

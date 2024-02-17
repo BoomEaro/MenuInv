@@ -1,6 +1,6 @@
 package ru.boomearo.menuinv.api;
 
-import ru.boomearo.menuinv.api.frames.PagedIconsBuilder;
+import ru.boomearo.menuinv.api.frames.PagedElementBuilder;
 import ru.boomearo.menuinv.api.icon.BottomInventoryClickHandler;
 import ru.boomearo.menuinv.api.icon.ClickExceptionHandler;
 import ru.boomearo.menuinv.api.icon.ElementBuilder;
@@ -48,17 +48,17 @@ public interface TemplatePage {
 
     TemplatePage setImmutableIcon(int slot, ElementBuilder elementBuilder);
 
-    TemplatePage setPagedIcons(String name, InventoryLocation first, int width, int height, PagedIconsBuilder pagedIconsBuilder);
+    TemplatePage setPagedIcons(String name, InventoryLocation first, int width, int height, PagedElementBuilder pagedIconsBuilder);
 
-    TemplatePage setPagedIcons(String name, InventoryLocation first, InventoryLocation second, PagedIconsBuilder pagedIconsBuilder);
+    TemplatePage setPagedIcons(String name, InventoryLocation first, InventoryLocation second, PagedElementBuilder pagedIconsBuilder);
 
-    TemplatePage setPagedIconsIngredients(String name, char first, char second, PagedIconsBuilder pagedIconsBuilder);
+    TemplatePage setPagedIconsIngredients(String name, char first, char second, PagedElementBuilder pagedIconsBuilder);
 
-    TemplatePage setImmutablePagedIcons(String name, InventoryLocation first, int width, int height, PagedIconsBuilder pagedIconsBuilder);
+    TemplatePage setImmutablePagedIcons(String name, InventoryLocation first, int width, int height, PagedElementBuilder pagedIconsBuilder);
 
-    TemplatePage setImmutablePagedIcons(String name, InventoryLocation first, InventoryLocation second, PagedIconsBuilder pagedIconsBuilder);
+    TemplatePage setImmutablePagedIcons(String name, InventoryLocation first, InventoryLocation second, PagedElementBuilder pagedIconsBuilder);
 
-    TemplatePage setImmutablePagedIconsIngredients(String name, char first, char second, PagedIconsBuilder pagedIconsBuilder);
+    TemplatePage setImmutablePagedIconsIngredients(String name, char first, char second, PagedElementBuilder pagedIconsBuilder);
 
     TemplatePage setBackground(ElementBuilder elementBuilder);
 

@@ -5,12 +5,8 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
-
-import ru.boomearo.menuinv.api.frames.Frame;
-import ru.boomearo.menuinv.api.frames.PagedIconsImpl;
-import ru.boomearo.menuinv.api.frames.PagedIconsBuilder;
+import ru.boomearo.menuinv.api.frames.*;
 import ru.boomearo.menuinv.api.icon.*;
-import ru.boomearo.menuinv.api.frames.FramedIconsTemplate;
 import ru.boomearo.menuinv.api.session.InventorySession;
 
 import java.util.HashMap;
@@ -39,7 +35,8 @@ public class TemplatePageImpl implements TemplatePage {
                 "Exception on icon update. Player: " + player.getName() + ". Closing menu now.", exception);
     };
 
-    private InventoryCloseHandler inventoryCloseHandler = (inventoryPage, player) -> {};
+    private InventoryCloseHandler inventoryCloseHandler = (inventoryPage, player) -> {
+    };
     private Delayable<InventoryPage> globalUpdateDelay = new DefaultUpdateDelay<>();
 
     private BottomInventoryClickHandler bottomInventoryClickHandler = (inventoryPage, player, slot, clickType) -> true;
@@ -172,7 +169,7 @@ public class TemplatePageImpl implements TemplatePage {
     }
 
     @Override
-    public TemplatePage setPagedIcons(String name, InventoryLocation first, int width, int height, PagedIconsBuilder pagedIconsBuilder) {
+    public TemplatePage setPagedIcons(String name, InventoryLocation first, int width, int height, PagedElementBuilder pagedIconsBuilder) {
         Preconditions.checkArgument(name != null, "name is null!");
         Preconditions.checkArgument(first != null, "first is null!");
         Preconditions.checkArgument(pagedIconsBuilder != null, "pagedItemsBuilder is null!");
@@ -187,7 +184,7 @@ public class TemplatePageImpl implements TemplatePage {
     }
 
     @Override
-    public TemplatePage setPagedIcons(String name, InventoryLocation first, InventoryLocation second, PagedIconsBuilder pagedIconsBuilder) {
+    public TemplatePage setPagedIcons(String name, InventoryLocation first, InventoryLocation second, PagedElementBuilder pagedIconsBuilder) {
         Preconditions.checkArgument(name != null, "name is null!");
         Preconditions.checkArgument(first != null, "first is null!");
         Preconditions.checkArgument(second != null, "second is null!");
@@ -203,7 +200,7 @@ public class TemplatePageImpl implements TemplatePage {
     }
 
     @Override
-    public TemplatePage setPagedIconsIngredients(String name, char first, char second, PagedIconsBuilder pagedIconsBuilder) {
+    public TemplatePage setPagedIconsIngredients(String name, char first, char second, PagedElementBuilder pagedIconsBuilder) {
         Preconditions.checkArgument(this.structure != null, "structure is not set!");
 
         InventoryLocation firstLocation = InventoryLocation.of(0, 0);
@@ -221,24 +218,36 @@ public class TemplatePageImpl implements TemplatePage {
     }
 
     @Override
-    public TemplatePage setImmutablePagedIcons(String name, InventoryLocation first, int width, int height, PagedIconsBuilder pagedIconsBuilder) {
-        pagedIconsBuilder.setUpdateDelay(new InfinityUpdateDelay<>(true));
+    public TemplatePage setImmutablePagedIcons(String name, InventoryLocation first, int width, int height, PagedElementBuilder pagedIconsBuilder) {
+        if (pagedIconsBuilder instanceof PagedElementBuilderUpdatable) {
+            PagedElementBuilderUpdatable<?> elementBuilderUpdatable = (PagedElementBuilderUpdatable<?>)  pagedIconsBuilder;
+            elementBuilderUpdatable.setUpdateDelay(new InfinityUpdateDelay<>(true));
+        }
+
         pagedIconsBuilder.setCacheHandler(new InfinityUpdateDelay<>(true));
 
         return setPagedIcons(name, first, width, height, pagedIconsBuilder);
     }
 
     @Override
-    public TemplatePage setImmutablePagedIcons(String name, InventoryLocation first, InventoryLocation second, PagedIconsBuilder pagedIconsBuilder) {
-        pagedIconsBuilder.setUpdateDelay(new InfinityUpdateDelay<>(true));
+    public TemplatePage setImmutablePagedIcons(String name, InventoryLocation first, InventoryLocation second, PagedElementBuilder pagedIconsBuilder) {
+        if (pagedIconsBuilder instanceof PagedElementBuilderUpdatable) {
+            PagedElementBuilderUpdatable<?> elementBuilderUpdatable = (PagedElementBuilderUpdatable<?>)  pagedIconsBuilder;
+            elementBuilderUpdatable.setUpdateDelay(new InfinityUpdateDelay<>(true));
+        }
+
         pagedIconsBuilder.setCacheHandler(new InfinityUpdateDelay<>(true));
 
         return setPagedIcons(name, first, second, pagedIconsBuilder);
     }
 
     @Override
-    public TemplatePage setImmutablePagedIconsIngredients(String name, char first, char second, PagedIconsBuilder pagedIconsBuilder) {
-        pagedIconsBuilder.setUpdateDelay(new InfinityUpdateDelay<>(true));
+    public TemplatePage setImmutablePagedIconsIngredients(String name, char first, char second, PagedElementBuilder pagedIconsBuilder) {
+        if (pagedIconsBuilder instanceof PagedElementBuilderUpdatable) {
+            PagedElementBuilderUpdatable<?> elementBuilderUpdatable = (PagedElementBuilderUpdatable<?>)  pagedIconsBuilder;
+            elementBuilderUpdatable.setUpdateDelay(new InfinityUpdateDelay<>(true));
+        }
+
         pagedIconsBuilder.setCacheHandler(new InfinityUpdateDelay<>(true));
 
         return setPagedIconsIngredients(name, first, second, pagedIconsBuilder);

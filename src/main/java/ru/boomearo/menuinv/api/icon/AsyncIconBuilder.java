@@ -1,6 +1,7 @@
 package ru.boomearo.menuinv.api.icon;
 
 import com.google.common.base.Preconditions;
+import ru.boomearo.menuinv.api.AsyncResetHandler;
 import ru.boomearo.menuinv.api.InfinityUpdateDelay;
 
 import java.util.concurrent.ExecutorService;
@@ -12,7 +13,7 @@ public class AsyncIconBuilder implements ElementBuilder {
 
     private ElementBuilder loadedIconBuilder = new IconBuilder();
     private ElementBuilder loadingIconBuilder = new IconBuilder();
-    private AsyncIconResetHandler asyncIconResetHandler = (page, force) -> force;
+    private AsyncResetHandler asyncResetHandler = (page, force) -> force;
 
     public AsyncIconBuilder setExecutorService(ExecutorService executorService) {
         Preconditions.checkArgument(executorService != null, "executorService is null!");
@@ -50,9 +51,9 @@ public class AsyncIconBuilder implements ElementBuilder {
         return setLoadingIcon(elementBuilder);
     }
 
-    public AsyncIconBuilder setAsyncIconResetHandler(AsyncIconResetHandler asyncIconResetHandler) {
-        Preconditions.checkArgument(asyncIconResetHandler != null, "asyncIconResetHandler is null!");
-        this.asyncIconResetHandler = asyncIconResetHandler;
+    public AsyncIconBuilder setAsyncIconResetHandler(AsyncResetHandler asyncResetHandler) {
+        Preconditions.checkArgument(asyncResetHandler != null, "asyncIconResetHandler is null!");
+        this.asyncResetHandler = asyncResetHandler;
         return this;
     }
 
@@ -61,8 +62,8 @@ public class AsyncIconBuilder implements ElementBuilder {
         return () -> new AsyncIconHandler(this.executorService,
                 this.loadedIconBuilder.build().create(),
                 this.loadingIconBuilder.build().create(),
-                this.asyncIconResetHandler) {
-        };
+                this.asyncResetHandler
+        );
     }
 
 }

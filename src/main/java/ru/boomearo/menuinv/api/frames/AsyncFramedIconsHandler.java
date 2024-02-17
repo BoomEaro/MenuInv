@@ -1,34 +1,34 @@
-package ru.boomearo.menuinv.api.icon;
+package ru.boomearo.menuinv.api.frames;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.inventory.ItemStack;
-import ru.boomearo.menuinv.api.AsyncResetHandler;
 import ru.boomearo.menuinv.api.InventoryPage;
+import ru.boomearo.menuinv.api.AsyncResetHandler;
+import ru.boomearo.menuinv.api.icon.IconHandler;
 
 import java.time.Duration;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
-public class AsyncIconHandler extends IconHandler {
+public class AsyncFramedIconsHandler implements FramedIconsHandler {
 
     private final ExecutorService executorService;
-    private final IconHandler onLoadedHandler;
-    private final IconHandler onLoadingHandler;
+    private final FramedIconsHandler onLoadedHandler;
+    private final FramedIconsHandler onLoadingHandler;
     private final AsyncResetHandler asyncResetHandler;
 
-    private IconHandler currentHandler;
+    private FramedIconsHandler currentHandler;
 
-    private ItemStack itemResult = null;
+    private List<IconHandler> handlersResult = null;
     private Exception exceptionResult = null;
 
     private Future<?> task = null;
     private boolean forceUpdate = false;
 
-    public AsyncIconHandler(ExecutorService executorService,
-                            IconHandler onLoadedHandler,
-                            IconHandler onLoadingHandler,
-                            AsyncResetHandler asyncResetHandler
+    public AsyncFramedIconsHandler(ExecutorService executorService,
+                                   FramedIconsHandler onLoadedHandler,
+                                   FramedIconsHandler onLoadingHandler,
+                                   AsyncResetHandler asyncResetHandler
     ) {
         this.executorService = executorService;
         this.onLoadedHandler = onLoadedHandler;
@@ -39,33 +39,30 @@ public class AsyncIconHandler extends IconHandler {
     }
 
     @Override
-    public ItemStack onUpdate(InventoryPage page, Player player) throws Exception {
+    public List<IconHandler> onUpdate(InventoryPage page, Player player) throws Exception {
         if (this.task != null) {
             if (this.task.isDone()) {
                 this.task = null;
             }
-        }
-        else {
+        } else {
             this.task = this.executorService.submit(() -> {
                 try {
-                    if (page.isClosed() || !page.isHandlerExists(this)) {
+                    if (page.isClosed()) {
                         return;
                     }
 
-                    this.itemResult = this.onLoadedHandler.onUpdate(page, player);
-                }
-                catch (Exception e) {
+                    this.handlersResult = this.onLoadedHandler.onUpdate(page, player);
+                } catch (Exception e) {
                     this.exceptionResult = e;
-                }
-                finally {
+                } finally {
                     this.currentHandler = this.onLoadedHandler;
                     this.forceUpdate = true;
                 }
             });
         }
 
-        if (this.itemResult != null) {
-            return this.itemResult;
+        if (this.handlersResult != null) {
+            return this.handlersResult;
         }
 
         if (this.exceptionResult != null) {
@@ -76,25 +73,10 @@ public class AsyncIconHandler extends IconHandler {
     }
 
     @Override
-    public void onClick(InventoryPage page, ItemIcon icon, Player player, ClickType click) {
-        this.currentHandler.onClick(page, icon, player, click);
-    }
-
-    @Override
-    public Duration getClickTime(InventoryPage page, Player player, ClickType click) {
-        return this.currentHandler.getClickTime(page, player, click);
-    }
-
-    @Override
-    public int compareTo(IconHandler other) {
-        return this.currentHandler.compareTo(other);
-    }
-
-    @Override
     public Duration onUpdateTime(InventoryPage page, boolean force) {
         if (this.asyncResetHandler.onIconReset(page, force)) {
             this.currentHandler = this.onLoadingHandler;
-            this.itemResult = null;
+            this.handlersResult = null;
             this.exceptionResult = null;
 
             if (this.task != null) {
