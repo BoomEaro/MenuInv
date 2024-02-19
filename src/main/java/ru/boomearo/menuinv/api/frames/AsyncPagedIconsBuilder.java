@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import lombok.Getter;
 import ru.boomearo.menuinv.api.AsyncResetHandler;
 import ru.boomearo.menuinv.api.Delayable;
+import ru.boomearo.menuinv.api.InfinityUpdateDelay;
 import ru.boomearo.menuinv.api.InventoryPage;
 import ru.boomearo.menuinv.api.frames.iteration.DefaultIterationHandlerImpl;
 import ru.boomearo.menuinv.api.frames.iteration.FrameIterationHandler;
@@ -36,8 +37,28 @@ public class AsyncPagedIconsBuilder implements PagedElementBuilder {
         return this;
     }
 
+    public AsyncPagedIconsBuilder setImmutableLoadedPagedIcons(PagedIconsBuilder loadedPagedIcons) {
+        Preconditions.checkArgument(loadedPagedIcons != null, "loadedPagedIcons is null!");
+
+        loadedPagedIcons.setUpdateDelay(new InfinityUpdateDelay<>(true));
+        loadedPagedIcons.setCacheHandler(new InfinityUpdateDelay<>(true));
+
+        this.loadedPagedIconsBuilder = loadedPagedIcons;
+        return this;
+    }
+
     public AsyncPagedIconsBuilder setLoadingPagedIcons(PagedIconsBuilder loadingPagedIcons) {
         Preconditions.checkArgument(loadingPagedIcons != null, "loadingPagedIcons is null!");
+        this.loadingPagedIconsBuilder = loadingPagedIcons;
+        return this;
+    }
+
+    public AsyncPagedIconsBuilder setImmutableLoadingPagedIcons(PagedIconsBuilder loadingPagedIcons) {
+        Preconditions.checkArgument(loadingPagedIcons != null, "loadingPagedIcons is null!");
+
+        loadingPagedIcons.setUpdateDelay(new InfinityUpdateDelay<>(true));
+        loadingPagedIcons.setCacheHandler(new InfinityUpdateDelay<>(true));
+
         this.loadingPagedIconsBuilder = loadingPagedIcons;
         return this;
     }
