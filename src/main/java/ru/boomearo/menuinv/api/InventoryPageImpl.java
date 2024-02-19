@@ -14,6 +14,7 @@ import ru.boomearo.menuinv.api.icon.*;
 import ru.boomearo.menuinv.api.session.InventorySession;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 @Getter
@@ -188,7 +189,12 @@ public class InventoryPageImpl implements InventoryPage {
         }
         PagedIconsImpl pagedIconsImpl = (PagedIconsImpl) pagedIcons;
 
-        for (ItemIcon itemIcon : pagedIconsImpl.updateActiveIcons(this, this.activeIcons, force, false, this.updateExceptionHandler)) {
+        List<ItemIcon> updatedIcons = pagedIconsImpl.updateActiveIcons(this, this.activeIcons, force, false, this.updateExceptionHandler);
+        if (updatedIcons == null) {
+            return false;
+        }
+
+        for (ItemIcon itemIcon : updatedIcons) {
             update(itemIcon, force);
         }
 
