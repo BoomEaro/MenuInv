@@ -24,6 +24,18 @@ public interface InventoryPage {
 
     void setNeedUpdate();
 
+    default boolean update(PagedIcons pagedIcons) {
+        return update(pagedIcons, false);
+    }
+
+    boolean update(PagedIcons pagedIcons, boolean force);
+
+    default boolean update(ItemIcon itemIcon) {
+        return update(itemIcon, false);
+    }
+
+    boolean update(ItemIcon itemIcon, boolean force);
+
     default void update() {
         update(false);
     }

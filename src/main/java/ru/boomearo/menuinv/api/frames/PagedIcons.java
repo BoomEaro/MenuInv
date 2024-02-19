@@ -17,5 +17,7 @@ public interface PagedIcons {
     boolean scrollPage(ScrollType type);
 
     void resetChanges();
+
+    void forceUpdate();
 }
 

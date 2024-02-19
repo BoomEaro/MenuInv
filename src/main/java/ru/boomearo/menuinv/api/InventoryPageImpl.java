@@ -5,17 +5,16 @@ import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
-
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-
 import ru.boomearo.menuinv.MenuInv;
 import ru.boomearo.menuinv.api.frames.PagedIcons;
+import ru.boomearo.menuinv.api.frames.PagedIconsImpl;
 import ru.boomearo.menuinv.api.icon.*;
 import ru.boomearo.menuinv.api.session.InventorySession;
-import ru.boomearo.menuinv.api.frames.PagedIconsImpl;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Map;
 
 @Getter
 public class InventoryPageImpl implements InventoryPage {
@@ -44,7 +43,7 @@ public class InventoryPageImpl implements InventoryPage {
 
     private long cooldown = 0;
 
-    private boolean changes = false;
+    private boolean needUpdate = false;
 
     @Setter
     private boolean closed = false;
@@ -101,7 +100,7 @@ public class InventoryPageImpl implements InventoryPage {
 
     @Override
     public void setNeedUpdate() {
-        this.changes = true;
+        this.needUpdate = true;
     }
 
     @Override
@@ -115,8 +114,7 @@ public class InventoryPageImpl implements InventoryPage {
 
             try {
                 ii.getIconHandler().handleClick(this, ii, this.player, type);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 this.clickExceptionHandler.onException(this, this.player, type, e);
             }
         }
@@ -136,51 +134,84 @@ public class InventoryPageImpl implements InventoryPage {
     }
 
     private void performUpdate(boolean force, boolean reopenIfNeed, boolean create) {
-        boolean forceUpdate = this.changes || force;
+        boolean forceUpdate = this.needUpdate || force;
 
-        if (this.globalUpdateDelay.canUpdate(this, force, this.cooldown) || create) {
-            this.cooldown = System.currentTimeMillis();
+        try {
+            if (this.globalUpdateDelay.canUpdate(this, forceUpdate, this.cooldown) || create) {
+                this.cooldown = System.currentTimeMillis();
 
-            if (reopenIfNeed) {
-                try {
-                    if (this.inventoryReopenHandler.reopenCondition(this, forceUpdate)) {
-                        reopen(true);
-                        return;
+                if (reopenIfNeed) {
+                    try {
+                        if (this.inventoryReopenHandler.reopenCondition(this, forceUpdate)) {
+                            reopen(true);
+                            return;
+                        }
+                    } catch (Exception e) {
+                        this.updateExceptionHandler.onException(this, this.player, e);
                     }
                 }
-                catch (Exception e) {
-                    this.updateExceptionHandler.onException(this, this.player, e);
-                }
-            }
 
-            // Update the current array of active items using frame items.
-            for (PagedIconsImpl lii : this.listedIcons.values()) {
-                lii.updateActiveIcons(this, this.activeIcons, forceUpdate, create, this.updateExceptionHandler);
-            }
-
-            // Using an array of active items, we fill the array with Bukkit items
-            boolean shouldUpdateInventory = false;
-            for (ItemIconImpl ii : this.activeIcons) {
-                if (ii == null) {
-                    continue;
+                // Update the current array of active items using frame items.
+                for (PagedIconsImpl lii : this.listedIcons.values()) {
+                    lii.updateActiveIcons(this, this.activeIcons, forceUpdate, create, this.updateExceptionHandler);
                 }
 
-                ItemStack itemStack = ii.getItemStack(this, forceUpdate, create, this.updateExceptionHandler);
-                if (itemStack == null) {
-                    continue;
+                // Using an array of active items, we fill the array with Bukkit items
+                boolean shouldUpdateInventory = false;
+                for (ItemIconImpl ii : this.activeIcons) {
+                    if (ii == null) {
+                        continue;
+                    }
+
+                    ItemStack itemStack = ii.getItemStack(this, forceUpdate, create, this.updateExceptionHandler);
+                    if (itemStack == null) {
+                        continue;
+                    }
+
+                    this.inventory.setItem(ii.getSlot(), itemStack);
+                    shouldUpdateInventory = true;
                 }
 
-                this.inventory.setItem(ii.getSlot(), itemStack);
-                shouldUpdateInventory = true;
+                if (shouldUpdateInventory) {
+                    this.player.updateInventory();
+                }
             }
-
-            if (shouldUpdateInventory) {
-                this.player.updateInventory();
-            }
-
-            this.changes = false;
+        } finally {
+            this.needUpdate = false;
         }
     }
+
+    @Override
+    public boolean update(PagedIcons pagedIcons, boolean force) {
+        if (!(pagedIcons instanceof PagedIconsImpl)) {
+            return false;
+        }
+        PagedIconsImpl pagedIconsImpl = (PagedIconsImpl) pagedIcons;
+
+        for (ItemIcon itemIcon : pagedIconsImpl.updateActiveIcons(this, this.activeIcons, force, false, this.updateExceptionHandler)) {
+            update(itemIcon, force);
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean update(ItemIcon itemIcon, boolean force) {
+        if (!(itemIcon instanceof ItemIconImpl)) {
+            return false;
+        }
+        ItemIconImpl itemIconImpl = (ItemIconImpl) itemIcon;
+
+        ItemStack itemStack = itemIconImpl.getItemStack(this, force, false, this.updateExceptionHandler);
+        if (itemStack == null) {
+            return false;
+        }
+
+        this.inventory.setItem(itemIconImpl.getSlot(), itemStack);
+
+        return true;
+    }
+
 
     @Override
     public void reopen(boolean force) {

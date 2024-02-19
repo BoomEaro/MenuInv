@@ -3,10 +3,7 @@ package ru.boomearo.menuinv.api.frames;
 import lombok.Getter;
 import ru.boomearo.menuinv.api.*;
 import ru.boomearo.menuinv.api.frames.iteration.FrameIterationHandler;
-import ru.boomearo.menuinv.api.icon.DummyIconHandler;
-import ru.boomearo.menuinv.api.icon.IconHandler;
-import ru.boomearo.menuinv.api.icon.ItemIconImpl;
-import ru.boomearo.menuinv.api.icon.UpdateExceptionHandler;
+import ru.boomearo.menuinv.api.icon.*;
 import ru.boomearo.menuinv.api.icon.scrolls.ScrollType;
 
 import java.util.ArrayList;
@@ -23,6 +20,7 @@ public class PagedIconsImpl extends FramedIcons implements PagedIcons {
     private int maxPage = 1;
 
     private boolean changes = false;
+    private boolean forceUpdate = false;
 
     private List<IconHandler> cachedHandlers = null;
     private long cacheTime = 0;
@@ -125,8 +123,7 @@ public class PagedIconsImpl extends FramedIcons implements PagedIcons {
     public boolean scrollPage(ScrollType type) {
         if (type == ScrollType.NEXT) {
             return nextPage();
-        }
-        else if (type == ScrollType.PREVIOUSLY) {
+        } else if (type == ScrollType.PREVIOUSLY) {
             return previouslyPage();
         }
         return false;
@@ -137,12 +134,16 @@ public class PagedIconsImpl extends FramedIcons implements PagedIcons {
         this.changes = false;
     }
 
+    @Override
+    public void forceUpdate() {
+        this.forceUpdate = true;
+    }
+
     private List<IconHandler> getHandlers(InventoryPageImpl page, UpdateExceptionHandler updateExceptionHandler) {
         List<IconHandler> handlers = null;
         try {
             handlers = this.iconsHandler.onUpdate(page, page.getPlayer());
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             updateExceptionHandler.onException(page, page.getPlayer(), e);
         }
 
@@ -163,70 +164,84 @@ public class PagedIconsImpl extends FramedIcons implements PagedIcons {
         return this.cachedHandlers;
     }
 
-    public void updateActiveIcons(InventoryPageImpl page,
-                                  ItemIconImpl[] activeIcons,
-                                  boolean force,
-                                  boolean create,
-                                  UpdateExceptionHandler updateExceptionHandler) {
+    public List<ItemIcon> updateActiveIcons(InventoryPageImpl page,
+                                            ItemIconImpl[] activeIcons,
+                                            boolean force,
+                                            boolean create,
+                                            UpdateExceptionHandler updateExceptionHandler) {
 
-        if (this.iconsHandler.canUpdate(page, force, this.updateHandlerCooldown) || create) {
-            this.updateHandlerCooldown = System.currentTimeMillis();
+        boolean updateForce = this.forceUpdate || force;
 
-            List<IconHandler> handlers = getCachedHandlers(page, force, updateExceptionHandler);
+        try {
+            if (this.iconsHandler.canUpdate(page, updateForce, this.updateHandlerCooldown) || create) {
+                this.updateHandlerCooldown = System.currentTimeMillis();
 
-            Collections.sort(handlers);
+                List<IconHandler> handlers = getCachedHandlers(page, updateForce, updateExceptionHandler);
 
-            int maxSize = handlers.size();
+                Collections.sort(handlers);
 
-            MenuType type = page.getMenuType();
+                int maxSize = handlers.size();
 
-            int pageLimit = (getWidth() * getHeight());
+                MenuType type = page.getMenuType();
 
-            setMaxPage(maxSize / pageLimit + (maxSize % pageLimit > 0 ? 1 : 0));
+                int pageLimit = (getWidth() * getHeight());
 
-            setCurrentPage(this.page);
+                setMaxPage(maxSize / pageLimit + (maxSize % pageLimit > 0 ? 1 : 0));
 
-            int pageOffset = (this.page - 1) * pageLimit;
-            if (pageOffset > maxSize) {
-                pageOffset = maxSize;
-            }
+                setCurrentPage(this.page);
 
-            int i = pageOffset;
-
-            FrameIterationHandler iterationHandler = this.iterationHandler;
-
-            for (int z = iterationHandler.startPositionZ(getHeight()); iterationHandler.hasNextZ(z, getHeight()); z = iterationHandler.manipulateZ(z)) {
-                for (int x = iterationHandler.startPositionX(getWidth()); iterationHandler.hasNextX(x, getWidth()); x = iterationHandler.manipulateX(x)) {
-
-                    int slotOffset;
-                    if (iterationHandler.isReverse()) {
-                        slotOffset = this.first.getZ() * type.getWidth() + this.first.getX() + z + (x * type.getWidth());
-                    }
-                    else {
-                        slotOffset = this.first.getZ() * type.getWidth() + this.first.getX() + x + (z * type.getWidth());
-                    }
-
-                    if (i > (maxSize - 1)) {
-                        setItemIcon(activeIcons, slotOffset, DummyIconHandler.INSTANCE);
-                    }
-                    else {
-                        setItemIcon(activeIcons, slotOffset, handlers.get(i));
-                    }
-
-                    i++;
+                int pageOffset = (this.page - 1) * pageLimit;
+                if (pageOffset > maxSize) {
+                    pageOffset = maxSize;
                 }
+
+                int i = pageOffset;
+
+                FrameIterationHandler iterationHandler = this.iterationHandler;
+
+                List<ItemIcon> updatedIcons = new ArrayList<>();
+                for (int z = iterationHandler.startPositionZ(getHeight()); iterationHandler.hasNextZ(z, getHeight()); z = iterationHandler.manipulateZ(z)) {
+                    for (int x = iterationHandler.startPositionX(getWidth()); iterationHandler.hasNextX(x, getWidth()); x = iterationHandler.manipulateX(x)) {
+
+                        int slotOffset;
+                        if (iterationHandler.isReverse()) {
+                            slotOffset = this.first.getZ() * type.getWidth() + this.first.getX() + z + (x * type.getWidth());
+                        } else {
+                            slotOffset = this.first.getZ() * type.getWidth() + this.first.getX() + x + (z * type.getWidth());
+                        }
+
+                        if (i > (maxSize - 1)) {
+                            updatedIcons.add(setItemIcon(activeIcons, slotOffset, DummyIconHandler.INSTANCE));
+                        } else {
+                            updatedIcons.add(setItemIcon(activeIcons, slotOffset, handlers.get(i)));
+                        }
+
+                        i++;
+                    }
+                }
+
+                return updatedIcons;
             }
         }
+        finally {
+            this.forceUpdate = false;
+        }
+
+        return null;
     }
 
-    private void setItemIcon(ItemIconImpl[] activeIcons, int slot, IconHandler iconHandler) {
+    private ItemIconImpl setItemIcon(ItemIconImpl[] activeIcons, int slot, IconHandler iconHandler) {
         ItemIconImpl current = activeIcons[slot];
         if (current != null) {
             current.setIconHandler(iconHandler);
-            return;
+            return current;
         }
 
-        activeIcons[slot] = new ItemIconImpl(slot, iconHandler);
+        ItemIconImpl newItemIcon = new ItemIconImpl(slot, iconHandler);
+
+        activeIcons[slot] = newItemIcon;
+
+        return newItemIcon;
     }
 
 }
