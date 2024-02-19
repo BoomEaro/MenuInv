@@ -11,6 +11,7 @@ import ru.boomearo.menuinv.MenuInv;
 import ru.boomearo.menuinv.api.frames.PagedIcons;
 import ru.boomearo.menuinv.api.frames.PagedIconsImpl;
 import ru.boomearo.menuinv.api.icon.*;
+import ru.boomearo.menuinv.api.icon.scrolls.ScrollIconHandler;
 import ru.boomearo.menuinv.api.session.InventorySession;
 
 import java.util.Arrays;
@@ -218,6 +219,32 @@ public class InventoryPageImpl implements InventoryPage {
         return true;
     }
 
+    @Override
+    public boolean updateScrolls(String name, boolean force) {
+        boolean updated = false;
+        for (ItemIconImpl icon : this.activeIcons) {
+            if (icon == null) {
+                continue;
+            }
+
+            IconHandler iconHandler = icon.getIconHandler();
+
+            if (!(iconHandler instanceof ScrollIconHandler)) {
+                continue;
+            }
+            ScrollIconHandler scrollIconHandler = (ScrollIconHandler) iconHandler;
+
+            if (!scrollIconHandler.getName().equals(name)) {
+                continue;
+            }
+
+            if (update(icon, force)) {
+                updated = true;
+            }
+        }
+
+        return updated;
+    }
 
     @Override
     public void reopen(boolean force) {

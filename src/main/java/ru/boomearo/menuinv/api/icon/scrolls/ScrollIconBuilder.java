@@ -1,17 +1,10 @@
 package ru.boomearo.menuinv.api.icon.scrolls;
 
 import com.google.common.base.Preconditions;
-import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.inventory.ItemStack;
 import ru.boomearo.menuinv.api.DefaultUpdateDelay;
 import ru.boomearo.menuinv.api.Delayable;
 import ru.boomearo.menuinv.api.InventoryPage;
-import ru.boomearo.menuinv.api.frames.PagedIcons;
 import ru.boomearo.menuinv.api.icon.*;
-import ru.boomearo.menuinv.api.icon.DefaultIconClickDelay;
-
-import java.time.Duration;
 
 public class ScrollIconBuilder implements ElementBuilderUpdatable<ScrollIconBuilder> {
 
@@ -70,56 +63,14 @@ public class ScrollIconBuilder implements ElementBuilderUpdatable<ScrollIconBuil
 
     @Override
     public IconHandlerFactory build() {
-        return () -> new IconHandler() {
-
-            @Override
-            public void onClick(InventoryPage page, ItemIcon icon, Player player, ClickType clickType) {
-                PagedIcons pagedIcons = page.getListedIconsItems(ScrollIconBuilder.this.name);
-                if (pagedIcons == null) {
-                    return;
-                }
-
-                boolean change = pagedIcons.scrollPage(ScrollIconBuilder.this.scrollType);
-                if (change) {
-                    page.update(icon, true);
-                    page.update(pagedIcons, true);
-                    ScrollIconBuilder.this.iconClick.onClick(page, icon, player, clickType);
-                }
-            }
-
-            @Override
-            public ItemStack onUpdate(InventoryPage page, Player player) {
-                PagedIcons pagedIcons = page.getListedIconsItems(ScrollIconBuilder.this.name);
-                if (pagedIcons == null) {
-                    return null;
-                }
-
-                if (ScrollIconBuilder.this.scrollType == ScrollType.NEXT) {
-                    if (pagedIcons.getCurrentPage() >= pagedIcons.getMaxPage()) {
-                        return ScrollIconBuilder.this.scrollHideUpdate.onUpdate(page, player, ScrollIconBuilder.this.scrollType, pagedIcons.getCurrentPage(), pagedIcons.getMaxPage());
-                    } else {
-                        return ScrollIconBuilder.this.scrollVisibleUpdate.onUpdate(page, player, ScrollIconBuilder.this.scrollType, pagedIcons.getCurrentPage(), pagedIcons.getMaxPage());
-                    }
-                } else if (ScrollIconBuilder.this.scrollType == ScrollType.PREVIOUSLY) {
-                    if (pagedIcons.getCurrentPage() <= 1) {
-                        return ScrollIconBuilder.this.scrollHideUpdate.onUpdate(page, player, ScrollIconBuilder.this.scrollType, pagedIcons.getCurrentPage(), pagedIcons.getMaxPage());
-                    } else {
-                        return ScrollIconBuilder.this.scrollVisibleUpdate.onUpdate(page, player, ScrollIconBuilder.this.scrollType, pagedIcons.getCurrentPage(), pagedIcons.getMaxPage());
-                    }
-                }
-                return null;
-            }
-
-            @Override
-            public Duration getClickTime(InventoryPage page, Player player, ClickType click) {
-                return ScrollIconBuilder.this.iconClickDelay.getClickTime(page, player, click);
-            }
-
-            @Override
-            public Duration onUpdateTime(InventoryPage page, boolean force) {
-                return ScrollIconBuilder.this.updateDelay.onUpdateTime(page, force);
-            }
-
-        };
+        return () -> new ScrollIconHandler(
+                this.name,
+                this.scrollType,
+                this.iconClick,
+                this.iconClickDelay,
+                this.updateDelay,
+                this.scrollHideUpdate,
+                this.scrollVisibleUpdate
+        );
     }
 }

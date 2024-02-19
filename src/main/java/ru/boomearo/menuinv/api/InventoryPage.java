@@ -24,6 +24,12 @@ public interface InventoryPage {
 
     void setNeedUpdate();
 
+    default boolean updateScrolls(String name) {
+        return updateScrolls(name, false);
+    }
+
+    boolean updateScrolls(String name, boolean force);
+
     default boolean update(PagedIcons pagedIcons) {
         return update(pagedIcons, false);
     }
