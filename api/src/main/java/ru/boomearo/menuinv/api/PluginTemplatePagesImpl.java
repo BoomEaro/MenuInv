@@ -8,10 +8,12 @@ import java.util.Map;
 
 public class PluginTemplatePagesImpl implements PluginTemplatePages {
 
+    private final Plugin menuPlugin;
     private final Plugin plugin;
     private final Map<String, TemplatePageImpl> pages = new HashMap<>();
 
-    public PluginTemplatePagesImpl(Plugin plugin) {
+    public PluginTemplatePagesImpl(Plugin menuPlugin, Plugin plugin) {
+        this.menuPlugin = menuPlugin;
         this.plugin = plugin;
     }
 
@@ -30,7 +32,7 @@ public class PluginTemplatePagesImpl implements PluginTemplatePages {
 
         String name = pluginPage.getPage();
 
-        TemplatePageImpl newPage = new TemplatePageImpl(name, this);
+        TemplatePageImpl newPage = new TemplatePageImpl(this.menuPlugin, name, this);
 
         this.pages.put(name, newPage);
 

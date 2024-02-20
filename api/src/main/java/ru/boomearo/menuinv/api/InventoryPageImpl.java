@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import ru.boomearo.menuinv.MenuInv;
+import org.bukkit.plugin.Plugin;
 import ru.boomearo.menuinv.api.frames.PagedIcons;
 import ru.boomearo.menuinv.api.frames.PagedIconsImpl;
 import ru.boomearo.menuinv.api.icon.*;
@@ -21,6 +21,7 @@ import java.util.Map;
 @Getter
 public class InventoryPageImpl implements InventoryPage {
 
+    private final Plugin plugin;
     private final String name;
     private final MenuType menuType;
     private final InventoryTitleHandler inventoryTitleHandler;
@@ -50,7 +51,8 @@ public class InventoryPageImpl implements InventoryPage {
     @Setter
     private boolean closed = false;
 
-    public InventoryPageImpl(String name,
+    public InventoryPageImpl(Plugin plugin,
+                             String name,
                              MenuType menuType,
                              Map<Integer, ItemIconImpl> iconsPosition,
                              Map<String, PagedIconsImpl> listedIcons,
@@ -65,6 +67,7 @@ public class InventoryPageImpl implements InventoryPage {
                              Player player,
                              InventorySession session,
                              TemplatePageImpl templatePage) {
+        this.plugin = plugin;
         this.name = name;
         this.menuType = menuType;
         this.listedIcons = listedIcons;
@@ -253,7 +256,7 @@ public class InventoryPageImpl implements InventoryPage {
             return;
         }
 
-        Bukkit.getScheduler().runTask(MenuInv.getInstance(), this::performReopen);
+        Bukkit.getScheduler().runTask(this.plugin, this::performReopen);
     }
 
     // Recreate the page
@@ -278,7 +281,7 @@ public class InventoryPageImpl implements InventoryPage {
             return;
         }
 
-        Bukkit.getScheduler().runTask(MenuInv.getInstance(), this.player::closeInventory);
+        Bukkit.getScheduler().runTask(this.plugin, this.player::closeInventory);
     }
 
     @Override

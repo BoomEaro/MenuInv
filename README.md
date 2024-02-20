@@ -54,7 +54,7 @@ As arguments to registerPages you need to specify your page enum.
 To open the menu, you also need to specify an enum.
 
 ```
-    public class TestMenu {
+    public class ExampleMenu {
 
         public static void registerMenu(Plugin plugin) {
             Menu.registerPages(plugin)

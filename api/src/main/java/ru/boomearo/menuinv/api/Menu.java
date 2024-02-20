@@ -1,103 +1,68 @@
 package ru.boomearo.menuinv.api;
 
 import com.google.common.base.Preconditions;
+import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.plugin.Plugin;
-import ru.boomearo.menuinv.MenuInv;
-import ru.boomearo.menuinv.api.icon.IconBuilder;
-import ru.boomearo.menuinv.api.session.ConfirmData;
+import org.bukkit.scheduler.BukkitTask;
 import ru.boomearo.menuinv.api.session.InventorySession;
 import ru.boomearo.menuinv.api.session.InventorySessionImpl;
+import ru.boomearo.menuinv.listeners.InventoryListener;
+import ru.boomearo.menuinv.task.MenuUpdaterTask;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@UtilityClass
 public class Menu {
 
     private static final Map<Class<? extends Plugin>, PluginTemplatePagesImpl> MENU_BY_PLUGIN = new HashMap<>();
 
-    public static void initMenu(MenuInv menuInv) {
-        registerPages(menuInv)
-                .createTemplatePage(DefaultMenuPage.CONFIRM)
-                .setMenuType(MenuType.HOPPER)
-                .setInventoryTitle((inventoryPage) -> {
-                    InventorySession session = inventoryPage.getSession();
-                    if (session == null) {
-                        return null;
-                    }
+    private static Plugin plugin = null;
+    private static BukkitTask updaterTask = null;
+    private static InventoryListener inventoryListener = null;
 
-                    ConfirmData data = session.getConfirmData();
+    public static void initMenu(Plugin plugin) {
+        if (Menu.plugin != null) {
+            throw new IllegalStateException("API is already initialized by " + Menu.plugin.getName());
+        }
 
-                    if (data == null) {
-                        return null;
-                    }
+        Menu.plugin = plugin;
 
-                    return data.getInventoryName(session);
-                })
-                .setIcon(0, new IconBuilder()
-                        .setIconClick((inventoryPage, icon, player, clickType) -> {
-                            InventorySession session = inventoryPage.getSession();
+        updaterTask = new MenuUpdaterTask().runTaskTimer(plugin, 1, 1);
 
-                            if (session == null) {
-                                return;
-                            }
+        inventoryListener = new InventoryListener();
 
-                            ConfirmData confirm = session.getConfirmData();
+        plugin.getServer().getPluginManager().registerEvents(inventoryListener, plugin);
+    }
 
-                            if (confirm == null) {
-                                return;
-                            }
+    public static void unloadMenu(Plugin plugin) {
+        if (Menu.plugin != plugin) {
+            throw new IllegalStateException("API is already unloaded or provided plugin is incorrect");
+        }
 
-                            confirm.executeCancel(inventoryPage);
-                        })
-                        .setIconUpdate((inventoryPage, player) -> {
-                            InventorySession session = inventoryPage.getSession();
+        if (inventoryListener != null) {
+            HandlerList.unregisterAll(inventoryListener);
+            inventoryListener = null;
+        }
 
-                            if (session == null) {
-                                return null;
-                            }
+        if (updaterTask != null) {
+            updaterTask.cancel();
+            updaterTask = null;
+        }
 
-                            ConfirmData confirm = session.getConfirmData();
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            InventoryHolder holder = player.getOpenInventory().getTopInventory().getHolder();
+            if (holder instanceof MenuInventoryHolder) {
+                MenuInventoryHolder mih = (MenuInventoryHolder) holder;
+                InventoryPageImpl page = mih.getPage();
 
-                            if (confirm == null) {
-                                return null;
-                            }
-
-                            return confirm.getCancelItem(inventoryPage);
-                        }))
-                .setIcon(4, new IconBuilder()
-                        .setIconClick((inventoryPage, icon, player, clickType) -> {
-                            InventorySession session = inventoryPage.getSession();
-
-                            if (session == null) {
-                                return;
-                            }
-
-                            ConfirmData confirm = session.getConfirmData();
-
-                            if (confirm == null) {
-                                return;
-                            }
-
-                            confirm.executeConfirm(inventoryPage);
-                        })
-                        .setIconUpdate((inventoryPage, player) -> {
-                            InventorySession session = inventoryPage.getSession();
-
-                            if (session == null) {
-                                return null;
-                            }
-
-                            ConfirmData confirm = session.getConfirmData();
-
-                            if (confirm == null) {
-                                return null;
-                            }
-
-                            return confirm.getConfirmItem(inventoryPage);
-                        }));
+                page.close(true);
+            }
+        }
     }
 
     public static PluginTemplatePages registerPages(Plugin plugin) {
@@ -108,11 +73,11 @@ public class Menu {
             return tmp;
         }
 
-        PluginTemplatePagesImpl pages = new PluginTemplatePagesImpl(plugin);
+        PluginTemplatePagesImpl pages = new PluginTemplatePagesImpl(Menu.plugin, plugin);
 
         MENU_BY_PLUGIN.put(plugin.getClass(), pages);
 
-        MenuInv.getInstance().getLogger().info("Registered PluginTemplatePages for " + plugin.getName());
+        plugin.getLogger().info("Registered PluginTemplatePages for " + plugin.getName());
         return pages;
     }
 
@@ -142,7 +107,7 @@ public class Menu {
             }
         }
 
-        MenuInv.getInstance().getLogger().info("Unregistered PluginTemplatePages for " + plugin.getName());
+        plugin.getLogger().info("Unregistered PluginTemplatePages for " + plugin.getName());
     }
 
     public static InventoryPage open(PluginPage pluginPage, Player player) {
@@ -152,7 +117,7 @@ public class Menu {
     public static InventoryPage open(PluginPage pluginPage, Player player, InventorySession session) {
         InventoryPage inventoryPage = create(pluginPage, player, session);
 
-        Bukkit.getScheduler().runTask(MenuInv.getInstance(), () -> {
+        Bukkit.getScheduler().runTask(plugin, () -> {
             try {
                 player.openInventory(inventoryPage.getInventory());
             } catch (Throwable e) {

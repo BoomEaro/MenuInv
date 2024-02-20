@@ -1,0 +1,11 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
+dependencies {
+    compileOnly project(":api")
+}
+
+processResources {
+    filter ReplaceTokens, tokens: [
+            "version": version
+    ]
+}

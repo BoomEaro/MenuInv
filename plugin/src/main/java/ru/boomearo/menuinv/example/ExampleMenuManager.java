@@ -1,22 +1,11 @@
-package ru.boomearo.menuinv.test;
+package ru.boomearo.menuinv.example;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
-import ru.boomearo.menuinv.MenuInv;
 import ru.boomearo.menuinv.api.*;
 import ru.boomearo.menuinv.api.frames.AsyncPagedIconsBuilder;
 import ru.boomearo.menuinv.api.frames.PagedIcons;
@@ -26,8 +15,8 @@ import ru.boomearo.menuinv.api.icon.IconBuilder;
 import ru.boomearo.menuinv.api.icon.IconHandler;
 import ru.boomearo.menuinv.api.icon.scrolls.ScrollIconBuilder;
 import ru.boomearo.menuinv.api.icon.scrolls.ScrollType;
-import ru.boomearo.menuinv.api.session.InventorySessionImpl;
 
+import java.io.File;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,9 +28,9 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Level;
 
 /**
- * Just a test menu for debug
+ * Just an example menu for debug
  */
-public class TestMenu {
+public class ExampleMenuManager {
 
     private static final List<Material> MATERIALS;
 
@@ -54,43 +43,48 @@ public class TestMenu {
         }
         MATERIALS = tmp;
     }
+    
+    public static void setup(Plugin plugin) {
+        File configFile = new File(plugin.getDataFolder() + File.separator + "config.yml");
+        if (!configFile.exists()) {
+            plugin.getLogger().info("Config not found, creating a new one...");
+            plugin.saveDefaultConfig();
+        }
 
-
-    public static void setupTest(MenuInv menuInv) {
         try {
-            if (menuInv.getConfig().getBoolean("debug")) {
-                menuInv.getLogger().warning("Debug mode activated!");
+            if (plugin.getConfig().getBoolean("debug")) {
+                plugin.getLogger().warning("Debug mode activated!");
 
-                setupMenu(menuInv);
-                menuInv.getServer().getPluginManager().registerEvents(new TestListener(), menuInv);
+                setupMenu(plugin);
+                plugin.getServer().getPluginManager().registerEvents(new ExampleListener(), plugin);
             }
         } catch (Exception e) {
-            menuInv.getLogger().log(Level.SEVERE, "Failed to configure debug mode", e);
+            plugin.getLogger().log(Level.SEVERE, "Failed to configure debug mode", e);
         }
     }
 
-    private static void setupMenu(MenuInv menuInv) {
+    private static void setupMenu(Plugin plugin) {
         ExecutorService executorService = Executors.newFixedThreadPool(2, new ThreadFactoryBuilder()
-                .setNameFormat("TestMenu-%d")
+                .setNameFormat("exampleMenu-%d")
                 .build());
         {
-            Menu.registerPages(menuInv)
-                    .createTemplatePage(MenuPage.MAIN)
+            Menu.registerPages(plugin)
+                    .createTemplatePage(ExampleMenuPage.MAIN)
                     .setMenuType(MenuType.CHEST_9X6)
                     .setInventoryCloseHandler((inventoryPage, player) -> player.sendMessage("Inventory closed!"))
                     .setInventoryTitle((inventoryPage) -> {
-                        PagedIcons piTest = inventoryPage.getListedIconsItems("test");
-                        PagedIcons piTest2 = inventoryPage.getListedIconsItems("test2");
+                        PagedIcons piExample1 = inventoryPage.getListedIconsItems("example");
+                        PagedIcons piExample2 = inventoryPage.getListedIconsItems("example2");
 
-                        return "Test: " + piTest.getCurrentPage() + "/" + piTest.getMaxPage() + " ||| " + piTest2.getCurrentPage() + "/" + piTest2.getMaxPage();
+                        return "example: " + piExample1.getCurrentPage() + "/" + piExample1.getMaxPage() + " ||| " + piExample2.getCurrentPage() + "/" + piExample2.getMaxPage();
                     })
                     .setIcon(1, new IconBuilder()
-                            .setIconClick((inventoryPage, icon, player, type) -> Menu.open(MenuPage.OTHER, player, inventoryPage.getSession()))
+                            .setIconClick((inventoryPage, icon, player, type) -> Menu.open(ExampleMenuPage.OTHER, player, inventoryPage.getSession()))
                             .setIconUpdate((consume, player) -> new ItemStack(Material.STONE, 1)))
 
                     .setIcon(3, new IconBuilder()
                             .setIconClick((inventoryPage, icon, player, type) -> {
-                                TestSession ts = (TestSession) inventoryPage.getSession();
+                                ExampleSession ts = (ExampleSession) inventoryPage.getSession();
 
                                 List<ItemStack> items = ts.getItems();
                                 if (items.isEmpty()) {
@@ -105,7 +99,7 @@ public class TestMenu {
 
                     .setIcon(4, new IconBuilder()
                             .setIconClick((inventoryPage, icon, player, type) -> {
-                                TestSession ts = (TestSession) inventoryPage.getSession();
+                                ExampleSession ts = (ExampleSession) inventoryPage.getSession();
 
                                 ts.getItems().add(new ItemStack(Material.DIAMOND, 1));
 
@@ -127,16 +121,16 @@ public class TestMenu {
                             .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.TNT, 1)))
 
                     .setIngredient('<', new ScrollIconBuilder()
-                            .setName("test")
+                            .setName("example")
                             .setScrollType(ScrollType.PREVIOUSLY)
                             .setScrollVisibleUpdate((inventoryPage, player, scrollType, currentPage, maxPage) -> createScrollItems(scrollType, currentPage, maxPage)))
 
                     .setIngredient('>', new ScrollIconBuilder()
-                            .setName("test")
+                            .setName("example")
                             .setScrollType(ScrollType.NEXT)
                             .setScrollVisibleUpdate((inventoryPage, player, scrollType, currentPage, maxPage) -> createScrollItems(scrollType, currentPage, maxPage)))
 
-                    .setPagedIconsIngredients("test", '1', '2', new PagedIconsBuilder()
+                    .setPagedIconsIngredients("example", '1', '2', new PagedIconsBuilder()
                             .setPagedItemsUpdate((inventoryPage, player) -> {
                                 List<IconHandler> tmp = new ArrayList<>();
                                 for (int i = 1; i <= new Random().nextInt(1000); i++) {
@@ -177,7 +171,7 @@ public class TestMenu {
                             .setCacheHandler((page, force) -> Duration.ofSeconds(5))
                             .setUpdateDelay(new InfinityUpdateDelay<>()))
 
-                    /*.setPagedIconsIngredients("test2", '3', '4', new PagedIconsBuilder()
+                    /*.setPagedIconsIngredients("example2", '3', '4', new PagedIconsBuilder()
                             .setPagedItemsUpdate((inventoryPage, player) -> {
                                 List<IconHandler> tmp = new ArrayList<>();
                                 for (int i = 1; i <= new Random().nextInt(20); i++) {
@@ -191,7 +185,7 @@ public class TestMenu {
                                 return tmp;
                             }))*/
 
-                    .setPagedIconsIngredients("test2", '3', '4', new AsyncPagedIconsBuilder()
+                    .setPagedIconsIngredients("example2", '3', '4', new AsyncPagedIconsBuilder()
                             .setExecutorService(executorService)
                             .setLoadedPagedIcons(new PagedIconsBuilder()
                                     .setPagedItemsUpdate((inventoryPage, player) -> {
@@ -241,13 +235,13 @@ public class TestMenu {
                             .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.COOKIE, 1)));
         }
         {
-            Menu.registerPages(menuInv)
-                    .createTemplatePage(MenuPage.OTHER)
+            Menu.registerPages(plugin)
+                    .createTemplatePage(ExampleMenuPage.OTHER)
                     .setMenuType(MenuType.WORKBENCH)
                     .setGlobalUpdateDelay((data, force) -> Duration.ZERO)
                     .setInventoryTitle((inventoryPage) -> "Hello2")
                     .setIcon(9, new IconBuilder()
-                            .setIconClick((inventoryPage, icon, player, click) -> Menu.open(MenuPage.MAIN, player, inventoryPage.getSession()))
+                            .setIconClick((inventoryPage, icon, player, click) -> Menu.open(ExampleMenuPage.MAIN, player, inventoryPage.getSession()))
                             .setIconUpdate((inventoryPage, player) -> {
                                 ItemStack item = new ItemStack(MATERIALS.get(ThreadLocalRandom.current().nextInt(MATERIALS.size())), 1);
                                 ItemMeta meta = item.getItemMeta();
@@ -309,36 +303,4 @@ public class TestMenu {
         return item;
     }
 
-    private static class TestListener implements Listener {
-
-        @EventHandler
-        public void onPlayerInteractEvent(PlayerInteractEvent e) {
-            Player pl = e.getPlayer();
-
-            if (e.getAction() == Action.LEFT_CLICK_BLOCK) {
-                e.setUseInteractedBlock(Event.Result.DENY);
-                e.setUseItemInHand(Event.Result.DENY);
-
-                Menu.open(MenuPage.MAIN, pl, new TestSession());
-            }
-        }
-    }
-
-    @Value
-    @EqualsAndHashCode(callSuper = true)
-    private static class TestSession extends InventorySessionImpl {
-        List<ItemStack> items = new ArrayList<>();
-    }
-
-    @RequiredArgsConstructor
-    @Getter
-    private enum MenuPage implements PluginPage {
-
-        MAIN(MenuInv.getInstance(), "main"),
-        OTHER(MenuInv.getInstance(), "other");
-
-        private final Plugin plugin;
-        private final String page;
-
-    }
 }

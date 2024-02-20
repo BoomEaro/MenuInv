@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import ru.boomearo.menuinv.api.frames.*;
 import ru.boomearo.menuinv.api.icon.*;
 import ru.boomearo.menuinv.api.session.InventorySession;
@@ -18,6 +19,7 @@ import java.util.logging.Level;
 @Getter
 public class TemplatePageImpl implements TemplatePage {
 
+    private final Plugin plugin;
     private final String name;
     private final PluginTemplatePagesImpl pluginTemplatePages;
 
@@ -383,7 +385,9 @@ public class TemplatePageImpl implements TemplatePage {
             pagedIconsActive.put(tli.getName(), new PagedIconsImpl(tli.getName(), tli.getFirst(), tli.getSecond(), tli.getIconsFactory().create(), tli.getIterationHandler(), tli.getCacheHandler()));
         }
 
-        return new InventoryPageImpl(this.name,
+        return new InventoryPageImpl(
+                this.plugin,
+                this.name,
                 this.menuType,
                 itemIconsActive,
                 pagedIconsActive,
@@ -397,7 +401,8 @@ public class TemplatePageImpl implements TemplatePage {
                 this.background,
                 player,
                 session,
-                this);
+                this
+        );
     }
 
     private static String[] removeEmptyChars(String[] value) {
