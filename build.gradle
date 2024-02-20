@@ -1,16 +1,7 @@
-plugins {
-    id "java-library"
-    id "maven-publish"
-    id "com.github.johnrengelman.shadow" version "7.1.2"
-}
-
 allprojects {
     group = "ru.boomearo"
-    version = "1.5.6"
+    version = "1.5.7"
 
-}
-
-subprojects {
     apply plugin: "java"
 
     compileJava {
@@ -23,7 +14,7 @@ subprojects {
     }
 
     repositories {
-	    maven {
+        maven {
             name = "spigot-repo"
             url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"
         }
@@ -35,32 +26,9 @@ subprojects {
     }
 
     dependencies {
-        compileOnly "org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT"
+        compileOnly("org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT")
 
         compileOnly("org.projectlombok:lombok:1.18.26")
         annotationProcessor("org.projectlombok:lombok:1.18.26")
     }
-
-}
-
-publishing {
-    publications {
-        publishToMavenLocal(MavenPublication) {
-            from components.java
-        }
-    }
-}
-
-dependencies {
-    api project(":plugin")
-    api project(":api")
-}
-
-shadowJar {
-    archiveBaseName.set("MenuInv")
-    archiveClassifier.set("")
-}
-
-artifacts {
-    archives shadowJar
 }

@@ -1,11 +1,26 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
+plugins {
+    id "java-library"
+    id "com.github.johnrengelman.shadow" version "7.1.2"
+}
+
 dependencies {
-    compileOnly project(":api")
+    implementation project(":api")
 }
 
 processResources {
     filter ReplaceTokens, tokens: [
             "version": version
     ]
+}
+
+shadowJar {
+    archiveBaseName.set("MenuInv")
+    archiveClassifier.set("")
+    archiveVersion.set("")
+}
+
+artifacts {
+    archives shadowJar
 }
