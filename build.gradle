@@ -2,7 +2,7 @@ allprojects {
     apply plugin: "java"
 
     group = "ru.boomearo.menuinv"
-    version = "1.5.8"
+    version = "1.5.9"
 
     compileJava {
         options.encoding = "UTF-8"
