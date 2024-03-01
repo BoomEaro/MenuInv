@@ -181,7 +181,11 @@ public class InventoryPageImpl implements InventoryPage {
                     this.player.updateInventory();
                 }
             }
-        } finally {
+        }
+        catch (Exception e) {
+            this.updateExceptionHandler.onException(this, this.player, e);
+        }
+        finally {
             this.needUpdate = false;
         }
     }
