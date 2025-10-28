@@ -6,7 +6,7 @@ allprojects {
     apply(plugin = "java")
 
     group = "ru.boomearo.menuinv"
-    version = "1.5.10"
+    version = "1.6.0"
 
     val targetJavaVersion = 17
     java {
