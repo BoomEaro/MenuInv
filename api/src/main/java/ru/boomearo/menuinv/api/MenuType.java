@@ -42,7 +42,8 @@ public enum MenuType implements InventoryFactory {
 
     @Override
     @NonNull
-    public Inventory createInventory(@Nullable InventoryHolder holder,
+    public Inventory createInventory(@NonNull InventoryPage inventoryPage,
+                                     @Nullable InventoryHolder holder,
                                      @Nullable String title) {
         if (title == null) {
             title = " ";
@@ -56,7 +57,8 @@ public enum MenuType implements InventoryFactory {
 
     @Override
     @NonNull
-    public Inventory createInventory(@Nullable InventoryHolder holder,
+    public Inventory createInventory(@NonNull InventoryPage inventoryPage,
+                                     @Nullable InventoryHolder holder,
                                      @Nullable Component title) {
         if (title == null) {
             title = Component.space();

@@ -292,9 +292,9 @@ public class InventoryPageImpl implements InventoryPage {
     @NonNull
     private Inventory createInventory() {
         if (this.componentInventoryTitleHandler != null) {
-            return this.inventoryFactory.createInventory(new MenuInventoryHolder(this), this.componentInventoryTitleHandler.createTitle(this));
+            return this.inventoryFactory.createInventory(this, new MenuInventoryHolder(this), this.componentInventoryTitleHandler.createTitle(this));
         } else if (this.inventoryTitleHandler != null) {
-            return this.inventoryFactory.createInventory(new MenuInventoryHolder(this), this.inventoryTitleHandler.createTitle(this));
+            return this.inventoryFactory.createInventory(this, new MenuInventoryHolder(this), this.inventoryTitleHandler.createTitle(this));
         }
 
         throw new IllegalStateException("No inventory title handlers provided!");

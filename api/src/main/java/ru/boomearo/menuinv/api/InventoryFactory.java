@@ -22,11 +22,13 @@ public interface InventoryFactory {
     }
 
     @NonNull
-    Inventory createInventory(@Nullable InventoryHolder holder,
+    Inventory createInventory(@NonNull InventoryPage inventoryPage,
+                              @Nullable InventoryHolder holder,
                               @Nullable String title);
 
     @NonNull
-    Inventory createInventory(@Nullable InventoryHolder holder,
+    Inventory createInventory(@NonNull InventoryPage inventoryPage,
+                              @Nullable InventoryHolder holder,
                               @Nullable Component title);
 
 }
