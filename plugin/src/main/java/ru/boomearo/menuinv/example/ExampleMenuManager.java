@@ -2,6 +2,7 @@ package ru.boomearo.menuinv.example;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -31,45 +32,49 @@ import java.util.logging.Level;
 /**
  * Just an example menu for debug
  */
+@RequiredArgsConstructor
 public class ExampleMenuManager {
 
-    private static final List<Material> MATERIALS;
+    private final Plugin plugin;
 
-    static {
-        List<Material> tmp = new ArrayList<>();
-        for (Material mat : Material.values()) {
-            if (!mat.isBlock()) {
-                tmp.add(mat);
-            }
-        }
-        MATERIALS = tmp;
-    }
+    private List<Material> materials = new ArrayList<>();
 
-    public static void setup(@NonNull Plugin plugin) {
-        File configFile = new File(plugin.getDataFolder() + File.separator + "config.yml");
+    public void load() {
+        File configFile = new File(this.plugin.getDataFolder() + File.separator + "config.yml");
         if (!configFile.exists()) {
-            plugin.getLogger().info("Config not found, creating a new one...");
-            plugin.saveDefaultConfig();
+            this.plugin.getLogger().info("Config not found, creating a new one...");
+            this.plugin.saveDefaultConfig();
         }
 
         try {
-            if (plugin.getConfig().getBoolean("debug")) {
-                plugin.getLogger().warning("Debug mode activated!");
+            if (this.plugin.getConfig().getBoolean("debug")) {
+                this.plugin.getLogger().warning("Debug mode activated!");
 
-                setupMenu(plugin);
-                plugin.getServer().getPluginManager().registerEvents(new ExampleListener(), plugin);
+                loadMaterials();
+                loadMenu();
+                this.plugin.getServer().getPluginManager().registerEvents(new ExampleListener(), this.plugin);
             }
         } catch (Exception e) {
-            plugin.getLogger().log(Level.SEVERE, "Failed to configure debug mode", e);
+            this.plugin.getLogger().log(Level.SEVERE, "Failed to load example menu", e);
         }
     }
 
-    private static void setupMenu(@NonNull Plugin plugin) {
+    private void loadMaterials() {
+        List<Material> materials = new ArrayList<>();
+        for (Material mat : Material.values()) {
+            if (!mat.isBlock()) {
+                materials.add(mat);
+            }
+        }
+        this.materials = materials;
+    }
+
+    private void loadMenu() {
         ExecutorService executorService = Executors.newFixedThreadPool(2, new ThreadFactoryBuilder()
                 .setNameFormat("exampleMenu-%d")
                 .build());
         {
-            Menu.registerPages(plugin)
+            Menu.registerPages(this.plugin)
                     .createTemplatePage(ExampleMenuPage.MAIN)
                     .setMenuType(MenuType.CHEST_9X6)
                     .setInventoryCloseHandler((inventoryPage, player) -> player.sendMessage("Inventory closed!"))
@@ -222,7 +227,7 @@ public class ExampleMenuManager {
                             .setIconUpdate((inventoryPage, player) -> new ItemStack(Material.COOKIE, 1)));
         }
         {
-            Menu.registerPages(plugin)
+            Menu.registerPages(this.plugin)
                     .createTemplatePage(ExampleMenuPage.OTHER)
                     .setMenuType(MenuType.WORKBENCH)
                     .setGlobalUpdateDelay((data, force) -> Duration.ZERO)
@@ -230,7 +235,7 @@ public class ExampleMenuManager {
                     .setIcon(9, new IconBuilder()
                             .setIconClick((inventoryPage, icon, player, click) -> Menu.open(ExampleMenuPage.MAIN, player, inventoryPage.getSession()))
                             .setIconUpdate((inventoryPage, player) -> {
-                                ItemStack item = new ItemStack(MATERIALS.get(ThreadLocalRandom.current().nextInt(MATERIALS.size())), 1);
+                                ItemStack item = new ItemStack(this.materials.get(ThreadLocalRandom.current().nextInt(this.materials.size())), 1);
                                 ItemMeta meta = item.getItemMeta();
                                 meta.setDisplayName("Hello@");
                                 meta.setLore(Collections.singletonList("Time: " + System.currentTimeMillis()));
@@ -241,7 +246,7 @@ public class ExampleMenuManager {
 
                     .setIcon(0, new IconBuilder()
                             .setIconUpdate((inventoryPage, player) -> {
-                                ItemStack item = new ItemStack(MATERIALS.get(ThreadLocalRandom.current().nextInt(MATERIALS.size())), 1);
+                                ItemStack item = new ItemStack(this.materials.get(ThreadLocalRandom.current().nextInt(this.materials.size())), 1);
                                 ItemMeta meta = item.getItemMeta();
                                 meta.setDisplayName("Hello!");
                                 meta.setLore(Collections.singletonList("Time2: " + System.currentTimeMillis()));

@@ -17,7 +17,8 @@ public final class MenuInv extends JavaPlugin {
 
         Menu.initMenu(this);
 
-        ExampleMenuManager.setup(this);
+        ExampleMenuManager exampleMenuManager = new ExampleMenuManager(this);
+        exampleMenuManager.load();
 
         this.getLogger().info("Plugin successfully enabled.");
     }
