@@ -27,6 +27,7 @@ public class InventoryPageImpl implements InventoryPage {
     private final String name;
     private final MenuType menuType;
     private final InventoryTitleHandler inventoryTitleHandler;
+    private final ComponentInventoryTitleHandler componentInventoryTitleHandler;
     private final InventoryReopenHandler inventoryReopenHandler;
     private final ClickExceptionHandler clickExceptionHandler;
     private final UpdateExceptionHandler updateExceptionHandler;
@@ -53,39 +54,42 @@ public class InventoryPageImpl implements InventoryPage {
     @Setter
     private boolean closed = false;
 
-    public InventoryPageImpl(Plugin plugin,
-                             String name,
-                             MenuType menuType,
-                             Map<Integer, ItemIconImpl> iconsPosition,
-                             Map<String, PagedIconsImpl> listedIcons,
-                             InventoryTitleHandler inventoryTitleHandler,
-                             InventoryReopenHandler inventoryReopenHandler,
-                             ClickExceptionHandler clickExceptionHandler,
-                             UpdateExceptionHandler updateExceptionHandler,
-                             InventoryCloseHandler inventoryCloseHandler,
-                             Delayable<InventoryPage> globalUpdateDelay,
-                             BottomInventoryClickHandler bottomInventoryClickHandler,
-                             IconHandlerFactory background,
-                             Player player,
-                             InventorySession session,
-                             TemplatePageImpl templatePage) {
+    public InventoryPageImpl(@NonNull Plugin plugin,
+                             @NonNull String name,
+                             @NonNull MenuType menuType,
+                             @NonNull Map<Integer, ItemIconImpl> iconsPosition,
+                             @NonNull Map<String, PagedIconsImpl> listedIcons,
+                             @Nullable InventoryTitleHandler inventoryTitleHandler,
+                             @Nullable ComponentInventoryTitleHandler componentInventoryTitleHandler,
+                             @NonNull InventoryReopenHandler inventoryReopenHandler,
+                             @NonNull ClickExceptionHandler clickExceptionHandler,
+                             @NonNull UpdateExceptionHandler updateExceptionHandler,
+                             @NonNull InventoryCloseHandler inventoryCloseHandler,
+                             @NonNull Delayable<InventoryPage> globalUpdateDelay,
+                             @NonNull BottomInventoryClickHandler bottomInventoryClickHandler,
+                             @Nullable IconHandlerFactory background,
+                             @NonNull Player player,
+                             @NonNull InventorySession session,
+                             @NonNull TemplatePageImpl templatePage) {
         this.plugin = plugin;
         this.name = name;
         this.menuType = menuType;
         this.listedIcons = listedIcons;
         this.inventoryTitleHandler = inventoryTitleHandler;
+        this.componentInventoryTitleHandler = componentInventoryTitleHandler;
         this.inventoryReopenHandler = inventoryReopenHandler;
         this.clickExceptionHandler = clickExceptionHandler;
         this.updateExceptionHandler = updateExceptionHandler;
         this.inventoryCloseHandler = inventoryCloseHandler;
         this.globalUpdateDelay = globalUpdateDelay;
         this.bottomInventoryClickHandler = bottomInventoryClickHandler;
+
         this.player = player;
         this.session = session;
         this.templatePage = templatePage;
 
         // Create a new bukkit inventory and add our own holder to it to identify the inventory
-        this.inventory = this.menuType.createInventory(new MenuInventoryHolder(this), this.inventoryTitleHandler.createTitle(this));
+        this.inventory = createInventory();
 
         // Create an array of active size items in the current inventory
         this.activeIcons = new ItemIconImpl[this.menuType.getSize()];
@@ -262,10 +266,9 @@ public class InventoryPageImpl implements InventoryPage {
     }
 
     // Recreate the page
-    // TODO Works weird. Namely, if during the opening of the inventory the player closes it, then the player will open a phantom inventory.
     private void performReopen() {
         // First, create a new instance of bukkit's inventory
-        this.inventory = this.menuType.createInventory(new MenuInventoryHolder(this), this.inventoryTitleHandler.createTitle(this));
+        this.inventory = createInventory();
         // Clear page scroll changes
         for (PagedIconsImpl pi : this.listedIcons.values()) {
             pi.resetChanges();
@@ -274,6 +277,17 @@ public class InventoryPageImpl implements InventoryPage {
         performUpdate();
         // Open this inventory to that player
         this.player.openInventory(this.inventory);
+    }
+
+    @NonNull
+    private Inventory createInventory() {
+        if (this.componentInventoryTitleHandler != null) {
+            return this.menuType.createInventory(new MenuInventoryHolder(this), this.componentInventoryTitleHandler.createTitle(this));
+        } else if (this.inventoryTitleHandler != null) {
+            return this.menuType.createInventory(new MenuInventoryHolder(this), this.inventoryTitleHandler.createTitle(this));
+        }
+
+        throw new IllegalStateException("No inventory title handlers provided!");
     }
 
     @Override

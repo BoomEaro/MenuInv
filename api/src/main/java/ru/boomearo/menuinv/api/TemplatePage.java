@@ -7,6 +7,7 @@ import ru.boomearo.menuinv.api.icon.ClickExceptionHandler;
 import ru.boomearo.menuinv.api.icon.ElementBuilder;
 import ru.boomearo.menuinv.api.icon.UpdateExceptionHandler;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public interface TemplatePage {
@@ -23,7 +24,13 @@ public interface TemplatePage {
     @NonNull
     TemplatePage setMenuType(@NonNull MenuType type);
 
+    @Nullable
+    ComponentInventoryTitleHandler getComponentInventoryTitle();
+
     @NonNull
+    TemplatePage setComponentInventoryTitle(@NonNull ComponentInventoryTitleHandler componentInventoryTitleHandler);
+
+    @Nullable
     InventoryTitleHandler getInventoryTitle();
 
     @NonNull

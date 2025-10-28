@@ -3,12 +3,15 @@ package ru.boomearo.menuinv.example;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
-import ru.boomearo.menuinv.api.*;
+import ru.boomearo.menuinv.api.InfinityUpdateDelay;
+import ru.boomearo.menuinv.api.Menu;
+import ru.boomearo.menuinv.api.MenuType;
 import ru.boomearo.menuinv.api.frames.AsyncPagedIconsBuilder;
 import ru.boomearo.menuinv.api.frames.PagedIcons;
 import ru.boomearo.menuinv.api.frames.PagedIconsBuilder;
@@ -21,7 +24,6 @@ import ru.boomearo.menuinv.api.icon.scrolls.ScrollType;
 import java.io.File;
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
@@ -78,11 +80,14 @@ public class ExampleMenuManager {
                     .createTemplatePage(ExampleMenuPage.MAIN)
                     .setMenuType(MenuType.CHEST_9X6)
                     .setInventoryCloseHandler((inventoryPage, player) -> player.sendMessage("Inventory closed!"))
-                    .setInventoryTitle((inventoryPage) -> {
+                    .setComponentInventoryTitle((inventoryPage) -> {
                         PagedIcons piExample1 = inventoryPage.getListedIconsItems("example");
                         PagedIcons piExample2 = inventoryPage.getListedIconsItems("example2");
+                        if (piExample1 == null || piExample2 == null) {
+                            return Component.text("No title");
+                        }
 
-                        return "example: " + piExample1.getCurrentPage() + "/" + piExample1.getMaxPage() + " ||| " + piExample2.getCurrentPage() + "/" + piExample2.getMaxPage();
+                        return Component.text("example: " + piExample1.getCurrentPage() + "/" + piExample1.getMaxPage() + " ||| " + piExample2.getCurrentPage() + "/" + piExample2.getMaxPage());
                     })
                     .setIcon(1, new IconBuilder()
                             .setIconClick((inventoryPage, icon, player, type) -> Menu.open(ExampleMenuPage.OTHER, player, inventoryPage.getSession()))
@@ -154,7 +159,7 @@ public class ExampleMenuManager {
 
                                                         ItemStack itemStack = new ItemStack(Material.OAK_SIGN, t);
                                                         ItemMeta itemMeta = itemStack.getItemMeta();
-                                                        itemMeta.setDisplayName("Loaded data " + new Random().nextInt(64) + " for data type #" + t);
+                                                        itemMeta.displayName(Component.text("Loaded data " + new Random().nextInt(64) + " for data type #" + t));
                                                         itemStack.setItemMeta(itemMeta);
 
                                                         return itemStack;
@@ -164,7 +169,7 @@ public class ExampleMenuManager {
                                                     .setIconUpdate((inventoryPage2, player2) -> {
                                                         ItemStack itemStack = new ItemStack(Material.PAPER, t);
                                                         ItemMeta itemMeta = itemStack.getItemMeta();
-                                                        itemMeta.setDisplayName("TIME: " + System.currentTimeMillis() + ". Loading data with type #" + t + "...");
+                                                        itemMeta.displayName(Component.text("TIME: " + System.currentTimeMillis() + ". Loading data with type #" + t + "..."));
                                                         itemStack.setItemMeta(itemMeta);
                                                         return itemStack;
                                                     })
@@ -188,7 +193,7 @@ public class ExampleMenuManager {
                                                     .setIconUpdate((inventoryPage2, player2) -> {
                                                         ItemStack itemStack = new ItemStack(Material.OAK_SIGN, finalI);
                                                         ItemMeta itemMeta = itemStack.getItemMeta();
-                                                        itemMeta.setDisplayName("Loaded data " + new Random().nextInt(64) + " for data type #" + finalI);
+                                                        itemMeta.displayName(Component.text("Loaded data " + new Random().nextInt(64) + " for data type #" + finalI));
                                                         itemStack.setItemMeta(itemMeta);
 
                                                         return itemStack;
@@ -212,7 +217,7 @@ public class ExampleMenuManager {
                                                 .setIconUpdate((inventoryPage2, player2) -> {
                                                     ItemStack itemStack = new ItemStack(Material.PAPER, 1);
                                                     ItemMeta itemMeta = itemStack.getItemMeta();
-                                                    itemMeta.setDisplayName("Just loading holder!");
+                                                    itemMeta.displayName(Component.text("Just loading holder!"));
                                                     itemStack.setItemMeta(itemMeta);
 
                                                     return itemStack;
@@ -231,14 +236,14 @@ public class ExampleMenuManager {
                     .createTemplatePage(ExampleMenuPage.OTHER)
                     .setMenuType(MenuType.WORKBENCH)
                     .setGlobalUpdateDelay((data, force) -> Duration.ZERO)
-                    .setInventoryTitle((inventoryPage) -> "Hello2")
+                    .setComponentInventoryTitle((inventoryPage) -> Component.text("Hello2"))
                     .setIcon(9, new IconBuilder()
                             .setIconClick((inventoryPage, icon, player, click) -> Menu.open(ExampleMenuPage.MAIN, player, inventoryPage.getSession()))
                             .setIconUpdate((inventoryPage, player) -> {
                                 ItemStack item = new ItemStack(this.materials.get(ThreadLocalRandom.current().nextInt(this.materials.size())), 1);
                                 ItemMeta meta = item.getItemMeta();
-                                meta.setDisplayName("Hello@");
-                                meta.setLore(Collections.singletonList("Time: " + System.currentTimeMillis()));
+                                meta.displayName(Component.text("Hello@"));
+                                meta.lore(List.of(Component.text("Time: " + System.currentTimeMillis())));
                                 item.setItemMeta(meta);
                                 return item;
                             })
@@ -248,8 +253,8 @@ public class ExampleMenuManager {
                             .setIconUpdate((inventoryPage, player) -> {
                                 ItemStack item = new ItemStack(this.materials.get(ThreadLocalRandom.current().nextInt(this.materials.size())), 1);
                                 ItemMeta meta = item.getItemMeta();
-                                meta.setDisplayName("Hello!");
-                                meta.setLore(Collections.singletonList("Time2: " + System.currentTimeMillis()));
+                                meta.displayName(Component.text("Hello!"));
+                                meta.lore(List.of(Component.text("Time2: " + System.currentTimeMillis())));
                                 item.setItemMeta(meta);
                                 return item;
                             })
@@ -266,8 +271,8 @@ public class ExampleMenuManager {
                             .setIconUpdate((inventoryPage, player) -> {
                                 ItemStack item = new ItemStack(Material.BARRIER, 1);
                                 ItemMeta meta = item.getItemMeta();
-                                meta.setDisplayName("Close");
-                                meta.setLore(Collections.singletonList("UwU"));
+                                meta.displayName(Component.text("Close"));
+                                meta.lore(List.of(Component.text("UwU")));
                                 item.setItemMeta(meta);
                                 return item;
                             }))
@@ -290,7 +295,7 @@ public class ExampleMenuManager {
         }
         ItemStack item = new ItemStack(Material.PAPER, amount);
         ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName("§6" + scrollType.name() + " §7[§c" + nextPage + "§7/§c" + maxPage + "§7]");
+        meta.displayName(Component.text(scrollType.name() + " [" + nextPage + "/" + maxPage + "]"));
         meta.addItemFlags(ItemFlag.values());
         item.setItemMeta(meta);
         return item;

@@ -5,12 +5,14 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import ru.boomearo.menuinv.api.frames.*;
 import ru.boomearo.menuinv.api.icon.*;
 import ru.boomearo.menuinv.api.session.InventorySession;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +27,10 @@ public class TemplatePageImpl implements TemplatePage {
     private final PluginTemplatePagesImpl pluginTemplatePages;
 
     private MenuType menuType = MenuType.CHEST_9X6;
+
+    private ComponentInventoryTitleHandler componentInventoryTitleHandler = (inventoryPage) -> Component.text("Default page");
     private InventoryTitleHandler inventoryTitleHandler = (inventoryPage) -> "Default page";
+
     private InventoryReopenHandler inventoryReopenHandler = (inventoryPage, force) -> false;
     private ClickExceptionHandler clickExceptionHandler = (inventoryPage, player, clickType, exception) -> {
         inventoryPage.close(true);
@@ -63,7 +68,7 @@ public class TemplatePageImpl implements TemplatePage {
         return this;
     }
 
-    @NonNull
+    @Nullable
     @Override
     public InventoryTitleHandler getInventoryTitle() {
         return this.inventoryTitleHandler;
@@ -73,6 +78,21 @@ public class TemplatePageImpl implements TemplatePage {
     @Override
     public TemplatePage setInventoryTitle(@NonNull InventoryTitleHandler inventoryTitleHandler) {
         this.inventoryTitleHandler = inventoryTitleHandler;
+        this.componentInventoryTitleHandler = null;
+        return this;
+    }
+
+    @Nullable
+    @Override
+    public ComponentInventoryTitleHandler getComponentInventoryTitle() {
+        return this.componentInventoryTitleHandler;
+    }
+
+    @NonNull
+    @Override
+    public TemplatePage setComponentInventoryTitle(@NonNull ComponentInventoryTitleHandler componentInventoryTitleHandler) {
+        this.componentInventoryTitleHandler = componentInventoryTitleHandler;
+        this.inventoryTitleHandler = null;
         return this;
     }
 
@@ -387,6 +407,7 @@ public class TemplatePageImpl implements TemplatePage {
                 itemIconsActive,
                 pagedIconsActive,
                 this.inventoryTitleHandler,
+                this.componentInventoryTitleHandler,
                 this.inventoryReopenHandler,
                 this.clickExceptionHandler,
                 this.updateExceptionHandler,

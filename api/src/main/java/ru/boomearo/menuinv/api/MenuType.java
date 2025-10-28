@@ -3,6 +3,7 @@ package ru.boomearo.menuinv.api;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
@@ -48,6 +49,19 @@ public enum MenuType {
                                      @Nullable String title) {
         if (title == null) {
             title = " ";
+        }
+        if (this.type == InventoryType.CHEST) {
+            return Bukkit.createInventory(holder, getSize(), title);
+        }
+
+        return Bukkit.createInventory(holder, this.type, title);
+    }
+
+    @NonNull
+    public Inventory createInventory(@Nullable InventoryHolder holder,
+                                     @Nullable Component title) {
+        if (title == null) {
+            title = Component.space();
         }
         if (this.type == InventoryType.CHEST) {
             return Bukkit.createInventory(holder, getSize(), title);
