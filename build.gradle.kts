@@ -1,16 +1,26 @@
+plugins {
+    id("java")
+}
+
 allprojects {
-    apply plugin: "java"
+    apply(plugin = "java")
 
     group = "ru.boomearo.menuinv"
     version = "1.5.10"
 
-    compileJava {
-        options.encoding = "UTF-8"
+    val targetJavaVersion = 17
+    java {
+        val javaVersion = JavaVersion.toVersion(targetJavaVersion)
+        sourceCompatibility = javaVersion
+        targetCompatibility = javaVersion
+        if (JavaVersion.current() < javaVersion) {
+            toolchain.languageVersion.set(JavaLanguageVersion.of(targetJavaVersion))
+        }
     }
 
-    tasks.withType(JavaCompile).configureEach {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+    tasks.compileJava {
+        options.encoding = "UTF-8"
+        options.release.set(targetJavaVersion)
     }
 
     repositories {

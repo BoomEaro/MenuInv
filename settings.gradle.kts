@@ -1,3 +1,3 @@
 rootProject.name = "MenuInv"
 
-include ":api", ":plugin"
+include(":api", ":plugin")
