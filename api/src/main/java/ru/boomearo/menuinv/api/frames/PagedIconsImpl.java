@@ -187,7 +187,7 @@ public class PagedIconsImpl extends FramedIcons implements PagedIcons {
 
                 int maxSize = handlers.size();
 
-                MenuType type = page.getMenuType();
+                InventoryFactory inventoryFactory = page.getInventoryFactory();
 
                 int pageLimit = (getWidth() * getHeight());
 
@@ -210,9 +210,9 @@ public class PagedIconsImpl extends FramedIcons implements PagedIcons {
 
                         int slotOffset;
                         if (iterationHandler.isReverse()) {
-                            slotOffset = this.first.z() * type.getWidth() + this.first.x() + z + (x * type.getWidth());
+                            slotOffset = this.first.z() * inventoryFactory.getWidth() + this.first.x() + z + (x * inventoryFactory.getWidth());
                         } else {
-                            slotOffset = this.first.z() * type.getWidth() + this.first.x() + x + (z * type.getWidth());
+                            slotOffset = this.first.z() * inventoryFactory.getWidth() + this.first.x() + x + (z * inventoryFactory.getWidth());
                         }
 
                         if (i > (maxSize - 1)) {

@@ -26,7 +26,7 @@ public class TemplatePageImpl implements TemplatePage {
     private final String name;
     private final PluginTemplatePagesImpl pluginTemplatePages;
 
-    private MenuType menuType = MenuType.CHEST_9X6;
+    private InventoryFactory inventoryFactory = MenuType.CHEST_9X6;
 
     private ComponentInventoryTitleHandler componentInventoryTitleHandler = (inventoryPage) -> Component.text("Default page");
     private InventoryTitleHandler inventoryTitleHandler = (inventoryPage) -> "Default page";
@@ -58,13 +58,30 @@ public class TemplatePageImpl implements TemplatePage {
     @NonNull
     @Override
     public MenuType getMenuType() {
-        return this.menuType;
+        if (this.inventoryFactory instanceof MenuType menuType) {
+            return menuType;
+        }
+
+        throw new IllegalStateException("Is not MenuType!");
     }
 
     @NonNull
     @Override
     public TemplatePage setMenuType(@NonNull MenuType type) {
-        this.menuType = type;
+        this.inventoryFactory = type;
+        return this;
+    }
+
+    @NonNull
+    @Override
+    public InventoryFactory getInventoryFactory() {
+        return this.inventoryFactory;
+    }
+
+    @NonNull
+    @Override
+    public TemplatePage setInventoryFactory(@NonNull InventoryFactory inventoryFactory) {
+        this.inventoryFactory = inventoryFactory;
         return this;
     }
 
@@ -272,12 +289,12 @@ public class TemplatePageImpl implements TemplatePage {
             throw new IllegalStateException("Paged items with name '" + frame.getName() + "' went out of the area having a negative value of coordinates. (x: " + frame.getFirst().x() + " z: " + frame.getFirst().z() + ")");
         }
 
-        if (frame.getFirst().x() + frame.getWidth() > this.menuType.getWidth()) {
-            throw new IllegalStateException("Paged items with name '" + frame.getName() + "' went beyond the maximum area size (x: " + (frame.getFirst().x() + frame.getWidth()) + " > width: " + this.menuType.getWidth() + ")");
+        if (frame.getFirst().x() + frame.getWidth() > this.inventoryFactory.getWidth()) {
+            throw new IllegalStateException("Paged items with name '" + frame.getName() + "' went beyond the maximum area size (x: " + (frame.getFirst().x() + frame.getWidth()) + " > width: " + this.inventoryFactory.getWidth() + ")");
         }
 
-        if (frame.getFirst().z() + frame.getHeight() > this.menuType.getHeight()) {
-            throw new IllegalStateException("Paged items with name '" + frame.getName() + "' went beyond the maximum area size (z: " + (frame.getFirst().z() + frame.getHeight()) + " > height: " + this.menuType.getHeight() + ")");
+        if (frame.getFirst().z() + frame.getHeight() > this.inventoryFactory.getHeight()) {
+            throw new IllegalStateException("Paged items with name '" + frame.getName() + "' went beyond the maximum area size (z: " + (frame.getFirst().z() + frame.getHeight()) + " > height: " + this.inventoryFactory.getHeight() + ")");
         }
     }
 
@@ -306,15 +323,15 @@ public class TemplatePageImpl implements TemplatePage {
 
         int height = value.length;
 
-        if (height > this.menuType.getHeight()) {
-            throw new IllegalStateException("Structure height is more than " + this.menuType.getHeight());
+        if (height > this.inventoryFactory.getHeight()) {
+            throw new IllegalStateException("Structure height is more than " + this.inventoryFactory.getHeight());
         }
 
         int width = 0;
         StringBuilder sb = new StringBuilder();
         for (String data : value) {
-            if (data.length() > this.menuType.getWidth()) {
-                throw new IllegalStateException("Structure width is more than " + this.menuType.getWidth());
+            if (data.length() > this.inventoryFactory.getWidth()) {
+                throw new IllegalStateException("Structure width is more than " + this.inventoryFactory.getWidth());
             }
 
             width = data.length();
@@ -370,7 +387,7 @@ public class TemplatePageImpl implements TemplatePage {
         if (slot < 0) {
             throw new IllegalStateException("Button on slot '" + icon.getSlot() + "' is outside 0! (slot: " + slot + ")");
         }
-        int maxSlot = this.menuType.getSize() - 1;
+        int maxSlot = this.inventoryFactory.getSize() - 1;
         if (slot > maxSlot) {
             throw new IllegalStateException("Button on slot '" + icon.getSlot() + "' is more than possible! (slot: " + slot + "/" + maxSlot + ")");
         }
@@ -403,7 +420,7 @@ public class TemplatePageImpl implements TemplatePage {
         return new InventoryPageImpl(
                 this.plugin,
                 this.name,
-                this.menuType,
+                this.inventoryFactory,
                 itemIconsActive,
                 pagedIconsActive,
                 this.inventoryTitleHandler,

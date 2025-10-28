@@ -18,11 +18,19 @@ public interface TemplatePage {
     @NonNull
     PluginTemplatePages getPluginTemplatePages();
 
+    @Deprecated
     @NonNull
     MenuType getMenuType();
 
+    @Deprecated
     @NonNull
     TemplatePage setMenuType(@NonNull MenuType type);
+
+    @NonNull
+    InventoryFactory getInventoryFactory();
+
+    @NonNull
+    TemplatePage setInventoryFactory(@NonNull InventoryFactory inventoryFactory);
 
     @Nullable
     ComponentInventoryTitleHandler getComponentInventoryTitle();

@@ -25,7 +25,7 @@ public class InventoryPageImpl implements InventoryPage {
 
     private final Plugin plugin;
     private final String name;
-    private final MenuType menuType;
+    private final InventoryFactory inventoryFactory;
     private final InventoryTitleHandler inventoryTitleHandler;
     private final ComponentInventoryTitleHandler componentInventoryTitleHandler;
     private final InventoryReopenHandler inventoryReopenHandler;
@@ -56,7 +56,7 @@ public class InventoryPageImpl implements InventoryPage {
 
     public InventoryPageImpl(@NonNull Plugin plugin,
                              @NonNull String name,
-                             @NonNull MenuType menuType,
+                             @NonNull InventoryFactory inventoryFactory,
                              @NonNull Map<Integer, ItemIconImpl> iconsPosition,
                              @NonNull Map<String, PagedIconsImpl> listedIcons,
                              @Nullable InventoryTitleHandler inventoryTitleHandler,
@@ -73,7 +73,7 @@ public class InventoryPageImpl implements InventoryPage {
                              @NonNull TemplatePageImpl templatePage) {
         this.plugin = plugin;
         this.name = name;
-        this.menuType = menuType;
+        this.inventoryFactory = inventoryFactory;
         this.listedIcons = listedIcons;
         this.inventoryTitleHandler = inventoryTitleHandler;
         this.componentInventoryTitleHandler = componentInventoryTitleHandler;
@@ -92,13 +92,13 @@ public class InventoryPageImpl implements InventoryPage {
         this.inventory = createInventory();
 
         // Create an array of active size items in the current inventory
-        this.activeIcons = new ItemIconImpl[this.menuType.getSize()];
+        this.activeIcons = new ItemIconImpl[this.inventoryFactory.getSize()];
         // Filling the array with nulls
         Arrays.fill(this.activeIcons, null);
 
         // First, we fill the array of active objects with the background.
         if (background != null) {
-            for (int i = 0; i < this.menuType.getSize(); i++) {
+            for (int i = 0; i < this.inventory.getSize(); i++) {
                 this.activeIcons[i] = new ItemIconImpl(i, background.create());
             }
         }
@@ -112,6 +112,16 @@ public class InventoryPageImpl implements InventoryPage {
     @Override
     public void setNeedUpdate() {
         this.needUpdate = true;
+    }
+
+    @NonNull
+    @Override
+    public MenuType getMenuType() {
+        if (this.inventoryFactory instanceof MenuType menuType) {
+            return menuType;
+        }
+
+        throw new IllegalStateException("Is not MenuType!");
     }
 
     @Nullable
@@ -282,9 +292,9 @@ public class InventoryPageImpl implements InventoryPage {
     @NonNull
     private Inventory createInventory() {
         if (this.componentInventoryTitleHandler != null) {
-            return this.menuType.createInventory(new MenuInventoryHolder(this), this.componentInventoryTitleHandler.createTitle(this));
+            return this.inventoryFactory.createInventory(new MenuInventoryHolder(this), this.componentInventoryTitleHandler.createTitle(this));
         } else if (this.inventoryTitleHandler != null) {
-            return this.menuType.createInventory(new MenuInventoryHolder(this), this.inventoryTitleHandler.createTitle(this));
+            return this.inventoryFactory.createInventory(new MenuInventoryHolder(this), this.inventoryTitleHandler.createTitle(this));
         }
 
         throw new IllegalStateException("No inventory title handlers provided!");

@@ -13,7 +13,7 @@ import javax.annotation.Nullable;
 
 @RequiredArgsConstructor
 @Getter
-public enum MenuType {
+public enum MenuType implements InventoryFactory {
 
     ANVIL(InventoryType.ANVIL, 3, 1),
     BEACON(InventoryType.BEACON, 1, 1),
@@ -40,10 +40,7 @@ public enum MenuType {
     private final int width;
     private final int height;
 
-    public int getSize() {
-        return this.width * this.height;
-    }
-
+    @Override
     @NonNull
     public Inventory createInventory(@Nullable InventoryHolder holder,
                                      @Nullable String title) {
@@ -57,6 +54,7 @@ public enum MenuType {
         return Bukkit.createInventory(holder, this.type, title);
     }
 
+    @Override
     @NonNull
     public Inventory createInventory(@Nullable InventoryHolder holder,
                                      @Nullable Component title) {

@@ -78,7 +78,7 @@ public class ExampleMenuManager {
         {
             Menu.registerPages(this.plugin)
                     .createTemplatePage(ExampleMenuPage.MAIN)
-                    .setMenuType(MenuType.CHEST_9X6)
+                    .setInventoryFactory(MenuType.CHEST_9X6)
                     .setInventoryCloseHandler((inventoryPage, player) -> player.sendMessage("Inventory closed!"))
                     .setComponentInventoryTitle((inventoryPage) -> {
                         PagedIcons piExample1 = inventoryPage.getListedIconsItems("example");
@@ -234,7 +234,7 @@ public class ExampleMenuManager {
         {
             Menu.registerPages(this.plugin)
                     .createTemplatePage(ExampleMenuPage.OTHER)
-                    .setMenuType(MenuType.WORKBENCH)
+                    .setInventoryFactory(MenuType.WORKBENCH)
                     .setGlobalUpdateDelay((data, force) -> Duration.ZERO)
                     .setComponentInventoryTitle((inventoryPage) -> Component.text("Hello2"))
                     .setIcon(9, new IconBuilder()

@@ -19,8 +19,12 @@ public interface InventoryPage {
     @NonNull
     Inventory getInventory();
 
+    @Deprecated
     @NonNull
     MenuType getMenuType();
+
+    @NonNull
+    InventoryFactory getInventoryFactory();
 
     @NonNull
     Player getPlayer();
