@@ -11,14 +11,14 @@ import ru.boomearo.menuinv.api.Menu;
 public class ExampleListener implements Listener {
 
     @EventHandler
-    public void onPlayerInteractEvent(PlayerInteractEvent e) {
-        Player pl = e.getPlayer();
+    public void onPlayerInteractEvent(PlayerInteractEvent event) {
+        Player player = event.getPlayer();
 
-        if (e.getAction() == Action.LEFT_CLICK_BLOCK) {
-            e.setUseInteractedBlock(Event.Result.DENY);
-            e.setUseItemInHand(Event.Result.DENY);
+        if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
+            event.setUseInteractedBlock(Event.Result.DENY);
+            event.setUseItemInHand(Event.Result.DENY);
 
-            Menu.open(ExampleMenuPage.MAIN, pl, new ExampleSession());
+            Menu.open(ExampleMenuPage.MAIN, player, new ExampleSession());
         }
     }
 }

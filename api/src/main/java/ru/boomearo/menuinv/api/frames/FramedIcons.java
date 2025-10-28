@@ -1,6 +1,7 @@
 package ru.boomearo.menuinv.api.frames;
 
 import lombok.Getter;
+import lombok.NonNull;
 import ru.boomearo.menuinv.api.Delayable;
 import ru.boomearo.menuinv.api.InventoryLocation;
 import ru.boomearo.menuinv.api.InventoryPage;
@@ -13,12 +14,12 @@ public class FramedIcons extends Frame {
     protected final FrameIterationHandler iterationHandler;
     protected final Delayable<InventoryPage> cacheHandler;
 
-    public FramedIcons(String name,
-                       InventoryLocation first,
-                       InventoryLocation second,
-                       FramedIconsHandler iconsHandler,
-                       FrameIterationHandler iterationHandler,
-                       Delayable<InventoryPage> cacheHandler) {
+    public FramedIcons(@NonNull String name,
+                       @NonNull InventoryLocation first,
+                       @NonNull InventoryLocation second,
+                       @NonNull FramedIconsHandler iconsHandler,
+                       @NonNull FrameIterationHandler iterationHandler,
+                       @NonNull Delayable<InventoryPage> cacheHandler) {
         super(name, first, second);
         this.iconsHandler = iconsHandler;
         this.iterationHandler = iterationHandler;

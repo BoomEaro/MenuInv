@@ -1,6 +1,5 @@
 package ru.boomearo.menuinv.listeners;
 
-import com.google.common.base.Preconditions;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -20,11 +19,9 @@ import ru.boomearo.menuinv.api.MenuInventoryHolder;
 
 public class InventoryListener implements Listener {
 
-    private static final int OUTSIDE = -999;
-
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onInventoryClickEvent(InventoryClickEvent e) {
-        InventoryView view = e.getView();
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    public void onInventoryClickEvent(InventoryClickEvent event) {
+        InventoryView view = event.getView();
         if (view == null) {
             return;
         }
@@ -34,50 +31,47 @@ public class InventoryListener implements Listener {
             return;
         }
 
-        Inventory clickedInventory = e.getClickedInventory();
+        Inventory clickedInventory = event.getClickedInventory();
         if (clickedInventory == null) {
             return;
         }
 
         InventoryHolder holder = topInventory.getHolder();
-        if (!(holder instanceof MenuInventoryHolder)) {
+        if (!(holder instanceof MenuInventoryHolder menuHolder)) {
             return;
         }
 
-        if (!(e.getWhoClicked() instanceof Player)) {
+        if (!(event.getWhoClicked() instanceof Player pl)) {
             return;
         }
-        Player pl = (Player) e.getWhoClicked();
 
-        MenuInventoryHolder menuHolder = (MenuInventoryHolder) holder;
-        InventoryPageImpl page = menuHolder.getPage();
+        InventoryPageImpl page = menuHolder.page();
 
         // Allowing the player to modify their inventory
         if (view.getBottomInventory() == clickedInventory) {
-            InventoryAction action = e.getAction();
+            InventoryAction action = event.getAction();
 
             // TODO More InventoryActions to block?
             if (action == InventoryAction.MOVE_TO_OTHER_INVENTORY || action == InventoryAction.COLLECT_TO_CURSOR) {
-                e.setCancelled(true);
+                event.setCancelled(true);
             }
 
-            if (!page.getBottomInventoryClickHandler().canClick(page, pl, e.getSlot(), e.getClick())) {
-                e.setCancelled(true);
+            if (!page.getBottomInventoryClickHandler().canClick(page, pl, event.getSlot(), event.getClick())) {
+                event.setCancelled(true);
             }
 
             return;
         }
 
         // Now we cancel the event if it is a menu
-        e.setCancelled(true);
+        event.setCancelled(true);
 
-        page.handleInventoryClick(e.getSlot(), e.getClick());
+        page.handleInventoryClick(event.getSlot(), event.getClick());
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onInventoryDragEvent(InventoryDragEvent e) {
-        InventoryView view = e.getView();
-
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    public void onInventoryDragEvent(InventoryDragEvent event) {
+        InventoryView view = event.getView();
         if (view == null) {
             return;
         }
@@ -91,27 +85,26 @@ public class InventoryListener implements Listener {
             return;
         }
 
-        if (!(e.getWhoClicked() instanceof Player)) {
+        if (!(event.getWhoClicked() instanceof Player)) {
             return;
         }
 
-        for (Integer slot : e.getRawSlots()) {
-            Inventory i = getInventory(view, slot);
+        for (Integer slot : event.getRawSlots()) {
+            Inventory i = view.getInventory(slot);
             if (i == null) {
                 continue;
             }
 
             if (i == topInventory) {
-                e.setCancelled(true);
+                event.setCancelled(true);
                 return;
             }
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onInventoryCloseEvent(InventoryCloseEvent e) {
-        InventoryView view = e.getView();
-
+    @EventHandler
+    public void onInventoryCloseEvent(InventoryCloseEvent event) {
+        InventoryView view = event.getView();
         if (view == null) {
             return;
         }
@@ -121,45 +114,22 @@ public class InventoryListener implements Listener {
             return;
         }
 
-        if (!(e.getPlayer() instanceof Player)) {
+        if (!(event.getPlayer() instanceof Player pl)) {
             return;
         }
 
-        if (!(topInventory.getHolder() instanceof MenuInventoryHolder)) {
+        if (!(topInventory.getHolder() instanceof MenuInventoryHolder menuInventoryHolder)) {
             return;
         }
 
-        Player pl = (Player) e.getPlayer();
-
-        MenuInventoryHolder menuInventoryHolder = (MenuInventoryHolder) topInventory.getHolder();
-
-        InventoryPageImpl inventoryPage = menuInventoryHolder.getPage();
+        InventoryPageImpl inventoryPage = menuInventoryHolder.page();
 
         inventoryPage.getInventoryCloseHandler().onClose(inventoryPage, pl);
         inventoryPage.setClosed(true);
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void onPluginDisableEvent(PluginDisableEvent e) {
-        Menu.unregisterPages(e.getPlugin());
+    public void onPluginDisableEvent(PluginDisableEvent event) {
+        Menu.unregisterPages(event.getPlugin());
     }
-
-    // Copied from newer version for backend compatibility
-    private static Inventory getInventory(InventoryView view, int rawSlot) {
-        // Slot may be -1 if not properly detected due to client bug
-        // e.g. dropping an item into part of the enchantment list section of an enchanting table
-        if (rawSlot == OUTSIDE || rawSlot == -1) {
-            return null;
-        }
-        Preconditions.checkArgument(rawSlot >= 0, "Negative, non outside slot %s", rawSlot);
-        Preconditions.checkArgument(rawSlot < view.countSlots(), "Slot %s greater than inventory slot count", rawSlot);
-
-        if (rawSlot < view.getTopInventory().getSize()) {
-            return view.getTopInventory();
-        }
-        else {
-            return view.getBottomInventory();
-        }
-    }
-
 }

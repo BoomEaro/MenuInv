@@ -1,11 +1,14 @@
 package ru.boomearo.menuinv.api.icon;
 
+import lombok.NonNull;
+
 public interface ItemIcon {
 
     int getSlot();
 
-    void setIconHandler(IconHandler iconHandler);
+    void setIconHandler(@NonNull IconHandler iconHandler);
 
+    @NonNull
     IconHandler getIconHandler();
 
     void forceUpdate();

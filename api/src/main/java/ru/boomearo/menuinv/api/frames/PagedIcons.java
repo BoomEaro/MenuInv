@@ -1,5 +1,6 @@
 package ru.boomearo.menuinv.api.frames;
 
+import lombok.NonNull;
 import ru.boomearo.menuinv.api.icon.scrolls.ScrollType;
 
 public interface PagedIcons {
@@ -14,7 +15,7 @@ public interface PagedIcons {
 
     boolean previouslyPage();
 
-    boolean scrollPage(ScrollType type);
+    boolean scrollPage(@NonNull ScrollType type);
 
     void resetChanges();
 

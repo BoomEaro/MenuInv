@@ -12,14 +12,14 @@ public class MenuUpdaterTask extends BukkitRunnable {
 
     @Override
     public void run() {
+        // TODO Optimize
         for (Player pl : Bukkit.getOnlinePlayers()) {
             Inventory inv = pl.getOpenInventory().getTopInventory();
 
             InventoryHolder holder = inv.getHolder();
 
-            if (holder instanceof MenuInventoryHolder) {
-                MenuInventoryHolder mih = (MenuInventoryHolder) holder;
-                mih.getPage().update();
+            if (holder instanceof MenuInventoryHolder mih) {
+                mih.page().update();
             }
         }
     }

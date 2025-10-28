@@ -2,6 +2,7 @@ package ru.boomearo.menuinv.api.session;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.Setter;
 import ru.boomearo.menuinv.api.PluginPage;
 
@@ -17,7 +18,7 @@ public class InventorySessionImpl implements InventorySession {
     private ConfirmData confirmData = null;
 
     @Override
-    public void setCurrentPage(PluginPage page) {
+    public void setCurrentPage(@NonNull PluginPage page) {
         if (this.first) {
             this.currentPage = page;
             this.lastPage = page;

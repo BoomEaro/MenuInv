@@ -1,11 +1,13 @@
 package ru.boomearo.menuinv.api.icon;
 
-import com.google.common.base.Preconditions;
 import lombok.Getter;
+import lombok.NonNull;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import ru.boomearo.menuinv.api.InventoryPageImpl;
 import ru.boomearo.menuinv.api.SlotElement;
+
+import javax.annotation.Nullable;
 
 @Getter
 public class ItemIconImpl extends SlotElement implements ItemIcon {
@@ -17,19 +19,18 @@ public class ItemIconImpl extends SlotElement implements ItemIcon {
 
     private IconHandler iconHandler;
 
-    public ItemIconImpl(int position, IconHandler iconHandler) {
+    public ItemIconImpl(int position, @NonNull IconHandler iconHandler) {
         super(position);
         this.iconHandler = iconHandler;
     }
 
-    public void setIconHandler(IconHandler iconHandler) {
-        Preconditions.checkArgument(iconHandler != null, "iconHandler is null!");
-
+    public void setIconHandler(@NonNull IconHandler iconHandler) {
         this.iconHandler = iconHandler;
         this.handlerChangeForceUpdate = true;
     }
 
-    public ItemStack getItemStack(InventoryPageImpl page, boolean force, boolean create, UpdateExceptionHandler updateExceptionHandler) {
+    @Nullable
+    public ItemStack getItemStack(@NonNull InventoryPageImpl page, boolean force, boolean create, @NonNull UpdateExceptionHandler updateExceptionHandler) {
         /*
          * We check at the very beginning whether the object is being retrieved for the first time
          * If so, get the updated item and return it.
@@ -49,15 +50,15 @@ public class ItemIconImpl extends SlotElement implements ItemIcon {
 
                 return getUpdatedItem(page, updateExceptionHandler);
             }
-        }
-        finally {
+        } finally {
             this.forceUpdate = false;
         }
 
         return null;
     }
 
-    private ItemStack getUpdatedItem(InventoryPageImpl page, UpdateExceptionHandler updateExceptionHandler) {
+    @Nullable
+    private ItemStack getUpdatedItem(@NonNull InventoryPageImpl page, @NonNull UpdateExceptionHandler updateExceptionHandler) {
         try {
             ItemStack itemStack = this.iconHandler.onUpdate(page, page.getPlayer());
             if (itemStack != null) {

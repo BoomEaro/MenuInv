@@ -1,6 +1,7 @@
 package ru.boomearo.menuinv.api.icon.scrolls;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -13,6 +14,7 @@ import ru.boomearo.menuinv.api.icon.IconClickDelay;
 import ru.boomearo.menuinv.api.icon.IconHandler;
 import ru.boomearo.menuinv.api.icon.ItemIcon;
 
+import javax.annotation.Nullable;
 import java.time.Duration;
 
 @RequiredArgsConstructor
@@ -28,7 +30,7 @@ public class ScrollIconHandler extends IconHandler {
     private final ScrollUpdate scrollVisibleUpdate;
 
     @Override
-    public void onClick(InventoryPage page, ItemIcon icon, Player player, ClickType clickType) {
+    public void onClick(@NonNull InventoryPage page, @NonNull ItemIcon icon, @NonNull Player player, @NonNull ClickType clickType) {
         PagedIcons pagedIcons = page.getListedIconsItems(this.name);
         if (pagedIcons == null) {
             return;
@@ -42,8 +44,9 @@ public class ScrollIconHandler extends IconHandler {
         }
     }
 
+    @Nullable
     @Override
-    public ItemStack onUpdate(InventoryPage page, Player player) {
+    public ItemStack onUpdate(@NonNull InventoryPage page, @NonNull Player player) {
         PagedIcons pagedIcons = page.getListedIconsItems(this.name);
         if (pagedIcons == null) {
             return null;
@@ -65,13 +68,15 @@ public class ScrollIconHandler extends IconHandler {
         return null;
     }
 
+    @Nullable
     @Override
-    public Duration getClickTime(InventoryPage page, Player player, ClickType click) {
+    public Duration getClickTime(@NonNull InventoryPage page, @NonNull Player player, @NonNull ClickType click) {
         return this.iconClickDelay.getClickTime(page, player, click);
     }
 
+    @Nullable
     @Override
-    public Duration onUpdateTime(InventoryPage page, boolean force) {
+    public Duration onUpdateTime(@NonNull InventoryPage page, boolean force) {
         return this.updateDelay.onUpdateTime(page, force);
     }
 

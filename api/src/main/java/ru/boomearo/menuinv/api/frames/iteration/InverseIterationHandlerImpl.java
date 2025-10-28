@@ -1,15 +1,14 @@
 package ru.boomearo.menuinv.api.frames.iteration;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 public class InverseIterationHandlerImpl implements FrameIterationHandler {
 
     public static final InverseIterationHandlerImpl DEFAULT = new InverseIterationHandlerImpl(false);
     public static final InverseIterationHandlerImpl REVERSE = new InverseIterationHandlerImpl(true);
 
     private final boolean reverse;
-
-    private InverseIterationHandlerImpl(boolean reverse) {
-        this.reverse = reverse;
-    }
 
     private InverseIterationHandlerImpl() {
         this.reverse = false;

@@ -1,8 +1,10 @@
 package ru.boomearo.menuinv.api;
 
+import lombok.NonNull;
+
 @FunctionalInterface
 public interface AsyncResetHandler {
 
-    boolean onIconReset(InventoryPage page, boolean force);
+    boolean onIconReset(@NonNull InventoryPage page, boolean force);
 
 }

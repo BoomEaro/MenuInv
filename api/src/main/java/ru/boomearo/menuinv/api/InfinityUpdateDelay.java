@@ -1,5 +1,6 @@
 package ru.boomearo.menuinv.api;
 
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 import java.time.Duration;
@@ -13,8 +14,9 @@ public class InfinityUpdateDelay<T> implements Delayable<T> {
         this.ignoreForce = false;
     }
 
+    @NonNull
     @Override
-    public Duration onUpdateTime(T data, boolean force) {
+    public Duration onUpdateTime(@NonNull T data, boolean force) {
         if (this.ignoreForce) {
             return Duration.ofMillis(Long.MAX_VALUE);
         }

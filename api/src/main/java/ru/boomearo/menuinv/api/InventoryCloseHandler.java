@@ -1,10 +1,11 @@
 package ru.boomearo.menuinv.api;
 
+import lombok.NonNull;
 import org.bukkit.entity.Player;
 
 @FunctionalInterface
 public interface InventoryCloseHandler {
 
-    void onClose(InventoryPage inventoryPage, Player player);
+    void onClose(@NonNull InventoryPage inventoryPage, @NonNull Player player);
 
 }

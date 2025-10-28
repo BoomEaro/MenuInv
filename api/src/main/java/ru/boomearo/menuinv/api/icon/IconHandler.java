@@ -1,11 +1,13 @@
 package ru.boomearo.menuinv.api.icon;
 
+import lombok.NonNull;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import ru.boomearo.menuinv.api.InventoryPage;
 import ru.boomearo.menuinv.api.Updatable;
 
+import javax.annotation.Nullable;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,13 +16,14 @@ public abstract class IconHandler implements Updatable<ItemStack, InventoryPage>
 
     private static final Map<String, Long> CLICK_COOLDOWN = new HashMap<>();
 
-    public abstract void onClick(InventoryPage page, ItemIcon icon, Player player, ClickType click);
+    public abstract void onClick(@NonNull InventoryPage page, @NonNull ItemIcon icon, @NonNull Player player, @NonNull ClickType click);
 
-    public Duration getClickTime(InventoryPage page, Player player, ClickType click) {
+    @Nullable
+    public Duration getClickTime(@NonNull InventoryPage page, @NonNull Player player, @NonNull ClickType click) {
         return Duration.ofMillis(250);
     }
 
-    public void handleClick(InventoryPage page, ItemIcon icon, Player player, ClickType click) {
+    public void handleClick(@NonNull InventoryPage page, @NonNull ItemIcon icon, @NonNull Player player, @NonNull ClickType click) {
         Duration duration = getClickTime(page, player, click);
         if (duration == null) {
             duration = Duration.ZERO;
@@ -33,7 +36,7 @@ public abstract class IconHandler implements Updatable<ItemStack, InventoryPage>
         }
     }
 
-    private static boolean hasClicked(String name, long cd) {
+    private static boolean hasClicked(@NonNull String name, long cd) {
         Long value = CLICK_COOLDOWN.get(name);
         if (value == null) {
             return true;

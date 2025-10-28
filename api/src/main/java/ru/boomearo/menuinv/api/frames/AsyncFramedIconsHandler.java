@@ -1,10 +1,12 @@
 package ru.boomearo.menuinv.api.frames;
 
+import lombok.NonNull;
 import org.bukkit.entity.Player;
-import ru.boomearo.menuinv.api.InventoryPage;
 import ru.boomearo.menuinv.api.AsyncResetHandler;
+import ru.boomearo.menuinv.api.InventoryPage;
 import ru.boomearo.menuinv.api.icon.IconHandler;
 
+import javax.annotation.Nullable;
 import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -25,10 +27,10 @@ public class AsyncFramedIconsHandler implements FramedIconsHandler {
     private Future<?> task = null;
     private boolean forceUpdate = false;
 
-    public AsyncFramedIconsHandler(ExecutorService executorService,
-                                   FramedIconsHandler onLoadedHandler,
-                                   FramedIconsHandler onLoadingHandler,
-                                   AsyncResetHandler asyncResetHandler
+    public AsyncFramedIconsHandler(@NonNull ExecutorService executorService,
+                                   @NonNull FramedIconsHandler onLoadedHandler,
+                                   @NonNull FramedIconsHandler onLoadingHandler,
+                                   @NonNull AsyncResetHandler asyncResetHandler
     ) {
         this.executorService = executorService;
         this.onLoadedHandler = onLoadedHandler;
@@ -38,8 +40,9 @@ public class AsyncFramedIconsHandler implements FramedIconsHandler {
         this.currentHandler = this.onLoadingHandler;
     }
 
+    @Nullable
     @Override
-    public List<IconHandler> onUpdate(InventoryPage page, Player player) throws Exception {
+    public List<IconHandler> onUpdate(@NonNull InventoryPage page, @NonNull Player player) throws Exception {
         if (this.task != null) {
             if (this.task.isDone()) {
                 this.task = null;
@@ -72,8 +75,9 @@ public class AsyncFramedIconsHandler implements FramedIconsHandler {
         return this.onLoadingHandler.onUpdate(page, player);
     }
 
+    @Nullable
     @Override
-    public Duration onUpdateTime(InventoryPage page, boolean force) {
+    public Duration onUpdateTime(@NonNull InventoryPage page, boolean force) {
         if (this.asyncResetHandler.onIconReset(page, force)) {
             this.currentHandler = this.onLoadingHandler;
             this.handlersResult = null;

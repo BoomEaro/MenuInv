@@ -1,6 +1,7 @@
 package ru.boomearo.menuinv.example;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import lombok.NonNull;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -43,8 +44,8 @@ public class ExampleMenuManager {
         }
         MATERIALS = tmp;
     }
-    
-    public static void setup(Plugin plugin) {
+
+    public static void setup(@NonNull Plugin plugin) {
         File configFile = new File(plugin.getDataFolder() + File.separator + "config.yml");
         if (!configFile.exists()) {
             plugin.getLogger().info("Config not found, creating a new one...");
@@ -63,7 +64,7 @@ public class ExampleMenuManager {
         }
     }
 
-    private static void setupMenu(Plugin plugin) {
+    private static void setupMenu(@NonNull Plugin plugin) {
         ExecutorService executorService = Executors.newFixedThreadPool(2, new ThreadFactoryBuilder()
                 .setNameFormat("exampleMenu-%d")
                 .build());
@@ -171,20 +172,6 @@ public class ExampleMenuManager {
                             .setCacheHandler((page, force) -> Duration.ofSeconds(5))
                             .setUpdateDelay(new InfinityUpdateDelay<>()))
 
-                    /*.setPagedIconsIngredients("example2", '3', '4', new PagedIconsBuilder()
-                            .setPagedItemsUpdate((inventoryPage, player) -> {
-                                List<IconHandler> tmp = new ArrayList<>();
-                                for (int i = 1; i <= new Random().nextInt(20); i++) {
-                                    int t = i;
-                                    tmp.add(new IconBuilder()
-                                            .setIconClick((inventoryPage2, icon, player2, clickType) -> player2.sendMessage("REDSTONE: " + t))
-                                            .setIconUpdate((inventoryPage2, player2) -> new ItemStack(Material.REDSTONE_ORE, t))
-                                            .build()
-                                            .create());
-                                }
-                                return tmp;
-                            }))*/
-
                     .setPagedIconsIngredients("example2", '3', '4', new AsyncPagedIconsBuilder()
                             .setExecutorService(executorService)
                             .setLoadedPagedIcons(new PagedIconsBuilder()
@@ -285,7 +272,8 @@ public class ExampleMenuManager {
         }
     }
 
-    private static ItemStack createScrollItems(ScrollType scrollType, int currentPage, int maxPage) {
+    @NonNull
+    private static ItemStack createScrollItems(@NonNull ScrollType scrollType, int currentPage, int maxPage) {
         int nextPage = scrollType.getNextPage(currentPage);
 
         int amount = nextPage;

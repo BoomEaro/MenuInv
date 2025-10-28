@@ -1,13 +1,10 @@
 package ru.boomearo.menuinv.api;
 
-import lombok.Value;
+import lombok.NonNull;
 
-@Value
-public class InventoryLocation {
+public record InventoryLocation(int x, int z) {
 
-    int x;
-    int z;
-
+    @NonNull
     public static InventoryLocation of(int x, int z) {
         return new InventoryLocation(x, z);
     }

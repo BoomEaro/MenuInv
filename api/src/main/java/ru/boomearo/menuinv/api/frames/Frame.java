@@ -1,6 +1,7 @@
 package ru.boomearo.menuinv.api.frames;
 
 import lombok.Getter;
+import lombok.NonNull;
 import ru.boomearo.menuinv.api.InventoryLocation;
 
 @Getter
@@ -13,26 +14,26 @@ public abstract class Frame {
     protected final int width;
     protected final int height;
 
-    public Frame(String name, InventoryLocation first, InventoryLocation second) {
+    public Frame(@NonNull String name, @NonNull InventoryLocation first, @NonNull InventoryLocation second) {
         this.name = name;
 
-        int xMin = (Math.min(first.getX(), second.getX()));
-        int zMin = (Math.min(first.getZ(), second.getZ()));
+        int xMin = (Math.min(first.x(), second.x()));
+        int zMin = (Math.min(first.z(), second.z()));
         this.first = InventoryLocation.of(xMin, zMin);
 
-        int xMax = (Math.max(first.getX(), second.getX()));
-        int zMax = (Math.max(first.getZ(), second.getZ()));
+        int xMax = (Math.max(first.x(), second.x()));
+        int zMax = (Math.max(first.z(), second.z()));
         this.second = InventoryLocation.of(xMax, zMax);
 
-        this.width = Math.abs(second.getX() - first.getX());
-        this.height = Math.abs(second.getZ() - first.getZ());
+        this.width = Math.abs(second.x() - first.x());
+        this.height = Math.abs(second.z() - first.z());
     }
 
-    public Frame(String name, InventoryLocation loc, int width, int height) {
+    public Frame(@NonNull String name, @NonNull InventoryLocation loc, int width, int height) {
         this(
                 name,
-                InventoryLocation.of(loc.getX(), loc.getZ()),
-                InventoryLocation.of(loc.getX() + width, loc.getZ() + height)
+                InventoryLocation.of(loc.x(), loc.z()),
+                InventoryLocation.of(loc.x() + width, loc.z() + height)
         );
     }
 
@@ -43,6 +44,6 @@ public abstract class Frame {
     }
 
     public boolean isInsideFrame(int x, int z) {
-        return x >= this.first.getX() && z >= this.first.getZ() && x <= this.second.getX() && z <= this.second.getZ();
+        return x >= this.first.x() && z >= this.first.z() && x <= this.second.x() && z <= this.second.z();
     }
 }

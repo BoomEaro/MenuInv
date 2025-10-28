@@ -1,6 +1,9 @@
 package ru.boomearo.menuinv.api;
 
+import lombok.NonNull;
+
+@FunctionalInterface
 public interface InventoryReopenHandler {
 
-    boolean reopenCondition(InventoryPage page, boolean forceUpdate);
+    boolean reopenCondition(@NonNull InventoryPage page, boolean forceUpdate);
 }

@@ -1,6 +1,6 @@
 package ru.boomearo.menuinv.api.icon;
 
-import com.google.common.base.Preconditions;
+import lombok.NonNull;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
@@ -12,57 +12,59 @@ import java.time.Duration;
 
 public class IconBuilder implements ElementBuilderUpdatable<IconBuilder> {
 
-    private IconClick iconClick = (inventoryPage, icon, player, clickType) -> {};
+    private IconClick iconClick = (inventoryPage, icon, player, clickType) -> {
+    };
     private IconClickDelay iconClickDelay = new DefaultIconClickDelay();
     private IconUpdate iconUpdate = (inventoryPage, player) -> null;
     private Delayable<InventoryPage> updateDelay = new DefaultUpdateDelay<>();
 
-    public IconBuilder setIconClick(IconClick iconClick) {
-        Preconditions.checkArgument(iconClick != null, "iconClick is null!");
+    @NonNull
+    public IconBuilder setIconClick(@NonNull IconClick iconClick) {
         this.iconClick = iconClick;
         return this;
     }
 
-    public IconBuilder setIconUpdate(IconUpdate iconUpdate) {
-        Preconditions.checkArgument(iconUpdate != null, "iconUpdate is null!");
+    @NonNull
+    public IconBuilder setIconUpdate(@NonNull IconUpdate iconUpdate) {
         this.iconUpdate = iconUpdate;
         return this;
     }
 
+    @NonNull
     @Override
-    public IconBuilder setUpdateDelay(Delayable<InventoryPage> updateDelay) {
-        Preconditions.checkArgument(updateDelay != null, "updateDelay is null!");
+    public IconBuilder setUpdateDelay(@NonNull Delayable<InventoryPage> updateDelay) {
         this.updateDelay = updateDelay;
         return this;
     }
 
-    public IconBuilder setIconClickDelay(IconClickDelay iconClickDelay) {
-        Preconditions.checkArgument(iconClickDelay != null, "iconClickDelay is null!");
+    @NonNull
+    public IconBuilder setIconClickDelay(@NonNull IconClickDelay iconClickDelay) {
         this.iconClickDelay = iconClickDelay;
         return this;
     }
 
+    @NonNull
     @Override
     public IconHandlerFactory build() {
         return () -> new IconHandler() {
 
             @Override
-            public void onClick(InventoryPage page, ItemIcon icon, Player player, ClickType click) {
+            public void onClick(@NonNull InventoryPage page, @NonNull ItemIcon icon, @NonNull Player player, @NonNull ClickType click) {
                 IconBuilder.this.iconClick.onClick(page, icon, player, click);
             }
 
             @Override
-            public Duration getClickTime(InventoryPage page, Player player, ClickType click) {
+            public Duration getClickTime(@NonNull InventoryPage page, @NonNull Player player, @NonNull ClickType click) {
                 return IconBuilder.this.iconClickDelay.getClickTime(page, player, click);
             }
 
             @Override
-            public ItemStack onUpdate(InventoryPage consume, Player player) {
+            public ItemStack onUpdate(@NonNull InventoryPage consume, @NonNull Player player) {
                 return IconBuilder.this.iconUpdate.onUpdate(consume, player);
             }
 
             @Override
-            public Duration onUpdateTime(InventoryPage page, boolean force) {
+            public Duration onUpdateTime(@NonNull InventoryPage page, boolean force) {
                 return IconBuilder.this.updateDelay.onUpdateTime(page, force);
             }
 

@@ -1,6 +1,7 @@
 package ru.boomearo.menuinv.api;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -14,6 +15,7 @@ import ru.boomearo.menuinv.api.icon.*;
 import ru.boomearo.menuinv.api.icon.scrolls.ScrollIconHandler;
 import ru.boomearo.menuinv.api.session.InventorySession;
 
+import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -108,12 +110,13 @@ public class InventoryPageImpl implements InventoryPage {
         this.needUpdate = true;
     }
 
+    @Nullable
     @Override
-    public PagedIcons getListedIconsItems(String name) {
+    public PagedIcons getListedIconsItems(@NonNull String name) {
         return this.listedIcons.get(name);
     }
 
-    public void handleInventoryClick(int slot, ClickType type) {
+    public void handleInventoryClick(int slot, @NonNull ClickType type) {
         ItemIconImpl ii = this.activeIcons[slot];
         if (ii != null) {
 
@@ -181,21 +184,18 @@ public class InventoryPageImpl implements InventoryPage {
                     this.player.updateInventory();
                 }
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             this.updateExceptionHandler.onException(this, this.player, e);
-        }
-        finally {
+        } finally {
             this.needUpdate = false;
         }
     }
 
     @Override
-    public boolean update(PagedIcons pagedIcons, boolean force) {
-        if (!(pagedIcons instanceof PagedIconsImpl)) {
+    public boolean update(@NonNull PagedIcons pagedIcons, boolean force) {
+        if (!(pagedIcons instanceof PagedIconsImpl pagedIconsImpl)) {
             return false;
         }
-        PagedIconsImpl pagedIconsImpl = (PagedIconsImpl) pagedIcons;
 
         List<ItemIcon> updatedIcons = pagedIconsImpl.updateActiveIcons(this, this.activeIcons, force, false, this.updateExceptionHandler);
         if (updatedIcons == null) {
@@ -210,11 +210,10 @@ public class InventoryPageImpl implements InventoryPage {
     }
 
     @Override
-    public boolean update(ItemIcon itemIcon, boolean force) {
-        if (!(itemIcon instanceof ItemIconImpl)) {
+    public boolean update(@NonNull ItemIcon itemIcon, boolean force) {
+        if (!(itemIcon instanceof ItemIconImpl itemIconImpl)) {
             return false;
         }
-        ItemIconImpl itemIconImpl = (ItemIconImpl) itemIcon;
 
         ItemStack itemStack = itemIconImpl.getItemStack(this, force, false, this.updateExceptionHandler);
         if (itemStack == null) {
@@ -227,7 +226,7 @@ public class InventoryPageImpl implements InventoryPage {
     }
 
     @Override
-    public boolean updateScrolls(String name, boolean force) {
+    public boolean updateScrolls(@NonNull String name, boolean force) {
         boolean updated = false;
         for (ItemIconImpl icon : this.activeIcons) {
             if (icon == null) {
@@ -236,10 +235,9 @@ public class InventoryPageImpl implements InventoryPage {
 
             IconHandler iconHandler = icon.getIconHandler();
 
-            if (!(iconHandler instanceof ScrollIconHandler)) {
+            if (!(iconHandler instanceof ScrollIconHandler scrollIconHandler)) {
                 continue;
             }
-            ScrollIconHandler scrollIconHandler = (ScrollIconHandler) iconHandler;
 
             if (!scrollIconHandler.getName().equals(name)) {
                 continue;
@@ -294,7 +292,7 @@ public class InventoryPageImpl implements InventoryPage {
     }
 
     @Override
-    public boolean isHandlerExists(IconHandler iconHandler) {
+    public boolean isHandlerExists(@NonNull IconHandler iconHandler) {
         for (ItemIconImpl icon : this.activeIcons) {
             if (icon == null) {
                 continue;
@@ -307,6 +305,7 @@ public class InventoryPageImpl implements InventoryPage {
         return false;
     }
 
+    @NonNull
     @Override
     public ItemIcon getItemIconBySlot(int slot) {
         return this.activeIcons[slot];

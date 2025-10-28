@@ -1,29 +1,33 @@
 package ru.boomearo.menuinv.api;
 
+import lombok.NonNull;
+
+import javax.annotation.Nullable;
 import java.time.Duration;
 
 @FunctionalInterface
 public interface Delayable<T> {
 
-    Duration onUpdateTime(T data, boolean force);
+    @Nullable
+    Duration onUpdateTime(@NonNull T data, boolean force);
 
-    default boolean canUpdate(T data, boolean force, long time) {
+    default boolean canUpdate(@NonNull T data, boolean force, long time) {
         Duration duration = onUpdateTime(data, force);
         if (duration == null) {
             duration = Duration.ZERO;
         }
 
-        long miliseconds = duration.toMillis();
+        long milliseconds = duration.toMillis();
 
-        if (miliseconds == Long.MAX_VALUE) {
+        if (milliseconds == Long.MAX_VALUE) {
             return false;
         }
 
-        if (miliseconds <= 0) {
+        if (milliseconds <= 0) {
             return true;
         }
 
-        return (System.currentTimeMillis() - time) > miliseconds;
+        return (System.currentTimeMillis() - time) > milliseconds;
     }
 
 }

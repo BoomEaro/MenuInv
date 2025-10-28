@@ -1,5 +1,6 @@
 package ru.boomearo.menuinv.api;
 
+import lombok.NonNull;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import ru.boomearo.menuinv.api.frames.PagedIcons;
@@ -8,39 +9,47 @@ import ru.boomearo.menuinv.api.icon.IconHandler;
 import ru.boomearo.menuinv.api.icon.ItemIcon;
 import ru.boomearo.menuinv.api.session.InventorySession;
 
+import javax.annotation.Nullable;
+
 public interface InventoryPage {
 
+    @NonNull
     String getName();
 
+    @NonNull
     Inventory getInventory();
 
+    @NonNull
     MenuType getMenuType();
 
+    @NonNull
     Player getPlayer();
 
-    PagedIcons getListedIconsItems(String name);
+    @Nullable
+    PagedIcons getListedIconsItems(@NonNull String name);
 
+    @NonNull
     InventorySession getSession();
 
     void setNeedUpdate();
 
-    default boolean updateScrolls(String name) {
+    default boolean updateScrolls(@NonNull String name) {
         return updateScrolls(name, false);
     }
 
-    boolean updateScrolls(String name, boolean force);
+    boolean updateScrolls(@NonNull String name, boolean force);
 
-    default boolean update(PagedIcons pagedIcons) {
+    default boolean update(@NonNull PagedIcons pagedIcons) {
         return update(pagedIcons, false);
     }
 
-    boolean update(PagedIcons pagedIcons, boolean force);
+    boolean update(@NonNull PagedIcons pagedIcons, boolean force);
 
-    default boolean update(ItemIcon itemIcon) {
+    default boolean update(@NonNull ItemIcon itemIcon) {
         return update(itemIcon, false);
     }
 
-    boolean update(ItemIcon itemIcon, boolean force);
+    boolean update(@NonNull ItemIcon itemIcon, boolean force);
 
     default void update() {
         update(false);
@@ -62,14 +71,18 @@ public interface InventoryPage {
 
     boolean isClosed();
 
+    @NonNull
     TemplatePage getTemplatePage();
 
+    @NonNull
     InventoryCloseHandler getInventoryCloseHandler();
 
+    @NonNull
     BottomInventoryClickHandler getBottomInventoryClickHandler();
 
-    boolean isHandlerExists(IconHandler iconHandler);
+    boolean isHandlerExists(@NonNull IconHandler iconHandler);
 
+    @NonNull
     ItemIcon getItemIconBySlot(int slot);
 
 }

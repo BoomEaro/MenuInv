@@ -1,6 +1,6 @@
 package ru.boomearo.menuinv.api.icon;
 
-import com.google.common.base.Preconditions;
+import lombok.NonNull;
 import ru.boomearo.menuinv.api.AsyncResetHandler;
 import ru.boomearo.menuinv.api.InfinityUpdateDelay;
 
@@ -15,48 +15,49 @@ public class AsyncIconBuilder implements ElementBuilder {
     private ElementBuilder loadingIconBuilder = new IconBuilder();
     private AsyncResetHandler asyncResetHandler = (page, force) -> force;
 
-    public AsyncIconBuilder setExecutorService(ExecutorService executorService) {
-        Preconditions.checkArgument(executorService != null, "executorService is null!");
+    @NonNull
+    public AsyncIconBuilder setExecutorService(@NonNull ExecutorService executorService) {
         this.executorService = executorService;
         return this;
     }
 
-    public AsyncIconBuilder setLoadedIcon(ElementBuilder elementBuilder) {
-        Preconditions.checkArgument(elementBuilder != null, "ElementBuilder is null!");
+    @NonNull
+    public AsyncIconBuilder setLoadedIcon(@NonNull ElementBuilder elementBuilder) {
         this.loadedIconBuilder = elementBuilder;
         return this;
     }
 
-    public AsyncIconBuilder setImmutableLoadedIcon(ElementBuilder elementBuilder) {
-        if (elementBuilder instanceof ElementBuilderUpdatable) {
-            ElementBuilderUpdatable<?> elementBuilderUpdatable = (ElementBuilderUpdatable<?>) elementBuilder;
+    @NonNull
+    public AsyncIconBuilder setImmutableLoadedIcon(@NonNull ElementBuilder elementBuilder) {
+        if (elementBuilder instanceof ElementBuilderUpdatable<?> elementBuilderUpdatable) {
             elementBuilderUpdatable.setUpdateDelay(new InfinityUpdateDelay<>(true));
         }
 
         return setLoadedIcon(elementBuilder);
     }
 
-    public AsyncIconBuilder setLoadingIcon(ElementBuilder elementBuilder) {
-        Preconditions.checkArgument(elementBuilder != null, "iconBuilder is null!");
+    @NonNull
+    public AsyncIconBuilder setLoadingIcon(@NonNull ElementBuilder elementBuilder) {
         this.loadingIconBuilder = elementBuilder;
         return this;
     }
 
-    public AsyncIconBuilder setImmutableLoadingIcon(ElementBuilder elementBuilder) {
-        if (elementBuilder instanceof ElementBuilderUpdatable) {
-            ElementBuilderUpdatable<?> elementBuilderUpdatable = (ElementBuilderUpdatable<?>) elementBuilder;
+    @NonNull
+    public AsyncIconBuilder setImmutableLoadingIcon(@NonNull ElementBuilder elementBuilder) {
+        if (elementBuilder instanceof ElementBuilderUpdatable<?> elementBuilderUpdatable) {
             elementBuilderUpdatable.setUpdateDelay(new InfinityUpdateDelay<>(true));
         }
 
         return setLoadingIcon(elementBuilder);
     }
 
-    public AsyncIconBuilder setAsyncIconResetHandler(AsyncResetHandler asyncResetHandler) {
-        Preconditions.checkArgument(asyncResetHandler != null, "asyncIconResetHandler is null!");
+    @NonNull
+    public AsyncIconBuilder setAsyncIconResetHandler(@NonNull AsyncResetHandler asyncResetHandler) {
         this.asyncResetHandler = asyncResetHandler;
         return this;
     }
 
+    @NonNull
     @Override
     public IconHandlerFactory build() {
         return () -> new AsyncIconHandler(this.executorService,

@@ -1,6 +1,6 @@
 package ru.boomearo.menuinv.api;
 
-import com.google.common.base.Preconditions;
+import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -13,8 +13,10 @@ import ru.boomearo.menuinv.api.session.InventorySessionImpl;
 import ru.boomearo.menuinv.listeners.InventoryListener;
 import ru.boomearo.menuinv.task.MenuUpdaterTask;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 
 @UtilityClass
 public class Menu {
@@ -25,7 +27,7 @@ public class Menu {
     private static BukkitTask updaterTask = null;
     private static InventoryListener inventoryListener = null;
 
-    public static void initMenu(Plugin plugin) {
+    public static void initMenu(@NonNull Plugin plugin) {
         if (Menu.plugin != null) {
             throw new IllegalStateException("API is already initialized by " + Menu.plugin.getName());
         }
@@ -39,7 +41,7 @@ public class Menu {
         plugin.getServer().getPluginManager().registerEvents(inventoryListener, plugin);
     }
 
-    public static void unloadMenu(Plugin plugin) {
+    public static void unloadMenu(@NonNull Plugin plugin) {
         if (Menu.plugin != plugin) {
             throw new IllegalStateException("API is already unloaded or provided plugin is incorrect");
         }
@@ -56,18 +58,16 @@ public class Menu {
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             InventoryHolder holder = player.getOpenInventory().getTopInventory().getHolder();
-            if (holder instanceof MenuInventoryHolder) {
-                MenuInventoryHolder mih = (MenuInventoryHolder) holder;
-                InventoryPageImpl page = mih.getPage();
+            if (holder instanceof MenuInventoryHolder mih) {
+                InventoryPageImpl page = mih.page();
 
                 page.close(true);
             }
         }
     }
 
-    public static PluginTemplatePages registerPages(Plugin plugin) {
-        Preconditions.checkArgument(plugin != null, "plugin is null!");
-
+    @NonNull
+    public static PluginTemplatePages registerPages(@NonNull Plugin plugin) {
         PluginTemplatePagesImpl tmp = MENU_BY_PLUGIN.get(plugin.getClass());
         if (tmp != null) {
             return tmp;
@@ -81,9 +81,7 @@ public class Menu {
         return pages;
     }
 
-    public static void unregisterPages(Plugin plugin) {
-        Preconditions.checkArgument(plugin != null, "plugin is null!");
-
+    public static void unregisterPages(@NonNull Plugin plugin) {
         PluginTemplatePagesImpl tmp = MENU_BY_PLUGIN.get(plugin.getClass());
         if (tmp == null) {
             return;
@@ -93,10 +91,9 @@ public class Menu {
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             InventoryHolder holder = player.getOpenInventory().getTopInventory().getHolder();
-            if (holder instanceof MenuInventoryHolder) {
-                MenuInventoryHolder mih = (MenuInventoryHolder) holder;
+            if (holder instanceof MenuInventoryHolder mih) {
 
-                InventoryPageImpl page = mih.getPage();
+                InventoryPageImpl page = mih.page();
 
                 // We will not compare references, because I think that there may be such a situation when the plugin has not been unloaded.
                 // Therefore, we simply compare the names, and then we close the inventories for these players
@@ -110,43 +107,46 @@ public class Menu {
         plugin.getLogger().info("Unregistered PluginTemplatePages for " + plugin.getName());
     }
 
-    public static InventoryPage open(PluginPage pluginPage, Player player) {
+    @NonNull
+    public static InventoryPage open(@NonNull PluginPage pluginPage, @NonNull Player player) {
         return open(pluginPage, player, null);
     }
 
-    public static InventoryPage open(PluginPage pluginPage, Player player, InventorySession session) {
+    @NonNull
+    public static InventoryPage open(@NonNull PluginPage pluginPage, @NonNull Player player, @Nullable InventorySession session) {
         InventoryPage inventoryPage = create(pluginPage, player, session);
 
         Bukkit.getScheduler().runTask(plugin, () -> {
             try {
                 player.openInventory(inventoryPage.getInventory());
             } catch (Throwable e) {
-                e.printStackTrace();
+                plugin.getLogger().log(Level.SEVERE, "Failed to open menu", e);
             }
         });
 
         return inventoryPage;
     }
 
-    public static InventoryPage openNow(PluginPage pluginPage, Player player) {
+    @NonNull
+    public static InventoryPage openNow(@NonNull PluginPage pluginPage, @NonNull Player player) {
         return openNow(pluginPage, player, null);
     }
 
-    public static InventoryPage openNow(PluginPage pluginPage, Player player, InventorySession session) {
+    @NonNull
+    public static InventoryPage openNow(@NonNull PluginPage pluginPage, @NonNull Player player, @Nullable InventorySession session) {
         InventoryPage inventoryPage = create(pluginPage, player, session);
 
         player.openInventory(inventoryPage.getInventory());
         return inventoryPage;
     }
 
-    public static InventoryPage create(PluginPage pluginPage, Player player) {
+    @NonNull
+    public static InventoryPage create(@NonNull PluginPage pluginPage, @NonNull Player player) {
         return create(pluginPage, player, null);
     }
 
-    public static InventoryPage create(PluginPage pluginPage, Player player, InventorySession session) {
-        Preconditions.checkArgument(pluginPage != null, "pluginPage is null!");
-        Preconditions.checkArgument(player != null, "player is null!");
-
+    @NonNull
+    public static InventoryPage create(@NonNull PluginPage pluginPage, @NonNull Player player, @Nullable InventorySession session) {
         Plugin plugin = pluginPage.getPlugin();
         String page = pluginPage.getPage();
 

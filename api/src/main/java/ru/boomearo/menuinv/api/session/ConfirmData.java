@@ -1,18 +1,24 @@
 package ru.boomearo.menuinv.api.session;
 
+import lombok.NonNull;
 import org.bukkit.inventory.ItemStack;
 import ru.boomearo.menuinv.api.InventoryPage;
 
+import javax.annotation.Nullable;
+
 public interface ConfirmData {
 
-    void executeConfirm(InventoryPage page);
+    void executeConfirm(@NonNull InventoryPage page);
 
-    void executeCancel(InventoryPage page);
+    void executeCancel(@NonNull InventoryPage page);
 
-    ItemStack getConfirmItem(InventoryPage page);
+    @Nullable
+    ItemStack getConfirmItem(@NonNull InventoryPage page);
 
-    ItemStack getCancelItem(InventoryPage page);
+    @Nullable
+    ItemStack getCancelItem(@NonNull InventoryPage page);
 
-    String getInventoryName(InventorySession session);
+    @Nullable
+    String getInventoryName(@NonNull InventorySession session);
 
 }

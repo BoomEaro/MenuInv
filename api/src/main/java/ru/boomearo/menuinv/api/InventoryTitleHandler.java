@@ -1,8 +1,13 @@
 package ru.boomearo.menuinv.api;
 
+import lombok.NonNull;
+
+import javax.annotation.Nullable;
+
 @FunctionalInterface
 public interface InventoryTitleHandler {
 
-    String createTitle(InventoryPage page);
+    @Nullable
+    String createTitle(@NonNull InventoryPage page);
 
 }

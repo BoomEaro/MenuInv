@@ -1,5 +1,6 @@
 package ru.boomearo.menuinv.api;
 
+import lombok.NonNull;
 import ru.boomearo.menuinv.api.frames.PagedElementBuilder;
 import ru.boomearo.menuinv.api.icon.BottomInventoryClickHandler;
 import ru.boomearo.menuinv.api.icon.ClickExceptionHandler;
@@ -10,65 +11,95 @@ import java.util.List;
 
 public interface TemplatePage {
 
+    @NonNull
     String getName();
 
+    @NonNull
     PluginTemplatePages getPluginTemplatePages();
 
+    @NonNull
     MenuType getMenuType();
 
-    TemplatePage setMenuType(MenuType type);
+    @NonNull
+    TemplatePage setMenuType(@NonNull MenuType type);
 
+    @NonNull
     InventoryTitleHandler getInventoryTitle();
 
-    TemplatePage setInventoryTitle(InventoryTitleHandler inventoryTitleHandler);
+    @NonNull
+    TemplatePage setInventoryTitle(@NonNull InventoryTitleHandler inventoryTitleHandler);
 
+    @NonNull
     InventoryReopenHandler getInventoryReopen();
 
-    TemplatePage setInventoryReopen(InventoryReopenHandler inventoryReopenHandler);
+    @NonNull
+    TemplatePage setInventoryReopen(@NonNull InventoryReopenHandler inventoryReopenHandler);
 
+    @NonNull
     ClickExceptionHandler getClickExceptionHandler();
 
-    TemplatePage setClickExceptionHandler(ClickExceptionHandler clickExceptionHandler);
+    @NonNull
+    TemplatePage setClickExceptionHandler(@NonNull ClickExceptionHandler clickExceptionHandler);
 
+    @NonNull
     UpdateExceptionHandler getUpdateExceptionHandler();
 
-    TemplatePage setUpdateExceptionHandler(UpdateExceptionHandler updateExceptionHandler);
+    TemplatePage setUpdateExceptionHandler(@NonNull UpdateExceptionHandler updateExceptionHandler);
 
+    @NonNull
     InventoryCloseHandler getInventoryCloseHandler();
 
-    TemplatePage setInventoryCloseHandler(InventoryCloseHandler inventoryCloseHandler);
+    @NonNull
+    TemplatePage setInventoryCloseHandler(@NonNull InventoryCloseHandler inventoryCloseHandler);
 
-    TemplatePage setBottomInventoryClickHandler(BottomInventoryClickHandler bottomInventoryClickHandler);
+    @NonNull
+    TemplatePage setBottomInventoryClickHandler(@NonNull BottomInventoryClickHandler bottomInventoryClickHandler);
 
+    @NonNull
     Delayable<InventoryPage> getGlobalUpdateDelay();
 
-    TemplatePage setGlobalUpdateDelay(Delayable<InventoryPage> updateDelay);
+    @NonNull
+    TemplatePage setGlobalUpdateDelay(@NonNull Delayable<InventoryPage> updateDelay);
 
-    TemplatePage setIcon(int slot, ElementBuilder elementBuilder);
+    @NonNull
+    TemplatePage setIcon(int slot, @NonNull ElementBuilder elementBuilder);
 
-    TemplatePage setImmutableIcon(int slot, ElementBuilder elementBuilder);
+    @NonNull
+    TemplatePage setImmutableIcon(int slot, @NonNull ElementBuilder elementBuilder);
 
-    TemplatePage setPagedIcons(String name, InventoryLocation first, int width, int height, PagedElementBuilder pagedIconsBuilder);
+    @NonNull
+    TemplatePage setPagedIcons(@NonNull String name, @NonNull InventoryLocation first, int width, int height, @NonNull PagedElementBuilder pagedIconsBuilder);
 
-    TemplatePage setPagedIcons(String name, InventoryLocation first, InventoryLocation second, PagedElementBuilder pagedIconsBuilder);
+    @NonNull
+    TemplatePage setPagedIcons(@NonNull String name, @NonNull InventoryLocation first, @NonNull InventoryLocation second, @NonNull PagedElementBuilder pagedIconsBuilder);
 
-    TemplatePage setPagedIconsIngredients(String name, char first, char second, PagedElementBuilder pagedIconsBuilder);
+    @NonNull
+    TemplatePage setPagedIconsIngredients(@NonNull String name, char first, char second, @NonNull PagedElementBuilder pagedIconsBuilder);
 
-    TemplatePage setImmutablePagedIcons(String name, InventoryLocation first, int width, int height, PagedElementBuilder pagedIconsBuilder);
+    @NonNull
+    TemplatePage setImmutablePagedIcons(@NonNull String name, @NonNull InventoryLocation first, int width, int height, @NonNull PagedElementBuilder pagedIconsBuilder);
 
-    TemplatePage setImmutablePagedIcons(String name, InventoryLocation first, InventoryLocation second, PagedElementBuilder pagedIconsBuilder);
+    @NonNull
+    TemplatePage setImmutablePagedIcons(@NonNull String name, @NonNull InventoryLocation first, @NonNull InventoryLocation second, @NonNull PagedElementBuilder pagedIconsBuilder);
 
-    TemplatePage setImmutablePagedIconsIngredients(String name, char first, char second, PagedElementBuilder pagedIconsBuilder);
+    @NonNull
+    TemplatePage setImmutablePagedIconsIngredients(@NonNull String name, char first, char second, @NonNull PagedElementBuilder pagedIconsBuilder);
 
-    TemplatePage setBackground(ElementBuilder elementBuilder);
+    @NonNull
+    TemplatePage setBackground(@NonNull ElementBuilder elementBuilder);
 
-    TemplatePage setImmutableBackground(ElementBuilder elementBuilder);
+    @NonNull
+    TemplatePage setImmutableBackground(@NonNull ElementBuilder elementBuilder);
 
-    TemplatePage setStructure(String... value);
+    @NonNull
+    TemplatePage setStructure(@NonNull String... value);
 
-    TemplatePage setStructure(List<String> value);
+    @NonNull
+    TemplatePage setStructure(@NonNull List<String> value);
 
-    TemplatePage setIngredient(char value, ElementBuilder elementBuilder);
+    @NonNull
+    TemplatePage setIngredient(char value, @NonNull ElementBuilder elementBuilder);
 
-    TemplatePage setImmutableIngredient(char value, ElementBuilder elementBuilder);
+    @NonNull
+    TemplatePage setImmutableIngredient(char value, @NonNull ElementBuilder elementBuilder);
 }

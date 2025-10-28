@@ -1,7 +1,7 @@
 package ru.boomearo.menuinv.api.frames;
 
-import com.google.common.base.Preconditions;
 import lombok.Getter;
+import lombok.NonNull;
 import ru.boomearo.menuinv.api.AsyncResetHandler;
 import ru.boomearo.menuinv.api.Delayable;
 import ru.boomearo.menuinv.api.InfinityUpdateDelay;
@@ -25,21 +25,20 @@ public class AsyncPagedIconsBuilder implements PagedElementBuilder {
     private FrameIterationHandler frameIterationHandler = DefaultIterationHandlerImpl.DEFAULT;
     private Delayable<InventoryPage> cacheHandler = (page, force) -> Duration.ZERO;
 
-    public AsyncPagedIconsBuilder setExecutorService(ExecutorService executorService) {
-        Preconditions.checkArgument(executorService != null, "executorService is null!");
+    @NonNull
+    public AsyncPagedIconsBuilder setExecutorService(@NonNull ExecutorService executorService) {
         this.executorService = executorService;
         return this;
     }
 
-    public AsyncPagedIconsBuilder setLoadedPagedIcons(PagedIconsBuilder loadedPagedIcons) {
-        Preconditions.checkArgument(loadedPagedIcons != null, "loadedPagedIcons is null!");
+    @NonNull
+    public AsyncPagedIconsBuilder setLoadedPagedIcons(@NonNull PagedIconsBuilder loadedPagedIcons) {
         this.loadedPagedIconsBuilder = loadedPagedIcons;
         return this;
     }
 
-    public AsyncPagedIconsBuilder setImmutableLoadedPagedIcons(PagedIconsBuilder loadedPagedIcons) {
-        Preconditions.checkArgument(loadedPagedIcons != null, "loadedPagedIcons is null!");
-
+    @NonNull
+    public AsyncPagedIconsBuilder setImmutableLoadedPagedIcons(@NonNull PagedIconsBuilder loadedPagedIcons) {
         loadedPagedIcons.setUpdateDelay(new InfinityUpdateDelay<>(true));
         loadedPagedIcons.setCacheHandler(new InfinityUpdateDelay<>(true));
 
@@ -47,15 +46,14 @@ public class AsyncPagedIconsBuilder implements PagedElementBuilder {
         return this;
     }
 
-    public AsyncPagedIconsBuilder setLoadingPagedIcons(PagedIconsBuilder loadingPagedIcons) {
-        Preconditions.checkArgument(loadingPagedIcons != null, "loadingPagedIcons is null!");
+    @NonNull
+    public AsyncPagedIconsBuilder setLoadingPagedIcons(@NonNull PagedIconsBuilder loadingPagedIcons) {
         this.loadingPagedIconsBuilder = loadingPagedIcons;
         return this;
     }
 
-    public AsyncPagedIconsBuilder setImmutableLoadingPagedIcons(PagedIconsBuilder loadingPagedIcons) {
-        Preconditions.checkArgument(loadingPagedIcons != null, "loadingPagedIcons is null!");
-
+    @NonNull
+    public AsyncPagedIconsBuilder setImmutableLoadingPagedIcons(@NonNull PagedIconsBuilder loadingPagedIcons) {
         loadingPagedIcons.setUpdateDelay(new InfinityUpdateDelay<>(true));
         loadingPagedIcons.setCacheHandler(new InfinityUpdateDelay<>(true));
 
@@ -63,26 +61,27 @@ public class AsyncPagedIconsBuilder implements PagedElementBuilder {
         return this;
     }
 
-    public AsyncPagedIconsBuilder setAsyncIconResetHandler(AsyncResetHandler asyncResetHandler) {
-        Preconditions.checkArgument(asyncResetHandler != null, "asyncIconResetHandler is null!");
+    @NonNull
+    public AsyncPagedIconsBuilder setAsyncIconResetHandler(@NonNull AsyncResetHandler asyncResetHandler) {
         this.asyncResetHandler = asyncResetHandler;
         return this;
     }
 
+    @NonNull
     @Override
-    public AsyncPagedIconsBuilder setFrameIterationHandler(FrameIterationHandler frameIterationHandler) {
-        Preconditions.checkArgument(frameIterationHandler != null, "frameIterationHandler is null!");
+    public AsyncPagedIconsBuilder setFrameIterationHandler(@NonNull FrameIterationHandler frameIterationHandler) {
         this.frameIterationHandler = frameIterationHandler;
         return this;
     }
 
+    @NonNull
     @Override
-    public AsyncPagedIconsBuilder setCacheHandler(Delayable<InventoryPage> cacheHandler) {
-        Preconditions.checkArgument(cacheHandler != null, "cacheHandler is null!");
+    public AsyncPagedIconsBuilder setCacheHandler(@NonNull Delayable<InventoryPage> cacheHandler) {
         this.cacheHandler = cacheHandler;
         return this;
     }
 
+    @NonNull
     @Override
     public FramedIconsHandlerFactory build() {
         return () -> new AsyncFramedIconsHandler(

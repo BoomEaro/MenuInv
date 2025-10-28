@@ -1,11 +1,13 @@
 package ru.boomearo.menuinv.api.icon;
 
+import lombok.NonNull;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import ru.boomearo.menuinv.api.AsyncResetHandler;
 import ru.boomearo.menuinv.api.InventoryPage;
 
+import javax.annotation.Nullable;
 import java.time.Duration;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
@@ -25,10 +27,10 @@ public class AsyncIconHandler extends IconHandler {
     private Future<?> task = null;
     private boolean forceUpdate = false;
 
-    public AsyncIconHandler(ExecutorService executorService,
-                            IconHandler onLoadedHandler,
-                            IconHandler onLoadingHandler,
-                            AsyncResetHandler asyncResetHandler
+    public AsyncIconHandler(@NonNull ExecutorService executorService,
+                            @NonNull IconHandler onLoadedHandler,
+                            @NonNull IconHandler onLoadingHandler,
+                            @NonNull AsyncResetHandler asyncResetHandler
     ) {
         this.executorService = executorService;
         this.onLoadedHandler = onLoadedHandler;
@@ -38,14 +40,14 @@ public class AsyncIconHandler extends IconHandler {
         this.currentHandler = this.onLoadingHandler;
     }
 
+    @Nullable
     @Override
-    public ItemStack onUpdate(InventoryPage page, Player player) throws Exception {
+    public ItemStack onUpdate(@NonNull InventoryPage page, @NonNull Player player) throws Exception {
         if (this.task != null) {
             if (this.task.isDone()) {
                 this.task = null;
             }
-        }
-        else {
+        } else {
             this.task = this.executorService.submit(() -> {
                 try {
                     if (page.isClosed() || !page.isHandlerExists(this)) {
@@ -53,11 +55,9 @@ public class AsyncIconHandler extends IconHandler {
                     }
 
                     this.itemResult = this.onLoadedHandler.onUpdate(page, player);
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     this.exceptionResult = e;
-                }
-                finally {
+                } finally {
                     this.currentHandler = this.onLoadedHandler;
                     this.forceUpdate = true;
                 }
@@ -76,12 +76,13 @@ public class AsyncIconHandler extends IconHandler {
     }
 
     @Override
-    public void onClick(InventoryPage page, ItemIcon icon, Player player, ClickType click) {
+    public void onClick(@NonNull InventoryPage page, @NonNull ItemIcon icon, @NonNull Player player, @NonNull ClickType click) {
         this.currentHandler.onClick(page, icon, player, click);
     }
 
+    @Nullable
     @Override
-    public Duration getClickTime(InventoryPage page, Player player, ClickType click) {
+    public Duration getClickTime(@NonNull InventoryPage page, @NonNull Player player, @NonNull ClickType click) {
         return this.currentHandler.getClickTime(page, player, click);
     }
 
@@ -90,8 +91,9 @@ public class AsyncIconHandler extends IconHandler {
         return this.currentHandler.compareTo(other);
     }
 
+    @Nullable
     @Override
-    public Duration onUpdateTime(InventoryPage page, boolean force) {
+    public Duration onUpdateTime(@NonNull InventoryPage page, boolean force) {
         if (this.asyncResetHandler.onIconReset(page, force)) {
             this.currentHandler = this.onLoadingHandler;
             this.itemResult = null;

@@ -1,17 +1,10 @@
 package ru.boomearo.menuinv.api;
 
-import lombok.Getter;
+import lombok.NonNull;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
-@Getter
-public class MenuInventoryHolder implements InventoryHolder {
-
-    private final InventoryPageImpl page;
-
-    public MenuInventoryHolder(InventoryPageImpl page) {
-        this.page = page;
-    }
+public record MenuInventoryHolder(@NonNull InventoryPageImpl page) implements InventoryHolder {
 
     @Override
     public Inventory getInventory() {

@@ -1,11 +1,13 @@
 package ru.boomearo.menuinv.api.frames;
 
 import lombok.Getter;
+import lombok.NonNull;
 import ru.boomearo.menuinv.api.*;
 import ru.boomearo.menuinv.api.frames.iteration.FrameIterationHandler;
 import ru.boomearo.menuinv.api.icon.*;
 import ru.boomearo.menuinv.api.icon.scrolls.ScrollType;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -25,12 +27,12 @@ public class PagedIconsImpl extends FramedIcons implements PagedIcons {
     private List<IconHandler> cachedHandlers = null;
     private long cacheTime = 0;
 
-    public PagedIconsImpl(String name,
-                          InventoryLocation first,
-                          InventoryLocation second,
-                          FramedIconsHandler iconsHandler,
-                          FrameIterationHandler iterationHandler,
-                          Delayable<InventoryPage> cacheHandler) {
+    public PagedIconsImpl(@NonNull String name,
+                          @NonNull InventoryLocation first,
+                          @NonNull InventoryLocation second,
+                          @NonNull FramedIconsHandler iconsHandler,
+                          @NonNull FrameIterationHandler iterationHandler,
+                          @NonNull Delayable<InventoryPage> cacheHandler) {
         super(name, first, second, iconsHandler, iterationHandler, cacheHandler);
     }
 
@@ -120,7 +122,7 @@ public class PagedIconsImpl extends FramedIcons implements PagedIcons {
     }
 
     @Override
-    public boolean scrollPage(ScrollType type) {
+    public boolean scrollPage(@NonNull ScrollType type) {
         if (type == ScrollType.NEXT) {
             return nextPage();
         } else if (type == ScrollType.PREVIOUSLY) {
@@ -139,7 +141,8 @@ public class PagedIconsImpl extends FramedIcons implements PagedIcons {
         this.forceUpdate = true;
     }
 
-    private List<IconHandler> getHandlers(InventoryPageImpl page, UpdateExceptionHandler updateExceptionHandler) {
+    @NonNull
+    private List<IconHandler> getHandlers(@NonNull InventoryPageImpl page, @NonNull UpdateExceptionHandler updateExceptionHandler) {
         List<IconHandler> handlers = null;
         try {
             handlers = this.iconsHandler.onUpdate(page, page.getPlayer());
@@ -154,7 +157,8 @@ public class PagedIconsImpl extends FramedIcons implements PagedIcons {
         return handlers;
     }
 
-    private List<IconHandler> getCachedHandlers(InventoryPageImpl page, boolean force, UpdateExceptionHandler updateExceptionHandler) {
+    @NonNull
+    private List<IconHandler> getCachedHandlers(@NonNull InventoryPageImpl page, boolean force, @NonNull UpdateExceptionHandler updateExceptionHandler) {
         if (this.cachedHandlers == null || this.cacheHandler.canUpdate(page, force, this.cacheTime)) {
             this.cacheTime = System.currentTimeMillis();
 
@@ -164,11 +168,12 @@ public class PagedIconsImpl extends FramedIcons implements PagedIcons {
         return this.cachedHandlers;
     }
 
-    public List<ItemIcon> updateActiveIcons(InventoryPageImpl page,
-                                            ItemIconImpl[] activeIcons,
+    @Nullable
+    public List<ItemIcon> updateActiveIcons(@NonNull InventoryPageImpl page,
+                                            @NonNull ItemIconImpl[] activeIcons,
                                             boolean force,
                                             boolean create,
-                                            UpdateExceptionHandler updateExceptionHandler) {
+                                            @NonNull UpdateExceptionHandler updateExceptionHandler) {
 
         boolean updateForce = this.forceUpdate || force;
 
@@ -205,9 +210,9 @@ public class PagedIconsImpl extends FramedIcons implements PagedIcons {
 
                         int slotOffset;
                         if (iterationHandler.isReverse()) {
-                            slotOffset = this.first.getZ() * type.getWidth() + this.first.getX() + z + (x * type.getWidth());
+                            slotOffset = this.first.z() * type.getWidth() + this.first.x() + z + (x * type.getWidth());
                         } else {
-                            slotOffset = this.first.getZ() * type.getWidth() + this.first.getX() + x + (z * type.getWidth());
+                            slotOffset = this.first.z() * type.getWidth() + this.first.x() + x + (z * type.getWidth());
                         }
 
                         if (i > (maxSize - 1)) {
@@ -222,15 +227,15 @@ public class PagedIconsImpl extends FramedIcons implements PagedIcons {
 
                 return updatedIcons;
             }
-        }
-        finally {
+        } finally {
             this.forceUpdate = false;
         }
 
         return null;
     }
 
-    private ItemIconImpl setItemIcon(ItemIconImpl[] activeIcons, int slot, IconHandler iconHandler) {
+    @NonNull
+    private ItemIconImpl setItemIcon(ItemIconImpl[] activeIcons, int slot, @NonNull IconHandler iconHandler) {
         ItemIconImpl current = activeIcons[slot];
         if (current != null) {
             current.setIconHandler(iconHandler);
