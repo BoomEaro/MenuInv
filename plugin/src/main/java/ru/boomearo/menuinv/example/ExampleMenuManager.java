@@ -146,7 +146,7 @@ public class ExampleMenuManager {
                                                             throw new RuntimeException(e);
                                                         }
 
-                                                        ItemStack itemStack = new ItemStack(Material.SIGN, t);
+                                                        ItemStack itemStack = new ItemStack(Material.OAK_SIGN, t);
                                                         ItemMeta itemMeta = itemStack.getItemMeta();
                                                         itemMeta.setDisplayName("Loaded data " + new Random().nextInt(64) + " for data type #" + t);
                                                         itemStack.setItemMeta(itemMeta);
@@ -194,7 +194,7 @@ public class ExampleMenuManager {
                                             int finalI = i;
                                             tmp.add(new IconBuilder()
                                                     .setIconUpdate((inventoryPage2, player2) -> {
-                                                        ItemStack itemStack = new ItemStack(Material.SIGN, finalI);
+                                                        ItemStack itemStack = new ItemStack(Material.OAK_SIGN, finalI);
                                                         ItemMeta itemMeta = itemStack.getItemMeta();
                                                         itemMeta.setDisplayName("Loaded data " + new Random().nextInt(64) + " for data type #" + finalI);
                                                         itemStack.setItemMeta(itemMeta);

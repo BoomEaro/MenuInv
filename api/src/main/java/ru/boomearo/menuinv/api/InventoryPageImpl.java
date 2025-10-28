@@ -285,7 +285,7 @@ public class InventoryPageImpl implements InventoryPage {
             return;
         }
 
-        Bukkit.getScheduler().runTask(this.plugin, this.player::closeInventory);
+        Bukkit.getScheduler().runTask(this.plugin, () -> this.player.closeInventory());
     }
 
     @Override
